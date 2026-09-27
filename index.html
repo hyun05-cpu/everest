@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>빙하 위의 마을 — 에베레스트 베이스캠프</title>
+<meta name="description" content="해발 5300m, 쿰부 빙하 위에 텐트 1600동. 봄 한 시즌 동안 연료와 소변이 낸 열은 빙하와 눈 약 2500t을 녹일 수 있다.">
+<meta property="og:title" content="빙하 위의 마을">
+<meta property="og:description" content="봄마다 수천 명이 빙하 위에 모여 산다. 그들이 머무는 50일 동안 얼음 약 2500t이 녹을 수 있다.">
+<!-- 배포 폴더명이 다르면 이 주소만 바꿔 주세요. 공유 썸네일은 절대 주소여야 뜹니다. -->
+<meta property="og:image" content="https://hyun05-cpu.github.io/everest/00-cover.png">
+<meta property="og:type" content="article">
+<meta name="theme-color" content="#04070A">
+<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Song+Myung&family=Noto+Serif+KR:wght@500;700&display=swap">
+<link rel="preload" as="image" href="./00-cover.png" fetchpriority="high">
+<style>
+/* ─────────────────────────────────────────────
+   tokens — 냉동인간 편과 같은 체계
+   ───────────────────────────────────────────── */
+:root{
+  --ink:#04070A;
+  --ink-2:#0A1015;
+  --steel:#1B242C;
+  --slate:#6E8492;
+  --slate-lt:#A9BCC7;
+  --chalk:#E8EEF2;
+  --frost:#8FBAD4;
+  --heat:#E0A15E; /* 열. 연료와 소변 장면에서만 쓰고, 캠프가 빙하를 벗어나면 사라진다 */
+  --sans:"Pretendard Variable",Pretendard,-apple-system,BlinkMacSystemFont,system-ui,"Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+  --serif:"Song Myung","Noto Serif KR",serif;
+  --gut:clamp(20px,5vw,64px);
+}
+*,*::before,*::after{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--ink);color:var(--chalk);font-family:var(--sans);font-weight:400;-webkit-font-smoothing:antialiased;overflow-x:hidden;word-break:keep-all;overflow-wrap:break-word}
+img,svg,canvas{display:block;max-width:100%}
+::selection{background:rgba(143,186,212,.28)}
+:focus-visible{outline:2px solid var(--frost);outline-offset:3px}
+
+#rail{position:fixed;inset:0 0 auto 0;height:2px;z-index:60;background:rgba(110,132,146,.16)}
+#rail>i{display:block;height:100%;width:100%;background:var(--frost);transform-origin:0 50%;transform:scaleX(0)}
+
+/* act / stage */
+.act{position:relative}
+.stage{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden;display:grid;place-items:center;background:var(--ink)}
+.plate{position:absolute;inset:0;overflow:hidden;background:radial-gradient(90% 70% at 50% 110%,#15242E,#04070A 70%)}
+.plate img{width:100%;height:100%;object-fit:cover;object-position:var(--focal,50% 50%);will-change:transform}
+.plate.miss img{display:none}
+.scrim{position:absolute;inset:0;pointer-events:none}
+.scrim.bottom{background:linear-gradient(to top,rgba(4,7,10,.92) 0%,rgba(4,7,10,.55) 26%,rgba(4,7,10,0) 58%)}
+.scrim.full{background:radial-gradient(120% 90% at 50% 45%,rgba(4,7,10,0) 0%,rgba(4,7,10,.55) 62%,rgba(4,7,10,.92) 100%)}
+.scrim.heavy{background:radial-gradient(90% 70% at 50% 50%,rgba(4,7,10,.62) 0%,rgba(4,7,10,.52) 45%,rgba(4,7,10,.82) 100%)}
+.scrim.dim{background:#04070A;opacity:0;z-index:6}
+
+/* beats — 한 번에 하나만 보인다 */
+.beat{position:absolute;pointer-events:none;will-change:opacity,transform;z-index:5}
+.js .beat{opacity:0;filter:blur(5px);transform:translateY(20px);transition:opacity .38s ease,filter .38s ease,transform .6s cubic-bezier(.16,1,.3,1)}
+.js .beat.past{transform:translateY(-20px)}
+.js .beat.on{opacity:1;filter:none;transform:none;transition:opacity .62s ease .14s,filter .62s ease .14s,transform .9s cubic-bezier(.16,1,.3,1) .14s}
+.js .beat.centre{transform:translateY(calc(-50% + 20px))}
+.js .beat.centre.past{transform:translateY(calc(-50% - 20px))}
+.js .beat.centre.on{transform:translateY(-50%)}
+.js [data-ro]{opacity:0;transition:opacity .5s ease}
+.js [data-ro].ron{opacity:1}
+.beat.lower{left:var(--gut);right:var(--gut);bottom:clamp(64px,11vh,132px);max-width:min(780px,86vw)}
+.beat.centre{left:var(--gut);right:var(--gut);top:50%;transform:translateY(-50%);text-align:center}
+.beat.on{pointer-events:auto}
+.kicker{font-size:clamp(12px,1.15vw,14px);letter-spacing:.16em;color:#D4E0E7;margin:0 0 18px;font-weight:600;text-shadow:0 1px 12px rgba(4,7,10,.98),0 0 28px rgba(4,7,10,.92);display:flex;align-items:center;gap:10px}
+.kicker::before{content:"";flex:none;width:20px;height:1px;background:var(--frost);box-shadow:0 0 8px rgba(143,186,212,.7)}
+.kicker.warm::before{background:var(--heat);box-shadow:0 0 8px rgba(224,161,94,.8)}
+.beat.centre .kicker{justify-content:center}
+.line{font-family:var(--serif);font-weight:400;font-size:clamp(27px,3.5vw,46px);line-height:1.46;letter-spacing:-.01em;margin:0;color:#fff;text-wrap:pretty;word-break:keep-all;text-shadow:0 2px 24px rgba(4,7,10,.8)}
+.line em{font-style:normal;color:#CFE6F4;text-shadow:0 0 26px rgba(143,186,212,.55)}
+.line em.warm{color:#F3C48F;text-shadow:0 0 26px rgba(224,161,94,.6)}
+.note{font-size:clamp(14px,1.3vw,16.5px);line-height:1.92;color:var(--slate-lt);margin:20px 0 0;max-width:34ch;font-weight:350;text-wrap:pretty;text-shadow:0 1px 12px rgba(4,7,10,.98)}
+.beat.centre .note{margin-left:auto;margin-right:auto}
+
+/* 대형 수치 */
+.fig{font-size:clamp(58px,13vw,168px);line-height:.94;font-weight:700;letter-spacing:-.045em;color:#fff;font-variant-numeric:tabular-nums;margin:0;text-shadow:0 2px 40px rgba(4,7,10,.7)}
+.fig small{font-size:.32em;font-weight:500;letter-spacing:-.02em;margin-left:.12em}
+.fig.warm{color:#F6D2A6;text-shadow:0 0 30px rgba(224,161,94,.45),0 0 90px rgba(224,161,94,.35)}
+.figcap{font-size:clamp(15px,1.5vw,19px);color:#E4EDF2;margin:28px auto 0;line-height:1.75;max-width:38ch;text-wrap:balance;text-shadow:0 1px 14px rgba(4,7,10,.95),0 0 30px rgba(4,7,10,.8)}
+.figsub{font-size:clamp(12.5px,1.2vw,15px);color:var(--slate-lt);margin:14px auto 0;line-height:1.8;max-width:38ch;text-wrap:balance;text-shadow:0 1px 12px rgba(4,7,10,.98)}
+
+/* 계기 */
+.readout{position:absolute;left:var(--gut);top:clamp(76px,12vh,120px);z-index:5;font-size:clamp(14px,1.45vw,17px);letter-spacing:.14em;color:var(--frost);font-variant-numeric:tabular-nums;font-weight:600;text-shadow:0 1px 12px rgba(4,7,10,.98),0 0 26px rgba(4,7,10,.9)}
+.readout b{font-weight:600;color:#DCEEF9}
+.readout.warm{color:var(--heat)}
+.readout span{display:block;margin-top:6px;font-size:clamp(10.5px,.98vw,11.5px);letter-spacing:.09em;font-weight:400;color:rgba(190,206,215,.62)}
+
+/* 이미지 고지 */
+.disclaimer{position:absolute;right:var(--gut);bottom:clamp(16px,2.6vh,26px);z-index:7;font-size:clamp(10.5px,.95vw,11.5px);letter-spacing:.02em;line-height:1.5;color:rgba(190,206,215,.78);text-align:right;white-space:nowrap;pointer-events:none;text-shadow:0 1px 12px rgba(4,7,10,1),0 0 24px rgba(4,7,10,.95)}
+.disclaimer b{font-weight:600;color:rgba(143,186,212,.85);margin-right:7px}
+
+/* cover */
+#cover .stage{background:#000}
+#cover .scrim.full{background:linear-gradient(90deg,rgba(4,7,10,.62) 0%,rgba(4,7,10,.42) 32%,rgba(4,7,10,.18) 55%,rgba(4,7,10,0) 78%),linear-gradient(0deg,rgba(4,7,10,.5) 0%,rgba(4,7,10,.18) 36%,rgba(4,7,10,0) 67%)}
+.cover-wrap{position:relative;z-index:3;padding:0 var(--gut);width:100%;max-width:980px}
+.brand{font-size:12px;letter-spacing:.16em;color:var(--slate-lt);margin:0 0 26px;opacity:0;animation:rise .9s .25s ease-out forwards}
+.title{font-family:var(--serif);font-weight:400;font-size:clamp(46px,9vw,116px);line-height:1.08;letter-spacing:-.02em;margin:0;color:#fff;opacity:0;animation:rise 1.1s .45s cubic-bezier(.16,1,.3,1) forwards}
+.deck{font-size:clamp(15px,1.6vw,19px);line-height:1.85;color:#BCCBD4;margin:30px 0 0;max-width:34ch;font-weight:350;text-wrap:pretty;opacity:0;animation:rise 1s .85s ease-out forwards;text-shadow:0 1px 10px rgba(4,7,10,.72),0 0 22px rgba(4,7,10,.42)}
+@keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
+.cue{position:absolute;left:50%;bottom:clamp(64px,9vh,92px);transform:translateX(-50%);z-index:4;display:flex;flex-direction:column;align-items:center;gap:12px;opacity:0;animation:rise .8s 1.5s ease-out forwards}
+.cue span{font-size:10.5px;letter-spacing:.26em;color:var(--slate);font-weight:500}
+.cue i{display:block;width:1px;height:46px;background:linear-gradient(var(--slate),transparent);animation:drop 2.4s ease-in-out infinite}
+@keyframes drop{0%,100%{transform:scaleY(.35);transform-origin:top;opacity:.4}50%{transform:scaleY(1);transform-origin:top;opacity:1}}
+
+/* 1600동 */
+.tents{display:grid;grid-template-columns:repeat(40,1fr);gap:2px;width:min(70vw,34vh,300px);margin:22px auto 0}
+.tents i{display:block;aspect-ratio:1/1;background:rgba(110,132,146,.12);transition:background .25s,box-shadow .25s}
+.tents i.on{background:#DCEAF2;box-shadow:0 0 6px rgba(143,186,212,.55)}
+.amen{display:flex;flex-wrap:wrap;justify-content:center;gap:10px clamp(16px,3vw,34px);margin:34px auto 0;max-width:40rem}
+.amen b{font-size:clamp(15px,1.6vw,19px);font-weight:500;letter-spacing:.02em;color:rgba(150,170,182,.4);transition:color .5s,text-shadow .5s}
+.amen b.lit{color:#FBE7CF;text-shadow:0 0 18px rgba(224,161,94,.85),0 0 42px rgba(224,161,94,.4)}
+
+/* 비교 */
+.compare{position:relative;width:min(86vw,920px);aspect-ratio:16/9;margin:34px auto 0;--split:50%;border:1px solid rgba(169,188,199,.18);overflow:hidden;touch-action:pan-y;cursor:ew-resize;background:#04070A;user-select:none;-webkit-user-select:none}
+.compare .pl{position:absolute;inset:0;background:radial-gradient(90% 70% at 50% 110%,#15242E,#04070A 70%)}
+.compare img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.compare .top{clip-path:inset(0 calc(100% - var(--split)) 0 0)}
+.compare .handle{position:absolute;top:0;bottom:0;left:var(--split);width:2px;background:linear-gradient(rgba(143,186,212,.25),rgba(232,238,242,.95) 35%,rgba(232,238,242,.95) 65%,rgba(143,186,212,.25));transform:translateX(-1px)}
+.compare .handle::after{content:"";position:absolute;top:50%;left:50%;z-index:1;width:54px;height:54px;margin:-27px 0 0 -27px;border-radius:50%;border:1.5px solid rgba(143,186,212,.9);background:rgba(4,7,10,.5);backdrop-filter:blur(5px);-webkit-backdrop-filter:blur(5px);box-shadow:0 0 26px rgba(143,186,212,.45),inset 0 0 18px rgba(143,186,212,.15)}
+.compare .handle::before{content:"\2039\00a0\00a0\203A";position:absolute;top:50%;left:50%;z-index:2;transform:translate(-50%,-54%);font-size:19px;line-height:1;color:#fff;pointer-events:none}
+.compare.idle .handle::after{animation:hpulse 2.2s ease-in-out infinite}
+@keyframes hpulse{0%,100%{box-shadow:0 0 22px rgba(143,186,212,.35),inset 0 0 18px rgba(143,186,212,.12)}50%{box-shadow:0 0 40px rgba(143,186,212,.75),inset 0 0 22px rgba(143,186,212,.28)}}
+.compare .tag{position:absolute;bottom:16px;font-size:11px;letter-spacing:.14em;color:#fff;text-shadow:0 1px 10px rgba(4,7,10,.95)}
+.compare .tag.l{left:16px}.compare .tag.r{right:16px}
+.cmp-hint{display:block;width:fit-content;margin:20px auto 0;font-size:12px;color:#CFE2EE;letter-spacing:.08em;font-weight:600;padding:8px 16px;border:1px solid rgba(143,186,212,.42);background:rgba(143,186,212,.10);transition:opacity .5s}
+.cmp-hint.done{opacity:.35}
+
+/* 연료 장부 */
+.cans{display:grid;grid-template-columns:repeat(40,1fr);gap:3px;width:min(84vw,34vh*1.9,460px);margin:26px auto 0}
+.cans i{display:block;aspect-ratio:1/1;border-radius:50%;background:rgba(110,132,146,.14);transition:background .3s,box-shadow .3s}
+.cans i.on{background:var(--heat);box-shadow:0 0 6px rgba(224,161,94,.7)}
+.ledger{display:grid;gap:12px;width:min(84vw,520px);margin:24px auto 0;text-align:left}
+.ledger b{display:grid;grid-template-columns:14px 1fr auto;align-items:center;gap:12px;font-weight:400;text-shadow:0 1px 10px rgba(4,7,10,.96)}
+.ledger b em{height:2px;background:var(--heat);box-shadow:0 0 10px rgba(224,161,94,.8)}
+.ledger b em.g{background:rgba(224,161,94,.45);box-shadow:none}
+.ledger b i{font-style:normal;font-size:clamp(12.5px,1.25vw,14.5px);color:var(--slate-lt)}
+.ledger b u{text-decoration:none;font-size:clamp(14px,1.45vw,17px);font-weight:600;color:#E8EEF2;font-variant-numeric:tabular-nums;text-align:right}
+.ledger b s{display:block;grid-column:2/4;height:3px;background:rgba(110,132,146,.18);text-decoration:none;margin-top:-4px}
+.ledger b s i{display:block;height:100%;width:0;background:linear-gradient(90deg,rgba(224,161,94,.4),var(--heat))}
+
+/* 빙하 단면 */
+.xsec{position:absolute;left:0;right:0;top:clamp(70px,11vh,130px);height:min(56vh,600px);display:flex;justify-content:center;z-index:2}
+.xsec svg{width:min(94vw,1100px);height:100%}
+
+/* 수영장 */
+.pool{position:absolute;left:0;right:0;top:clamp(110px,17vh,180px);height:min(50vh,500px);display:flex;justify-content:center;z-index:2}
+.pool svg{width:min(90vw,960px);height:100%;overflow:visible}
+
+/* 위성 */
+#satCanvas{position:absolute;inset:0;width:100%;height:100%}
+.yline{position:relative;width:210px;height:18px;margin-top:14px}
+.yline::before{content:"";position:absolute;left:0;right:0;top:8px;height:1px;background:rgba(143,186,212,.3)}
+.yline i{position:absolute;top:4px;left:0;width:9px;height:9px;margin-left:-4.5px;border-radius:50%;background:#EAF6FF;box-shadow:0 0 14px rgba(190,226,245,1)}
+.legend{position:absolute;right:var(--gut);top:clamp(76px,12vh,120px);z-index:5;width:170px;font-size:11px;letter-spacing:.06em;color:#BCCBD4;text-shadow:0 1px 10px rgba(4,7,10,.96)}
+.legend i{display:block;height:5px;margin:8px 0 6px;background:linear-gradient(90deg,#1B2A55,#1F6F8B,#6BB08A,#E9C46A,#E07A3F,#B7322C)}
+.legend span{display:flex;justify-content:space-between;color:var(--slate)}
+
+.cmpbar.ron{opacity:1}
+.cmpbar{position:absolute;right:var(--gut);bottom:clamp(70px,12vh,140px);z-index:5;width:min(360px,40vw);opacity:0;transition:opacity .5s ease;pointer-events:none;text-shadow:0 1px 10px rgba(4,7,10,.96)}
+.cmpbar p{margin:0 0 14px;font-size:11px;letter-spacing:.12em;color:var(--slate-lt)}
+.cmpbar div{display:grid;grid-template-columns:7.5em 1fr auto;align-items:center;gap:12px;margin-top:10px;font-size:12.5px;color:#DCE6EB}
+.cmpbar b{display:block;height:8px;background:rgba(110,132,146,.16)}
+.cmpbar b i{display:block;height:100%;width:50%;background:var(--frost);transform:scaleX(0);transform-origin:left;box-shadow:0 0 12px rgba(143,186,212,.5)}
+.cmpbar b i.w{width:100%;background:linear-gradient(90deg,#E0A15E,#F3C48F);box-shadow:0 0 14px rgba(224,161,94,.6)}
+.cmpbar em{font-style:normal;font-size:11.5px;color:var(--slate-lt);font-variant-numeric:tabular-nums}
+.cans.burn i.on{animation:burn 1.7s ease-in-out infinite;animation-delay:var(--d,0s)}
+@keyframes burn{0%,100%{opacity:1}50%{opacity:.5;background:#F6D2A6}}
+
+.line em{white-space:nowrap}
+.swap{display:grid}
+.swap>*{grid-area:1/1;transition:opacity .8s ease,filter .8s ease,transform .9s cubic-bezier(.16,1,.3,1)}
+.swap>*:last-child{opacity:0;transform:translateY(12px);filter:blur(6px)}
+.swap.b>*:first-child{opacity:0;transform:translateY(-12px);filter:blur(6px)}
+.swap.b>*:last-child{opacity:1;transform:none;filter:none}
+
+/* 계산 제외 */
+.ex{list-style:none;margin:0;padding:0}
+.ex li{display:flex;align-items:center;gap:clamp(12px,2vw,20px);padding:.5em 0;font-family:var(--serif);font-size:clamp(30px,5.4vw,66px);line-height:1.2;color:#fff;text-shadow:0 2px 24px rgba(4,7,10,.85)}
+.ex li span{min-width:0;background:linear-gradient(var(--heat),var(--heat)) no-repeat 0 58%/var(--s,0%) 2px;-webkit-box-decoration-break:clone;box-decoration-break:clone;transition:color .6s}
+.ex li i{flex:none;white-space:nowrap;font-style:normal;font-family:var(--sans);font-size:12px;font-weight:700;letter-spacing:.12em;padding:4px 9px;border:1.5px solid var(--heat);color:var(--heat);opacity:0;transform:scale(1.7) rotate(-8deg);transition:opacity .35s,transform .5s cubic-bezier(.3,1.6,.5,1)}
+.ex li.hit span{color:rgba(232,238,242,.5)}
+.ex li.hit i{opacity:1;transform:rotate(-8deg)}
+
+/* 줌 아웃 */
+.ring{position:absolute;left:50%;top:50%;z-index:3;border-radius:50%;border:1.5px solid var(--heat);transform:translate(-50%,-50%);box-shadow:0 0 22px rgba(224,161,94,.55),inset 0 0 18px rgba(224,161,94,.2);pointer-events:none}
+
+/* 이전 모식도 */
+.move{position:absolute;left:0;right:0;top:clamp(80px,12vh,130px);bottom:clamp(210px,32vh,300px);display:flex;justify-content:center;z-index:2}
+.move svg{height:100%;width:min(94vw,1100px)}
+
+/* 질문 */
+#meltKg{font-variant-numeric:tabular-nums}
+
+/* 크레딧 */
+footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,84px) var(--gut) clamp(56px,10vh,96px);border-top:1px solid rgba(110,132,146,.18)}
+.credits{max-width:760px;margin:0 auto;display:grid;gap:40px}
+.imgnote{padding-bottom:clamp(30px,4vw,44px);border-bottom:1px solid rgba(169,188,199,.14);display:grid;grid-template-columns:minmax(0,34%) 1fr;gap:clamp(20px,3.4vw,38px);align-items:start}
+.imgnote h2{font-size:11.5px;letter-spacing:.18em;color:var(--slate);margin:0;font-weight:600;padding-top:3px}
+.imgnote p{margin:0;font-size:13px;line-height:2;color:rgba(169,188,199,.72);font-weight:350;max-width:52ch}
+.src-card{display:grid;grid-template-columns:minmax(0,34%) 1fr;align-items:stretch;text-decoration:none;overflow:hidden;border:1px solid rgba(169,188,199,.16);background:rgba(255,255,255,.012);transition:border-color .4s,background .4s}
+.src-card:hover{border-color:rgba(143,186,212,.42);background:rgba(143,186,212,.05)}
+.src-thumb{position:relative;overflow:hidden;min-height:150px;background:#0A1015}
+.src-thumb img{width:100%;height:100%;object-fit:cover;filter:grayscale(.62) brightness(.4) contrast(1.06) saturate(.7);transform:scale(1.04);transition:filter .6s,transform .8s cubic-bezier(.16,1,.3,1)}
+.src-thumb::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(4,7,10,.25),rgba(4,7,10,.85))}
+.src-card:hover .src-thumb img{filter:grayscale(.25) brightness(.58) contrast(1.06) saturate(.9);transform:scale(1.09)}
+.src-body{display:flex;flex-direction:column;justify-content:center;padding:clamp(24px,3.4vw,38px);gap:clamp(18px,2.4vw,26px)}
+.src-title{display:block;font-family:var(--serif);font-weight:400;font-size:clamp(18px,2.2vw,26px);line-height:1.55;color:#fff;letter-spacing:-.01em}
+.src-go{display:inline-flex;align-items:center;gap:12px}
+.src-go b{font-size:clamp(12.5px,1.3vw,14px);letter-spacing:.1em;color:var(--frost);font-weight:600}
+.src-go i{display:block;width:30px;height:1px;background:var(--frost);position:relative;transition:width .4s cubic-bezier(.16,1,.3,1)}
+.src-go i::after{content:"";position:absolute;right:0;top:-3.5px;width:8px;height:8px;border-top:1px solid var(--frost);border-right:1px solid var(--frost);transform:rotate(45deg)}
+.src-card:hover .src-go i{width:46px}
+.cat-link{display:flex;align-items:center;justify-content:space-between;gap:22px;margin-top:-10px;padding:23px 24px 22px;text-decoration:none;border-top:1px solid rgba(169,188,199,.38);border-bottom:1px solid rgba(169,188,199,.30);background:linear-gradient(90deg,rgba(143,186,212,.13) 0%,rgba(143,186,212,.07) 48%,rgba(143,186,212,.03) 100%);transition:background .35s,border-color .35s}
+.cat-link span{display:flex;align-items:center;gap:13px;font-size:clamp(16px,1.7vw,19px);letter-spacing:-.015em;font-weight:680;color:#E7F1F6;transition:color .35s,transform .35s}
+.cat-link span::before{content:"WORLD";display:inline-block;padding-right:13px;border-right:1px solid rgba(143,186,212,.38);font-size:10.5px;line-height:1;letter-spacing:.16em;font-weight:700;color:#8FBAD4}
+.cat-link i{display:block;width:42px;height:1px;background:#B9D9EA;position:relative;flex:none;transition:width .4s cubic-bezier(.16,1,.3,1)}
+.cat-link i::after{content:"";position:absolute;right:0;top:-4px;width:9px;height:9px;border-top:1.5px solid #B9D9EA;border-right:1.5px solid #B9D9EA;transform:rotate(45deg)}
+.cat-link:hover{background:linear-gradient(90deg,rgba(143,186,212,.2) 0%,rgba(143,186,212,.1) 55%,rgba(143,186,212,.04) 100%)}
+.cat-link:hover span{color:#fff;transform:translateX(2px)}
+.cat-link:hover i{width:54px}
+.credits h2{font-size:13px;letter-spacing:.14em;color:var(--slate);margin:0 0 12px;font-weight:500}
+.credits p{margin:0;font-size:14px;line-height:1.95;color:var(--slate-lt);font-weight:350}
+.credits a.inl{color:var(--frost);text-decoration:none;border-bottom:1px solid rgba(143,186,212,.35)}
+
+/* ── 모션 레이어 ── */
+#grain{position:fixed;inset:0;pointer-events:none;z-index:59;opacity:.06;mix-blend-mode:overlay;animation:grain .6s steps(1) infinite}
+@keyframes grain{0%{background-position:0 0}20%{background-position:-61px 37px}40%{background-position:83px -47px}60%{background-position:-29px -91px}80%{background-position:113px 71px}}
+/* 줄 단위 마스크 등장 */
+.ln{display:block;overflow:hidden;padding:.12em .4em;margin:-.12em -.4em}
+.ln>span{display:inline-block;transform:translateY(112%);transition:transform 1.15s cubic-bezier(.16,1,.3,1)}
+.beat.on .ln>span{transform:none}
+.beat.on .ln:nth-child(2)>span{transition-delay:.13s}
+.beat.on .ln:nth-child(3)>span{transition-delay:.26s}
+.kicker::before{transform:scaleX(0);transform-origin:left;transition:transform .9s .1s cubic-bezier(.16,1,.3,1)}
+.beat.centre .kicker::before{transform-origin:right}
+.beat.on .kicker::before{transform:none}
+.beat .fig{transition:transform 1.6s cubic-bezier(.16,1,.3,1),letter-spacing 1.6s cubic-bezier(.16,1,.3,1)}
+.beat:not(.on) .fig{transform:scale(.94);letter-spacing:-.02em}
+.fig.glow span{animation:figglow 3.6s ease-in-out infinite}
+/* 타메: 수치를 한 번씩 힘주어 찍는다 */
+.fig.stamp{position:relative;display:inline-block;transform-origin:50% 60%}
+.beat.centre .fig.stamp{display:block}
+.fig.stamp span{display:inline-block}
+.fig.stamp::after{content:"";position:absolute;left:50%;top:50%;width:1.1em;height:1.1em;border:2px solid rgba(207,230,244,.85);border-radius:50%;transform:translate(-50%,-50%) scale(.3);opacity:0;pointer-events:none}
+.fig.stamp.hit{animation:stampFig .7s cubic-bezier(.2,.9,.3,1.2) both;text-shadow:0 0 26px rgba(207,230,244,.55),0 2px 40px rgba(4,7,10,.7)}
+.fig.stamp.hit::after{animation:stampRing 1s cubic-bezier(.2,.7,.3,1) both}
+.fig.stamp.counting span{color:#C9D6DD;filter:blur(.6px)}
+@keyframes stampFig{0%{transform:scale(1.32);filter:brightness(2.2)}38%{transform:scale(.94);filter:brightness(1.3)}70%{transform:scale(1.03)}100%{transform:scale(1);filter:none}}
+@keyframes stampRing{0%{opacity:.95;transform:translate(-50%,-50%) scale(.35)}100%{opacity:0;transform:translate(-50%,-50%) scale(2.6)}}
+#thame .stage.shake{animation:stageShake .38s cubic-bezier(.36,.07,.19,.97)}
+@keyframes stageShake{0%,100%{transform:none}20%{transform:translate3d(0,5px,0)}40%{transform:translate3d(0,-3px,0)}60%{transform:translate3d(0,2px,0)}80%{transform:translate3d(0,-1px,0)}}
+.flood{transition:height 1.3s cubic-bezier(.34,1.35,.64,1)}
+@keyframes figglow{0%,100%{text-shadow:0 0 12px rgba(255,255,255,.2),0 0 40px rgba(143,186,212,.35)}50%{text-shadow:0 0 20px rgba(255,255,255,.45),0 0 80px rgba(143,186,212,.85)}}
+.fig.warm.glow span{animation-name:figwarm}
+@keyframes figwarm{0%,100%{text-shadow:0 0 14px rgba(246,210,166,.25),0 0 46px rgba(224,161,94,.35)}50%{text-shadow:0 0 24px rgba(246,210,166,.55),0 0 96px rgba(224,161,94,.8)}}
+/* 표지 새벽빛 */
+#cover .plate img{animation:dawnimg 5.5s .2s cubic-bezier(.3,.6,.3,1) both}
+@keyframes dawnimg{from{filter:brightness(.35) saturate(.4)}to{filter:none}}
+.dawn{position:absolute;inset:0;z-index:1;pointer-events:none;background:radial-gradient(70% 45% at 62% 100%,rgba(176,210,228,.34),rgba(176,210,228,0) 70%);opacity:0;transform:translateY(12%);animation:dawn 6s .6s cubic-bezier(.3,.6,.3,1) forwards}
+@keyframes dawn{to{opacity:1;transform:none}}
+/* 고도계 */
+.alt{position:absolute;right:var(--gut);top:20vh;height:58vh;width:54px;z-index:4;pointer-events:none}
+.alt::before{content:"";position:absolute;right:0;top:0;bottom:0;width:14px;background:repeating-linear-gradient(to top,rgba(169,188,199,.5) 0 1px,transparent 1px 10.2%)}
+.alt::after{content:"";position:absolute;right:0;top:0;bottom:0;width:1px;background:rgba(169,188,199,.3)}
+.alt b{position:absolute;right:22px;font-size:10.5px;font-weight:500;letter-spacing:.08em;color:var(--slate);transform:translateY(50%);white-space:nowrap}
+.alt i{position:absolute;right:-5px;bottom:0;width:24px;height:1.5px;background:#EAF6FF;box-shadow:0 0 12px rgba(190,226,245,1)}
+.alt i::after{content:"";position:absolute;right:-2px;top:-3.5px;width:8px;height:8px;border-radius:50%;background:#EAF6FF;box-shadow:0 0 14px rgba(190,226,245,1)}
+/* 50일 눈금 */
+.days{display:flex;gap:3px;width:min(80vw,440px);margin:28px auto 0}
+.days i{flex:1;height:22px;background:rgba(110,132,146,.16);transform:scaleY(.4);transform-origin:bottom;transition:transform .5s cubic-bezier(.16,1,.3,1),background .4s,box-shadow .4s}
+.days i.on{transform:none;background:#DCEAF2;box-shadow:0 0 8px rgba(143,186,212,.6)}
+/* 열기 입자 */
+/* 단면 */
+#xsvg .drip{animation:drip 2.6s linear infinite}
+#xsvg .ch{stroke-dasharray:1;stroke-dashoffset:1}
+#xsvg .flag{animation:flag 2.4s ease-in-out infinite}
+@keyframes flag{0%,100%{transform:skewX(0) rotate(0)}50%{transform:skewX(-10deg) rotate(-4deg)}}
+@keyframes drip{0%{transform:translateY(0);opacity:0}12%{opacity:1}100%{transform:translateY(150px);opacity:0}}
+#xsvg .strata{animation:strata 14s ease-in-out infinite alternate}
+@keyframes strata{to{transform:translateX(-18px)}}
+#xsvg #xGlow ellipse{transform-box:fill-box;transform-origin:50% 0;animation:breath 3.4s ease-in-out infinite}
+@keyframes breath{50%{transform:scale(1.12);opacity:.75}}
+.readout.hit b{animation:figglow 3s ease-in-out infinite}
+/* 위성 */
+.scan{position:absolute;left:0;right:0;top:0;height:120px;z-index:2;pointer-events:none;opacity:0;background:linear-gradient(transparent,rgba(190,226,245,.07) 70%,rgba(220,240,252,.55) 99%,transparent);transform:translateY(-130px)}
+.live .scan{opacity:1;animation:scan 3.4s cubic-bezier(.45,0,.55,1) infinite}
+@keyframes scan{to{transform:translateY(calc(100svh + 10px))}}
+.hot{position:absolute;z-index:2;width:0;height:0;pointer-events:none}
+.hot::before,.hot::after{content:"";position:absolute;left:-40px;top:-40px;width:80px;height:80px;border-radius:50%;border:1.5px solid rgba(240,150,90,.9);opacity:0}
+.live .hot::before,.live .hot::after{animation:hot 2.6s ease-out infinite}
+.live .hot::after{animation-delay:1.3s}
+@keyframes hot{0%{transform:scale(.3);opacity:0}20%{opacity:var(--hk,.5)}100%{transform:scale(2.2);opacity:0}}
+/* 줌 */
+#zCamp{position:absolute;inset:0;z-index:1;background:none}
+#zCamp img{width:100%;height:100%;object-fit:cover;will-change:transform,clip-path}
+/* 타메 수면 */
+.flood{position:absolute;left:0;right:0;bottom:0;height:0;z-index:1;overflow:hidden;pointer-events:none}
+.flood svg{position:absolute;left:0;top:0;width:200%;max-width:none;height:40px;animation:wave 9s linear infinite}
+.flood svg+svg{top:6px;opacity:.5;animation-duration:13s;animation-direction:reverse}
+.flood::after{content:"";position:absolute;left:0;right:0;top:36px;bottom:0;background:linear-gradient(rgba(62,104,128,.55),rgba(14,30,40,.9))}
+@keyframes wave{to{transform:translateX(-50%)}}
+#snow{position:fixed;inset:0;width:100%;height:100%;z-index:40;pointer-events:none}
+#rail>i{background:var(--rc,#8FBAD4)}
+/* 소리 버튼 — 진행선과 같은 색(--rc)을 따라 서리색 → 호박색 */
+.sound{--c:var(--rc,#8FBAD4);position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 16px);z-index:61;display:flex;align-items:center;gap:11px;min-height:42px;padding:0 12px 0 14px;border:1px solid rgba(143,186,212,.55);border:1px solid color-mix(in srgb,var(--c) 55%,transparent);border-radius:999px;background:rgba(4,7,10,.74);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#E8EEF2;font-family:var(--sans);font-size:13.5px;letter-spacing:.02em;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.45);transition:border-color .3s,background .3s,box-shadow .4s,opacity .6s}
+.sound:hover{background:rgba(10,16,21,.88);border-color:var(--c)}
+.sound.on{box-shadow:0 4px 20px rgba(0,0,0,.45),0 0 0 1px color-mix(in srgb,var(--c) 18%,transparent),0 0 22px color-mix(in srgb,var(--c) 28%,transparent)}
+.sound .bars{display:flex;align-items:flex-end;gap:2.5px;height:14px;color:var(--c)}
+.sound .bars i{display:block;width:2.5px;height:3px;border-radius:1px;background:currentColor;opacity:.45;transition:height .25s,opacity .3s}
+.sound.on .bars i{opacity:1;height:calc(3px + var(--g,0) * 11px)}
+.sound.on .bars i:nth-child(2){height:calc(3px + var(--g2,0) * 11px)}
+.sound.on .bars i:nth-child(3){height:calc(3px + var(--g3,0) * 11px)}
+/* 켜기/끄기 스위치 */
+.sound .sw{position:relative;width:34px;height:20px;border-radius:999px;background:rgba(110,132,146,.35);transition:background .3s}
+.sound .sw::after{content:"";position:absolute;left:3px;top:3px;width:14px;height:14px;border-radius:50%;background:#A9BCC7;transition:transform .3s cubic-bezier(.16,1,.3,1),background .3s}
+.sound.on .sw{background:color-mix(in srgb,var(--c) 45%,rgba(4,7,10,.6))}
+.sound.on .sw::after{transform:translateX(14px);background:#fff;box-shadow:0 0 8px var(--c)}
+/* 켜져 있지만 브라우저가 아직 소리를 막고 있을 때: 막대가 스스로 숨 쉬고 테두리가 맥박친다 */
+.sound.armed .bars i{animation:armBar 1.4s ease-in-out infinite}
+.sound.armed .bars i:nth-child(2){animation-delay:.2s}
+.sound.armed .bars i:nth-child(3){animation-delay:.4s}
+.sound.armed::before{content:"";position:absolute;inset:-1px;border-radius:inherit;border:1px solid var(--c);animation:armRing 2.2s ease-out infinite;pointer-events:none}
+@keyframes armBar{0%,100%{height:4px}50%{height:12px}}
+@keyframes armRing{0%{opacity:.7;transform:scale(1)}100%{opacity:0;transform:scale(1.25,1.5)}}
+.sound-hint{position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 66px);z-index:61;margin:0;padding:6px 11px;border-radius:8px;background:rgba(4,7,10,.74);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#C9D6DD;font-size:12px;line-height:1.4;pointer-events:none;opacity:0;transform:translateY(-4px);transition:opacity .5s,transform .5s}
+.sound-hint.show{opacity:1;transform:none}
+
+/* mobile */
+@media (max-width:720px){
+  .alt{width:40px;top:24vh;height:50vh}
+  .alt b{display:none}
+  .beat.lower{bottom:clamp(52px,9vh,96px);max-width:none}
+  .line{font-size:clamp(23px,6vw,32px);line-height:1.5}
+  .note{font-size:14.5px;max-width:100%;line-height:1.85}
+  .figcap,.figsub{max-width:26ch}
+  .fig{font-size:clamp(52px,17vw,92px)}
+  .readout{top:70px}
+  .sound{min-height:40px;font-size:13px;gap:9px;padding:0 10px 0 12px}
+  .sound-hint{top:calc(env(safe-area-inset-top,0px) + 62px);font-size:11.5px}
+  .legend{display:none}
+  .cmpbar{right:var(--gut);left:var(--gut);width:auto;top:auto;bottom:calc(clamp(52px,9vh,96px) + 128px);padding:14px 16px 16px;background:rgba(4,7,10,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+  .cmpbar p{margin-bottom:10px}
+  .disclaimer{left:var(--gut);right:var(--gut);text-align:center;white-space:normal;font-size:10px;bottom:12px}
+  .title{font-size:clamp(40px,11vw,66px);line-height:1.1}
+  .deck{font-size:15px;line-height:1.7;margin-top:20px;max-width:100%}
+  #cover .cover-wrap{padding-bottom:92px}
+  .tents{width:min(58vw,24vh);gap:1.5px;margin-top:18px}
+  .cans{grid-template-columns:repeat(28,1fr);width:min(86vw,32vh*.95);gap:2px}
+  .compare{aspect-ratio:4/3;width:90vw}
+  .xsec{top:auto;bottom:calc(clamp(52px,9vh,96px) + 196px + 5vh);height:auto}
+  .xsec svg{width:100vw;height:auto}
+  .pool{top:112px;height:46vh}
+  .pool svg{width:96vw}
+  .move{top:70px;bottom:44vh}
+  .imgnote,.src-card{grid-template-columns:1fr}
+  .src-thumb{min-height:128px}
+  .cat-link{padding:20px 18px 19px}
+  .cat-link span{font-size:16px;gap:10px}
+}
+
+/* 짧은 모바일 화면(높이 700px 이하) */
+@media (max-width:720px) and (max-height:700px){
+  .cmpbar{padding:10px 14px 12px}
+  .cmpbar p{display:none}
+  .cmpbar div:first-of-type{margin-top:0}
+  .readout span{display:none}
+}
+
+/* 키 작은 폰(360×640 등): 위성 비교 상자와 연료 계기를 압축 */
+@media (max-width:720px) and (max-height:700px){
+  .cmpbar{padding:10px 14px 12px}
+  .cmpbar p{display:none}
+  .cmpbar div:first-of-type{margin-top:0}
+  .readout span{display:none}
+  #fuel .kicker{margin-top:60px}
+}
+
+/* reduced motion — 스크롤 연출을 끄고 읽기 문서로 */
+@media (prefers-reduced-motion:reduce){
+  .sound.armed .bars i,.sound.armed::before{animation:none}
+  .fig.stamp.hit,.fig.stamp.hit::after,#thame .stage.shake{animation:none}
+  .act{height:auto!important}
+  .stage{position:static;height:auto;min-height:0;padding:56px var(--gut);display:block}
+  .plate{position:relative;inset:auto;height:52vh;margin-bottom:30px}
+  .plate img{transform:none!important}
+  .scrim,#snow,.cue,.ring{display:none}
+  .xsec,.pool,.move{position:relative;inset:auto;height:auto;margin-bottom:30px}
+  #satCanvas{position:relative;height:60vh}
+  .beat,.readout{position:static!important;opacity:1!important;transform:none!important;max-width:60ch;margin:0 0 46px;pointer-events:auto}
+  .beat.centre{text-align:left}
+  .title,.brand,.deck{animation:none;opacity:1}
+  *{transition:none!important;animation:none!important}
+  .ln>span{transform:none!important}
+  .alt,.scan,.hot,.flood,#grain,.dawn{display:none}
+}
+</style>
+<script>document.documentElement.className="js";</script>
+</head>
+<body>
+<div id="rail"><i></i></div>
+<div id="grain" aria-hidden="true"></div>
+<canvas id="snow" aria-hidden="true"></canvas>
+<button class="sound on" id="sound" type="button" role="switch" aria-checked="true" aria-label="바람 소리"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span><span id="soundLabel">바람 소리</span><span class="sw" aria-hidden="true"></span></button>
+<p class="sound-hint" id="soundHint" aria-hidden="true">화면을 한 번 누르면 소리가 나요</p>
+<main>
+
+<!-- ═══════════ 00 · 표지 ═══════════ -->
+<section class="act" id="cover" style="height:200vh">
+  <div class="stage">
+    <div class="plate"><img src="./00-cover.png" alt="새벽빛 속 쿰부 빙하 위에 늘어선 베이스캠프 텐트들" data-k="1.14,1.0" fetchpriority="high"></div>
+    <div class="dawn"></div>
+    <div class="scrim full"></div>
+    <div class="scrim dim" data-dim="0.72,1,0,1"></div>
+    <div class="cover-wrap">
+      <p class="brand">에베레스트 베이스캠프 · 해발 5300m</p>
+      <h1 class="title">빙하 위의<br>마을</h1>
+      <p class="deck">봄마다 수천 명이 빙하 위에 텐트를 세운다. 50일 동안 그들이 태운 연료와 흘려보낸 소변의 열은 얼음 약 2500t을 녹일 수 있다.</p>
+    </div>
+    <div class="cue"><i></i><span>SCROLL</span></div>
+    <p class="disclaimer"><b>재현 이미지</b>기사 내용을 바탕으로 제작했으며 실제 사진이 아닙니다.</p>
+  </div>
+</section>
+
+<!-- ═══════════ 01 · 숫자 ═══════════ -->
+<section class="act" id="numbers" data-fx="numbers" style="height:820vh">
+  <div class="stage">
+    <div class="plate"><img src="./01-camp.png" alt="빙하 위 텐트촌" data-k="1.0,1.12"></div>
+    <div class="scrim heavy"></div>
+    <div class="alt" data-ro="0.0,0.18" aria-hidden="true"><b style="bottom:0">0 m</b><b style="bottom:47.2%">2,500</b><b style="bottom:94.3%">5,000</b><i id="altMk"></i></div>
+    <div class="beat centre" data-band="0.02,0.17">
+      <p class="fig"><span data-c="0,5300,0.02,0.11,comma">0</span><small>m</small></p>
+      <p class="figcap">베이스캠프의 해발 고도</p>
+      <p class="figsub">에베레스트 네팔 쪽 등반로. 캠프는 땅이 아니라 쿰부 빙하 위에 있다.</p>
+    </div>
+    <div class="beat centre" data-band="0.22,0.36">
+      <p class="fig"><span data-c="0,50,0.22,0.30,int">0</span><small>일</small></p>
+      <p class="figcap">2023년 봄, 한 번의 등반 시즌</p>
+      <div class="days" id="days" aria-hidden="true"></div>
+      <p class="figsub">국제 연구진이 베이스캠프의 에너지 사용을 따져 본 기간이다.</p>
+    </div>
+    <div class="beat centre" data-band="0.41,0.64" data-rev="1500">
+      <p class="fig" style="font-size:clamp(52px,9vw,124px)"><span data-c="0,1600,0.42,0.56,comma" id="tentN">0</span><small>동</small></p>
+      <p class="figcap" style="margin-top:16px">빙하 위에 세운 텐트</p>
+      <div class="tents" id="tents" aria-hidden="true"></div>
+      <p class="figsub">등반객과 셰르파, 가이드, 지원 인력 수천 명이 머문다.</p>
+    </div>
+    <div class="beat centre" data-band="0.70,0.98" data-rev="2200">
+      <p class="kicker">지금의 베이스캠프</p>
+      <p class="line">과거엔 단순한 야영지에 가까웠다.</p>
+      <div class="amen" id="amen"><b>카페</b><b>고속 인터넷</b><b>대형 TV</b><b>온수 샤워</b><b>바닥 난방 텐트</b></div>
+      <p class="figsub">오래 머무는 등반객을 위한 시설이 늘면서, 이를 돌리는 에너지도 크게 늘었다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 02 · 과거와 지금 ═══════════ -->
+<section class="act" id="then" style="height:300vh">
+  <div class="stage">
+    <div class="beat centre" data-band="0.04,0.99" style="top:50%">
+      <p class="kicker">같은 자리</p>
+      <p class="line">야영지는 마을이 됐다.</p>
+      <div class="compare idle" id="cmp" tabindex="0" role="slider" aria-label="과거와 지금의 베이스캠프 비교" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
+        <div class="pl"><img src="./03-now.png" alt="대형 돔 텐트와 조명이 가득한 지금의 베이스캠프"></div>
+        <div class="pl top"><img src="./02-then.png" alt="텐트 몇 동뿐인 과거의 베이스캠프"></div>
+        <span class="handle"></span>
+        <span class="tag l">과거</span><span class="tag r">지금</span>
+      </div>
+      <span class="cmp-hint" id="cmpHint">좌우로 밀어 비교해 보세요</span>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 03 · 연료 장부 ═══════════ -->
+<section class="act" id="fuel" data-fx="fuel" style="height:620vh">
+  <div class="stage">
+    <p class="readout warm" data-ro="0.03,0.99">2023 봄 · <b data-c="0,50,0.10,0.66,int">0</b>일째<span>연료 장부 · 50일 균등 환산</span></p>
+    <div class="beat centre" data-band="0.03,0.99">
+      <p class="kicker warm">연료</p>
+      <div class="swap" id="fuelSwap"><p class="line">텐트 1600동을 50일 동안 돌렸다.</p><p class="line">취사·난방·전력. 모두 <em class="warm">빙하 위에서</em> 태웠다.</p></div>
+      <div class="cans" id="cans" aria-hidden="true"></div>
+      <div class="ledger">
+        <b><em></em><i>액화석유가스(LPG)</i><u><span data-c="0,824,0.10,0.66,comma">0</span>통</u></b>
+        <b><em class="g"></em><i>등유</i><u><span data-c="0,18935,0.10,0.66,comma">0</span>L</u><s><i data-fill="0.10,0.66,100"></i></s></b>
+        <b><em class="g"></em><i>휘발유</i><u><span data-c="0,5130,0.10,0.66,comma">0</span>L</u><s><i data-fill="0.10,0.66,27.1"></i></s></b>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 04 · 소변 ═══════════ -->
+<section class="act" id="urine" data-fx="xsec" style="height:680vh">
+  <div class="stage">
+    <div class="xsec"><svg id="xsvg" viewBox="0 0 1000 480" role="img" aria-label="빙하 단면 모식도. 대변은 저장조에 담겨 산 아래로 옮겨지고, 소변은 빙하 위에 스며든다."></svg></div>
+    <div class="beat lower" data-band="0.02,0.17">
+      <p class="line">열은 연료에서만<br>나오지 않는다.</p>
+    </div>
+    <div class="beat lower" data-band="0.20,0.40">
+      <p class="kicker">고산</p>
+      <p class="line">공기는 건조하고,<br>숨 쉴 때마다 수분이 빠져나간다.</p>
+      <p class="note">탈수를 막으려 모두 물을 많이 마신다.</p>
+    </div>
+    <div class="beat lower" data-band="0.43,0.60">
+      <p class="line">마신 만큼 내보낸다.<br>하루 <em><span data-c="0,6000,0.44,0.54,comma">0</span>L</em>가 넘는다.</p>
+      <p class="note">500mL 생수병 1만 2000병 분량이다. (단순 환산)</p>
+    </div>
+    <div class="beat lower" data-band="0.63,0.78">
+      <p class="line">대변은 저장조에 모아<br>산 아래로 옮긴다.</p>
+    </div>
+    <div class="beat lower" data-band="0.81,0.99">
+      <p class="line"><em class="warm">소변</em>은 상당량이<br>빙하 위에 그대로 남는다.</p>
+      <p class="note">그 열만으로 한 시즌에 약 154t의 눈과 얼음을 녹일 수 있다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 05 · 열 → 수영장 ═══════════ -->
+<section class="act" id="pool" data-fx="pool" style="height:900vh">
+  <div class="stage">
+    <p class="readout" id="poolRo" data-ro="0.20,0.99">녹는 얼음 <b id="poolT">0t</b><span>올림픽 규격 수영장 한 개 ≈ 2500t</span></p>
+    <div class="pool" id="poolBox" style="opacity:0"><svg id="poolSvg" viewBox="0 0 1000 420" aria-hidden="true"></svg></div>
+    <div class="beat centre" data-band="0.01,0.10">
+      <p class="line">연구진은 연료와 소변에서 나온<br>한 시즌의 열을 모두 더했다.</p>
+    </div>
+    <div class="beat centre" data-band="0.10,0.20">
+      <p class="fig warm glow"><span data-c="0,849174,0.10,0.16,comma">0</span><small>MJ</small></p>
+      <p class="figcap">50일 동안 베이스캠프가 낸 열에너지</p>
+    </div>
+    <div class="beat lower" data-band="0.21,0.33">
+      <p class="line">이 열로 녹일 수 있는 얼음을<br>수영장에 부어 본다.</p>
+    </div>
+    <div class="beat lower" data-band="0.34,0.50">
+      <p class="line">먼저 <em class="warm">소변의 열</em>만으로 약 154t.<br>바닥이 겨우 잠긴다.</p>
+    </div>
+    <div class="beat lower" data-band="0.52,0.70">
+      <p class="line">여기에 <em class="warm">연료의 열</em>을 더하면.</p>
+    </div>
+    <div class="beat lower" data-band="0.72,0.86">
+      <p class="line"><em>2492t.</em><br>올림픽 수영장 하나가 찬다.</p>
+      <p class="note">소변 몫은 그중 약 6%. 대부분은 연료에서 나왔다.</p>
+    </div>
+    <div class="beat lower" data-band="0.87,0.99">
+      <p class="line">연구진이 제시한 범위는 1964~3020t.<br>위쪽 끝이라면 넘친다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 06 · 위성 ═══════════ -->
+<section class="act" id="sat" data-fx="sat" style="height:560vh">
+  <div class="stage">
+    <canvas id="satCanvas" aria-label="베이스캠프 주변 지표 온도 추세를 재현한 지도"></canvas>
+    <i class="scan" aria-hidden="true"></i><i class="hot" id="hot" aria-hidden="true"></i>
+    <div class="scrim bottom"></div>
+    <div class="readout" data-ro="0.0,0.99">랜드샛 위성 <b id="satY">1991</b><div class="yline"><i id="satMk"></i></div><span>1991 — 2023 지표 온도 추세</span></div>
+    <div class="cmpbar" id="cmpbar" aria-hidden="true">
+      <p>지표 온도 상승 추세 · 상대 비교</p>
+      <div><span>베이스캠프</span><b><i class="w" id="cbA"></i></b><em>0.28도/년</em></div>
+      <div><span>쿰부 빙하 표면</span><b><i id="cbB"></i></b><em>약 절반</em></div>
+    </div>
+    <div class="legend">지표 온도 · 상대값<i></i><span><em>낮음</em><em>높음</em></span></div>
+    <div class="beat lower" data-band="0.03,0.26">
+      <p class="line">위성은 32년을<br>기록하고 있었다.</p>
+    </div>
+    <div class="beat lower" data-band="0.30,0.60">
+      <p class="line">베이스캠프의 땅은 해마다<br><em>0.28도</em>씩 뜨거워지는 추세였다.</p>
+    </div>
+    <div class="beat lower" data-band="0.64,0.97">
+      <p class="line">바로 옆 빙하 표면보다<br>약 <em>2배</em> 빠르다.</p>
+    </div>
+    <p class="disclaimer"><b>재현 그래픽</b>위성 분석 결과를 시각화한 것으로 실제 위성 영상이 아닙니다.</p>
+  </div>
+</section>
+
+<!-- ═══════════ 07 · 계산 제외 ═══════════ -->
+<section class="act" id="excl" data-fx="excl" style="height:440vh">
+  <div class="stage">
+    <div class="plate"><img src="./04-heli-yak.png" alt="" data-k="1.0,1.1"></div>
+    <div class="scrim" style="background:linear-gradient(90deg,rgba(4,7,10,.9),rgba(4,7,10,.4) 80%)"></div>
+    <div class="beat lower" data-band="0.02,0.70" style="max-width:none">
+      <p class="kicker warm">이번 계산에 들어가지 않은 것</p>
+      <ul class="ex" id="exList">
+        <li><span>헬리콥터 운항</span><i>계산 제외</i></li>
+        <li><span>등반객의 체열</span><i>계산 제외</i></li>
+        <li><span>물자를 나르는 야크</span><i>계산 제외</i></li>
+      </ul>
+    </div>
+    <div class="beat lower" data-band="0.74,0.99">
+      <p class="line">그래서 실제 영향은<br>계산보다 클 수 있다.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 08 · 줌 아웃 ═══════════ -->
+<section class="act" id="zoom" data-fx="zoom" style="height:640vh">
+  <div class="stage">
+    <div class="plate"><img src="./05-himalaya.png" alt="고고도에서 내려다본 히말라야 산맥과 빙하" id="zImg" style="opacity:0"></div>
+    <div class="plate" id="zCamp"><img src="./01-camp.png" alt=""></div>
+    <div class="scrim full"></div>
+    <i class="ring" id="ring"></i>
+    <p class="readout" data-ro="0.02,0.99">시야 <b id="zLab">베이스캠프</b></p>
+    <div class="beat lower" data-band="0.04,0.26">
+      <p class="line">하지만 이 빙하를 녹이는<br>가장 큰 원인은 베이스캠프가 아니다.</p>
+    </div>
+    <div class="beat lower" data-band="0.30,0.52">
+      <p class="line">지구 전체의 <em>기후변화</em>다.</p>
+    </div>
+    <div class="beat centre" data-band="0.56,0.76">
+      <p class="fig glow"><span data-c="0,2,0.56,0.62,int">0</span><small>배</small></p>
+      <p class="figcap">2000년 이후 빨라진 힌두쿠시 히말라야의 빙하 손실 속도</p>
+      <p class="figsub">국제산악종합개발센터(ICIMOD) 보고서</p>
+    </div>
+    <div class="beat centre" data-band="0.79,0.99">
+      <p class="fig"><span data-c="0,20,0.79,0.86,int">0</span><small>억 명</small></p>
+      <p class="figcap">이 빙하를 주요 수자원으로 기대어 사는 사람들</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 09 · 타메 ═══════════ -->
+<section class="act" id="thame" data-fx="thame" style="height:700vh">
+  <div class="stage">
+    <div class="flood" id="flood" aria-hidden="true">
+      <svg viewBox="0 0 2000 40" preserveAspectRatio="none"><path d="M0 20 Q125 6 250 20 T500 20 T750 20 T1000 20 T1250 20 T1500 20 T1750 20 T2000 20 V40 H0Z" fill="rgba(62,104,128,.55)"/><path d="M0 20 Q125 6 250 20 T500 20 T750 20 T1000 20 T1250 20 T1500 20 T1750 20 T2000 20" fill="none" stroke="rgba(207,230,244,.55)" stroke-width="1.2"/></svg>
+      <svg viewBox="0 0 2000 40" preserveAspectRatio="none"><path d="M0 22 Q100 10 200 22 T400 22 T600 22 T800 22 T1000 22 T1200 22 T1400 22 T1600 22 T1800 22 T2000 22 V40 H0Z" fill="rgba(40,76,98,.6)"/></svg>
+    </div>
+    <p class="readout" data-ro="0.02,0.99">2024.08<span>네팔 솔루쿰부 · 타메</span></p>
+    <div class="beat lower" data-band="0.03,0.24">
+      <p class="kicker">빙하호 붕괴</p>
+      <p class="line">빙하가 줄어드는 일은<br>이미 사람들의 삶에 닿았다.</p>
+      <p class="note">에베레스트 지역의 마을 타메에서 빙하호가 터졌다. 산사태와 붕괴가 잇따르며 피해는 수십 km 하류까지 이어졌다.</p>
+    </div>
+    <div class="beat centre" data-band="0.28,0.48">
+      <p class="fig stamp"><span data-stamp="25">0</span><small>채</small></p>
+      <p class="figcap">무너진 주택</p>
+    </div>
+    <div class="beat centre" data-band="0.52,0.72">
+      <p class="fig stamp"><span data-stamp="135">0</span><small>명</small></p>
+      <p class="figcap">삶의 터전을 잃은 주민</p>
+    </div>
+    <div class="beat centre" data-band="0.76,0.98">
+      <p class="fig stamp">약 <span data-stamp="618">0</span><small>만 달러</small></p>
+      <p class="figcap">지역 경제 피해 추산</p>
+    </div>
+  </div>
+</section>
+
+<!-- ═══════════ 10 · 연구진의 제안 ═══════════ -->
+<section class="act" id="relocate" data-fx="move" style="height:760vh">
+  <div class="stage">
+    <div class="move"><svg id="mvSvg" viewBox="0 0 1000 560" role="img" aria-label="빙하 위의 캠프가 빙하 밖 안정된 지반으로 옮겨 가는 모식도"></svg></div>
+    <div class="beat lower" data-band="0.02,0.22">
+      <p class="line">이미 빠르게 녹는 빙하 위에<br>수천 명이 모여 열을 더한다.</p>
+    </div>
+    <div class="beat lower" data-band="0.26,0.44">
+      <p class="line">연구진은 이 방식이<br>지속하기 어렵다고 봤다.</p>
+    </div>
+    <div class="beat lower" data-band="0.48,0.74">
+      <p class="line">그래서 제안한 자리는<br>빙하 밖, <em>안정된 지반</em>.</p>
+      <p class="note">장기적으로 이 방안을 검토해야 한다는 제안이다.</p>
+    </div>
+    <div class="beat lower" data-band="0.78,0.99">
+      <p class="line">얼음 위에 직접<br>열을 더하지 않는 자리다.</p>
+    </div>
+    <p class="disclaimer"><b>재현 그래픽</b>위치 관계만 보여 주는 모식도이며 실제 이전 후보지가 아닙니다.</p>
+  </div>
+</section>
+
+<!-- ═══════════ 11 · 마무리 ═══════════ -->
+<section class="act" id="coda" data-fx="coda" style="height:520vh">
+  <div class="stage">
+    <div class="plate"><img src="./00-cover.png" alt="" id="codaImg" data-k="1.18,1.0" style="opacity:0"></div>
+    <div class="scrim full"></div>
+    <div class="scrim dim" data-dim="0.9,1,0,1"></div>
+    <div class="beat centre" data-band="0.03,0.46">
+      <p class="kicker">당신이 이 기사를 읽는 동안</p>
+      <p class="fig glow"><span id="meltKg">0</span><small>kg</small></p>
+      <p class="figcap">베이스캠프의 열이 녹였을 눈과 얼음</p>
+      <p class="figsub">시즌 50일 동안 2492t이면 1분에 약 35kg. 이 페이지를 연 순간부터 흐른 시간으로 셉니다.</p>
+    </div>
+    <div class="beat centre" data-band="0.52,0.88">
+      <p class="line">봄이 오면,<br>수천 명이 다시 빙하 위로 모인다.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="credits">
+    <div class="imgnote">
+      <h2>이미지에 대하여</h2>
+      <p>화면에 쓰인 사진은 전부 기사 내용을 바탕으로 생성형 AI로 제작한 재현 이미지입니다. 실제 베이스캠프나 실존 인물의 사진이 아닙니다. 빙하 단면, 수영장, 위성 지도, 이전 모식도는 연구 결과를 이해하기 쉽게 그린 재현 그래픽입니다.</p>
+    </div>
+    <div class="imgnote">
+      <h2>계산에 대하여</h2>
+      <p>연료 장부의 일별 증가는 시즌 사용량을 50일에 고르게 나눈 값입니다. 마지막 화면의 분당 약 35kg은 2492t을 50일(7만 2000분)로 나눈 시즌 평균입니다. 생수병 1만 2000병은 하루 6000L를 500mL로, 소변 몫 약 6%는 154t을 2492t으로 나눈 값입니다. 수영장 한 개는 약 2500t으로 봤습니다.</p>
+    </div>
+    <div class="imgnote">
+      <h2>연구</h2>
+      <p>네팔 토지관리 당국 킴 랄 가우탐 수석측량관 등 국제 연구진, 「인간 활동이 쿰부 빙하에 미치는 영향: 지속 가능한 에베레스트 베이스캠프를 향하여」, 『Regional Environmental Change』. 함께 참고한 기사: <a class="inl" href="https://www.joongang.co.kr/article/25457611" target="_blank" rel="noopener">중앙일보</a></p>
+    </div>
+    <a class="src-card" href="https://www.asiae.co.kr/article/2026083108345434038" target="_blank" rel="noopener">
+      <div class="src-thumb"><img src="./06-thumb.jpg" alt=""></div>
+      <div class="src-body">
+        <span class="src-title">"소변까지 빙하 녹였다" 에베레스트 등반객이 한 시즌 녹인 얼음 '2500t'</span>
+        <span class="src-go"><b>기사 전문 보기</b><i></i></span>
+      </div>
+    </a>
+    <a class="cat-link" href="https://www.asiae.co.kr/list/world" target="_blank" rel="noopener"><span>국제 기사 더 보기</span><i></i></a>
+  </div>
+</footer>
+
+<script>
+(() => {
+"use strict";
+const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
+const lerp = (a, b, t) => a + (b - a) * t;
+const ease = t => t < .5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
+const easeOut = t => 1 - Math.pow(1 - t, 3);
+const fmt = n => Math.round(n).toLocaleString("ko-KR");
+const $ = s => document.querySelector(s);
+const nums = s => s.split(",").map(Number);
+const narrow = () => innerWidth <= 720;
+
+/* 이미지가 없으면 조용히 빈 판으로 */
+document.querySelectorAll(".plate img,.compare img,.src-thumb img").forEach(img => {
+  const miss = () => { img.style.visibility = "hidden"; img.closest(".plate")?.classList.add("miss"); };
+  if (img.complete && img.naturalWidth === 0) miss();
+  img.addEventListener("error", miss);
+});
+
+/* 문장을 줄 단위로 감싼다 (엔진이 노드를 모으기 전에) */
+document.querySelectorAll(".beat .line").forEach(l => {
+  l.innerHTML = l.innerHTML.split(/<br\s*\/?>/i).map(t => `<span class="ln"><span>${t}</span></span>`).join("");
+});
+
+/* 필름 그레인: 고운 노이즈 한 장 */
+(() => {
+  if (reduce) return;
+  const S = 256, c = document.createElement("canvas"); c.width = c.height = S;
+  const x = c.getContext("2d"), d = x.createImageData(S, S);
+  for (let i = 0; i < d.data.length; i += 4) { const v = 128 + (Math.random() + Math.random() - 1) * 127; d.data[i] = d.data[i + 1] = d.data[i + 2] = v; d.data[i + 3] = 255; }
+  x.putImageData(d, 0, 0);
+  const g = $("#grain"), dpr = Math.min(devicePixelRatio || 1, 2);
+  g.style.backgroundImage = `url(${c.toDataURL()})`; g.style.backgroundSize = `${S / dpr}px`;
+})();
+
+/* ─────────── 엔진: 막마다 진행도 p(0~1) ─────────── */
+const acts = [...document.querySelectorAll(".act")].map(el => ({
+  el,
+  beats: [...el.querySelectorAll(".beat")].map(b => ({ b, band: nums(b.dataset.band), c: b.classList.contains("centre") })),
+  counters: [...el.querySelectorAll("[data-c]")].map(n => { const a = n.dataset.c.split(","); return { n, f: +a[0], t: +a[1], a: +a[2], z: +a[3], k: a[4], last: null }; }),
+  kb: [...el.querySelectorAll("img[data-k]")].map(i => ({ i, k: nums(i.dataset.k) })),
+  ro: [...el.querySelectorAll("[data-ro]")].map(r => ({ r, band: nums(r.dataset.ro) })),
+  dim: [...el.querySelectorAll("[data-dim]")].map(d => ({ d, v: nums(d.dataset.dim) })),
+  fill: [...el.querySelectorAll("[data-fill]")].map(f => ({ f, v: nums(f.dataset.fill) })),
+  fx: el.dataset.fx
+}));
+const W = .045; // 경계에서만 교차 페이드
+const bandOp = (p, a, b) => p < a || p > b ? 0 : Math.min(1, (p - a) / W, (b - p) / W);
+const fmtC = (v, k) => k === "comma" ? fmt(v) : String(Math.round(v));
+const FX = {};
+
+/* 문장은 스크롤 위치로 '어느 것이 켜질지'만 정하고, 나타나고 사라지는 건 시간으로 한다.
+   그래서 어디서 멈춰도 반쯤 흐린 글자가 남지 않는다.
+   짧은 구간의 숫자(5,300m, 50일, 1,600동, 6,000L 등)도 문장이 켜지면 시간으로 세어 끝까지 도달한다.
+   그림·계기처럼 연속으로 변하는 것은 부드럽게 따라가는 진행도(ps)를 쓴다. */
+const HOLD = .06;          // 문장 사이 빈 구간이 이보다 짧으면 앞 문장을 붙잡아 둔다
+acts.forEach(a => {
+  a.ps = null;
+  a.beats.forEach(o => { o.active = false; o.past = false; o.t0 = 0; o.rv = 0; o.rev = +o.b.dataset.rev || 1100; });
+  a.counters.forEach(c => { c.beat = a.beats.find(o => o.b.contains(c.n)) || null; c.reveal = !!c.beat && (c.z - c.a) <= .16; });
+});
+function activeIndex(a, p) {
+  const B = a.beats; let idx = -1;
+  for (let i = 0; i < B.length; i++) if (p >= B[i].band[0] && p <= B[i].band[1]) idx = i;
+  if (idx < 0) for (let i = 0; i < B.length - 1; i++) if (p > B[i].band[1] && p < B[i + 1].band[0] && p - B[i].band[1] < HOLD) idx = i;
+  return idx;
+}
+function render(act, p, now) {
+  let busy = false;
+  const idx = activeIndex(act, p);
+  act.beats.forEach((o, i) => {
+    const on = i === idx, past = !on && p >= o.band[1];
+    if (on && !o.active) o.t0 = now;
+    o.active = on; o.past = past;
+    o.b.classList.toggle("on", on); o.b.classList.toggle("past", past);
+    if (on) { o.rv = reduce ? 1 : clamp((now - o.t0 - 160) / o.rev); if (o.rv < 1) busy = true; }
+    else o.rv = past ? 1 : 0;       // 지나간 문장은 완료, 아직 안 온 문장은 처음으로
+  });
+  act.counters.forEach(c => {
+    const k = c.reveal ? c.beat.rv : clamp((p - c.a) / (c.z - c.a));
+    const s = fmtC(lerp(c.f, c.t, easeOut(k)), c.k); if (s !== c.last) { c.n.textContent = s; c.last = s; }
+  });
+  act.kb.forEach(({ i, k }) => { if (!reduce) i.style.transform = `scale(${lerp(k[0], k[1], p)})`; });
+  act.ro.forEach(({ r, band }) => r.classList.toggle("ron", p >= band[0] && p <= band[1]));
+  act.dim.forEach(({ d, v }) => { d.style.opacity = lerp(v[2], v[3], clamp((p - v[0]) / (v[1] - v[0]))); });
+  act.fill.forEach(({ f, v }) => { f.style.width = (v[2] * clamp((p - v[0]) / (v[1] - v[0]))) + "%"; });
+  if (act.fx && FX[act.fx]) FX[act.fx](p, act.el, act, now);
+  return busy;
+}
+
+/* ─────────── 온도: 기사 전체를 관통하는 하나의 값 ───────────
+   0은 빙하의 추위, 1은 버너의 열. 눈, 바람 소리, 진행선이 모두 이 값을 따른다.
+   열이 오르면 내리던 눈송이가 멈추고, 호박색으로 물들어 거꾸로 피어오른다. */
+const TEMP = {
+  cover: () => 0,
+  numbers: p => .3 * clamp((p - .74) / .16),
+  then: () => .12,
+  fuel: p => lerp(.2, 1, clamp((p - .06) / .6)),
+  urine: p => .7 + .3 * clamp((p - .82) / .12),
+  pool: p => 1 - .35 * clamp((p - .87) / .1),
+  sat: () => .55,
+  excl: () => .3,
+  zoom: p => lerp(.3, 0, clamp(p / .3)),
+  thame: () => 0,
+  relocate: p => .85 * (1 - clamp((p - .5) / .22)),
+  coda: () => 0
+};
+// 장면마다 입자의 양. 사진 장면은 짙게, 그래픽 위에선 옅게
+const DENS = { cover: 1, numbers: .7, then: .55, fuel: .8, urine: .45, pool: .7, sat: .25, excl: .7, zoom: .55, thame: .5, relocate: .45, coda: 1 };
+const heat = { t: 0, target: 0, d: 1, dTarget: 1 };
+const emb1 = { k: 0 }, emb2 = { k: 0 };
+// 돌풍: 소리와 눈발이 같은 리듬을 쓴다
+const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3) + .2 * Math.sin(t * .83 + .4), 0, 1);
+(() => {
+  if (reduce) return;
+  const c = $("#snow"), x = c.getContext("2d");
+  let Wd = 0, H = 0, last = performance.now();
+  const N = innerWidth <= 720 ? 110 : 190;
+  const ps = Array.from({ length: N }, () => ({ x: Math.random(), y: Math.random(), r: .4 + Math.random() * 1.7, v: .012 + Math.random() * .035, w: Math.random() * 6, z: .4 + Math.random() * .6, a: .35 + Math.random() * .65 }));
+  const size = () => { const d = Math.min(devicePixelRatio || 1, 2); Wd = innerWidth; H = innerHeight; c.width = Wd * d; c.height = H * d; x.setTransform(d, 0, 0, d, 0, 0); };
+  size(); addEventListener("resize", size);
+  const root = document.documentElement.style;
+  function loop(now) {
+    const dt = Math.min(.05, (now - last) / 1000); last = now;
+    heat.t += (heat.target - heat.t) * Math.min(1, dt * 1.5);
+    heat.d += (heat.dTarget - heat.d) * Math.min(1, dt * 1.2);
+    const T = heat.t, Te = T * T * (3 - 2 * T), g = gust(now / 1000) * (1 - Te * .85);
+    x.clearRect(0, 0, Wd, H);
+    // 열이 오르면 화면 아래에 호박색 열기가 고인다
+    if (Te > .02) {
+      const gr = x.createLinearGradient(0, H, 0, H * .5);
+      gr.addColorStop(0, `rgba(224,161,94,${(.13 * Te).toFixed(3)})`); gr.addColorStop(1, "rgba(224,161,94,0)");
+      x.fillStyle = gr; x.fillRect(0, H * .5, Wd, H * .5);
+    }
+    const col = [lerp(232, 243, Te), lerp(238, 196, Te), lerp(242, 143, Te)].map(Math.round);
+    x.fillStyle = `rgb(${col})`;
+    const n = Math.round(N * clamp(heat.d));
+    for (let k = 0; k < N; k++) {
+      const f = ps[k];
+      // 떨어지던 속도가 줄어 공중에 머물다, 떠오르는 속도로 바뀐다
+      const vy = lerp(f.v * 3 * (1 + g * .6) * f.z, -f.v * 4.4 * f.z, Te);
+      f.y += vy * dt; f.x += ((g * g * .045 + .004) * (1 - Te) + Math.sin(now / 700 + f.w * 3) * .01 * Te) * dt * f.z;
+      if (f.y > 1.03) { f.y = -.03; f.x = Math.random(); }
+      if (f.y < -.03) { f.y = 1.03; f.x = Math.random(); }
+      if (f.x > 1.02) f.x -= 1.04; if (f.x < -.02) f.x += 1.04;
+      if (k >= n) continue;
+      const flick = Te > .05 ? lerp(1, .7 + .3 * Math.sin(now / 150 + f.w * 7), Te) : 1;
+      const life = lerp(1, clamp(f.y * 1.5), Te);  // 떠오른 열기는 위로 갈수록 스러진다
+      const al = lerp(.14 + f.r * .16, f.a * .95, Te) * flick * life * Math.min(1, heat.d * 1.4);
+      const px = (f.x + Math.sin(now / 2600 + f.w) * .008) * Wd, py = f.y * H, rr = f.r * f.z * lerp(1, 1.35, Te);
+      if (Te > .25) { x.globalAlpha = al * .16 * Te; x.beginPath(); x.arc(px, py, rr * 4, 0, 6.283); x.fill(); }  // 불티의 번짐
+      x.globalAlpha = al;
+      x.beginPath(); x.arc(px, py, rr, 0, 6.283); x.fill();
+    }
+    x.globalAlpha = 1;
+    root.setProperty("--rc", `rgb(${[lerp(143, 224, Te), lerp(186, 161, Te), lerp(212, 94, Te)].map(Math.round)})`);
+    requestAnimationFrame(loop);
+  }
+  requestAnimationFrame(loop);
+})();
+
+/* ─────────── 소리: 차가우면 바람, 뜨거우면 버너 (파일 없이 합성) ─────────── */
+(() => {
+  const btn = $("#sound"), hint = $("#soundHint");
+  let ac = null, master, windG, whistle, fireG, crackG, lp, on = false, timer = 0;
+  const buf = (fn) => { const len = ac.sampleRate * 6, b = ac.createBuffer(2, len, ac.sampleRate); for (let ch = 0; ch < 2; ch++) fn(b.getChannelData(ch)); return b; };
+  const play = b => { const s = ac.createBufferSource(); s.buffer = b; s.loop = true; s.start(); return s; };
+  function start() {
+    ac = new (window.AudioContext || window.webkitAudioContext)();
+    const brown = buf(d => { let b = 0; for (let i = 0; i < d.length; i++) { b = (b + .02 * (Math.random() * 2 - 1)) / 1.02; d[i] = b * 3.5; } });
+    master = ac.createGain(); master.gain.value = 0; master.connect(ac.destination);
+    // 바람: 낮은 바람 + 돌풍 때 올라오는 휘파람
+    const src = play(brown);
+    lp = ac.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 480; lp.Q.value = .7;
+    const lfo = ac.createOscillator(), lfoG = ac.createGain(); lfo.frequency.value = .07; lfoG.gain.value = 220; lfo.connect(lfoG).connect(lp.frequency); lfo.start();
+    const bp = ac.createBiquadFilter(); bp.type = "bandpass"; bp.frequency.value = 900; bp.Q.value = 6;
+    whistle = ac.createGain(); whistle.gain.value = 0;
+    windG = ac.createGain(); windG.gain.value = 0;
+    src.connect(lp).connect(windG); src.connect(bp).connect(whistle).connect(windG); windG.connect(master);
+    // 버너: 낮게 깔리는 웅웅거림
+    const hum = ac.createBiquadFilter(); hum.type = "lowpass"; hum.frequency.value = 140; hum.Q.value = 2.5;
+    fireG = ac.createGain(); fireG.gain.value = 0;
+    play(brown).connect(hum).connect(fireG).connect(master);
+    // 불꽃 튀는 소리: 드문드문한 짧은 충격
+    const crack = buf(d => { for (let k = 0; k < 110; k++) { const at = Math.floor(Math.random() * (d.length - 900)), amp = .2 + Math.random() * .6; for (let j = 0; j < 700; j++) d[at + j] += (Math.random() * 2 - 1) * amp * Math.exp(-j / 60); } });
+    const hp = ac.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 1500;
+    crackG = ac.createGain(); crackG.gain.value = 0;
+    play(crack).connect(hp).connect(crackG).connect(master);
+  }
+  function steer() {
+    if (!ac || !on) return;
+    const t = performance.now() / 1000, T = heat.t, g = gust(t) * (1 - T * .85), now = ac.currentTime;
+    master.gain.setTargetAtTime(.9, now, .8);
+    windG.gain.setTargetAtTime((.45 + g * .75) * lerp(.6, .07, T) * (.6 + .4 * clamp(heat.d)), now, .5);
+    whistle.gain.setTargetAtTime(g * g * .5, now, .5);
+    lp.frequency.setTargetAtTime(lerp(500, 300, T), now, .8);
+    fireG.gain.setTargetAtTime(T * 1.15, now, .7);
+    crackG.gain.setTargetAtTime(T * T * .2, now, .5);
+    const lv = k => clamp(lerp(gust(t + k), .4 + .6 * Math.abs(Math.sin(t * 7 + k)), T)).toFixed(2);
+    btn.style.setProperty("--g", lv(0)); btn.style.setProperty("--g2", lv(1.7)); btn.style.setProperty("--g3", lv(3.1));
+  }
+  const live = () => !!ac && ac.state === "running";
+  function apply() {
+    btn.setAttribute("aria-checked", String(on)); btn.classList.toggle("on", on);
+    const armed = on && !live();
+    btn.classList.toggle("armed", armed);
+    hint.classList.toggle("show", armed && hintOk && scrollY < innerHeight * 1.2);
+    if (ac && master && !on) { master.gain.cancelScheduledValues(ac.currentTime); master.gain.setTargetAtTime(0, ac.currentTime, .4); }
+    clearInterval(timer); if (on) { steer(); timer = setInterval(steer, 200); }
+  }
+  // 기본값은 켜짐(모든 사용자). 브라우저는 사용자 조작 전 소리를 막으므로 첫 클릭·탭·키 입력 때 재생을 시작한다.
+  // 스크롤만 한 터치처럼 브라우저가 허락하지 않은 입력이면 다음 입력을 계속 기다린다.
+  on = true;
+  let hintOk = false;
+  setTimeout(() => { hintOk = true; apply(); }, 1600);   // 표지를 먼저 보여 준 뒤 안내
+  const EVT = ["pointerup", "keydown", "touchend", "click"];
+  const done = () => EVT.forEach(t => document.removeEventListener(t, unlock, true));
+  const wake = () => {
+    if (!ac) start();
+    const r = ac.resume();
+    (r && r.then ? r : Promise.resolve()).then(() => { if (live()) done(); apply(); }).catch(() => {});
+    apply();
+  };
+  const unlock = e => {
+    if (e.target && e.target.closest && e.target.closest("#sound")) return;  // 버튼은 아래에서 처리
+    if (on) wake();
+  };
+  EVT.forEach(t => document.addEventListener(t, unlock, true));
+  addEventListener("scroll", () => { if (btn.classList.contains("armed")) apply(); }, { passive: true });
+  btn.addEventListener("click", () => {
+    // 켜짐인데 아직 막혀 있는 상태에서 누르면 끄지 않고 소리를 연다
+    if (on && !live()) { wake(); return; }
+    on = !on;
+    if (on) wake(); else apply();
+  });
+  // 타메 수치가 찍힐 때 낮게 한 번 울린다
+  addEventListener("stamp", () => {
+    if (!on || !live()) return;
+    const t = ac.currentTime, o = ac.createOscillator(), g = ac.createGain();
+    o.type = "sine"; o.frequency.setValueAtTime(92, t); o.frequency.exponentialRampToValueAtTime(38, t + .45);
+    g.gain.setValueAtTime(0, t); g.gain.linearRampToValueAtTime(.55, t + .012); g.gain.exponentialRampToValueAtTime(.001, t + .6);
+    o.connect(g).connect(ac.destination); o.start(t); o.stop(t + .65);
+  });
+  if (!window.AudioContext && !window.webkitAudioContext) { btn.hidden = true; }
+  apply();
+  document.addEventListener("visibilitychange", () => { if (ac && on) document.hidden ? ac.suspend() : ac.resume(); });
+})();
+
+/* ─────────── 01 · 텐트 1600칸, 편의시설 점등 ─────────── */
+(() => {
+  const g = $("#tents"); g.innerHTML = "<i></i>".repeat(1600);
+  const cells = [...g.children], amen = [...document.querySelectorAll("#amen b")];
+  const img = document.querySelector("#numbers .plate img");
+  // 가운데에서 바깥으로 불이 번지도록 순서를 섞는다
+  const order = cells.map((_, i) => { const x = i % 40 - 19.5, y = Math.floor(i / 40) - 19.5; return [i, Math.hypot(x, y) + Math.random() * 6]; }).sort((a, b) => a[1] - b[1]).map(a => a[0]);
+  let lit = 0;
+  const altMk = $("#altMk"), days = $("#days"); days.innerHTML = "<i></i>".repeat(50);
+  const dcells = [...days.children];
+  FX.numbers = (p, el, act) => {
+    const B = act.beats;
+    altMk.style.bottom = (easeOut(B[0].rv) * 100).toFixed(2) + "%";
+    const dn = Math.round(50 * easeOut(B[1].rv));
+    dcells.forEach((c, i) => c.classList.toggle("on", i < dn));
+    const n = Math.round(1600 * easeOut(B[2].rv));
+    if (n !== lit) { const [lo, hi] = n > lit ? [lit, n] : [n, lit]; for (let k = lo; k < hi; k++) cells[order[k]].classList.toggle("on", n > lit); lit = n; }
+    const a = Math.round(clamp(B[3].rv * 1.15) * 5);
+    amen.forEach((b, j) => b.classList.toggle("lit", j < a));
+    if (!reduce) img.style.filter = `brightness(${.55 + a * .09}) saturate(${.5 + a * .1})`;
+  };
+})();
+
+/* ─────────── 02 · 과거/지금 비교 (유일한 조작) ─────────── */
+(() => {
+  const box = $("#cmp"), hint = $("#cmpHint");
+  const set = v => { box.style.setProperty("--split", v + "%"); box.setAttribute("aria-valuenow", Math.round(v)); };
+  let drag = false, touched = false;
+  const done = () => { if (!touched) { touched = true; box.classList.remove("idle"); hint.classList.add("done"); } };
+  const mv = e => { const r = box.getBoundingClientRect(); set(clamp((e.clientX - r.left) / r.width) * 100); };
+  box.addEventListener("pointerdown", e => { drag = true; done(); box.setPointerCapture(e.pointerId); mv(e); });
+  box.addEventListener("pointermove", e => drag && mv(e));
+  ["pointerup", "pointercancel"].forEach(t => box.addEventListener(t, () => drag = false));
+  box.addEventListener("keydown", e => {
+    if (e.key !== "ArrowLeft" && e.key !== "ArrowRight") return;
+    done(); const cur = parseFloat(box.style.getPropertyValue("--split")) || 50;
+    set(clamp(cur + (e.key === "ArrowRight" ? 5 : -5), 0, 100)); e.preventDefault();
+  });
+  if (reduce) return;
+  const io = new IntersectionObserver(([e]) => {
+    if (!e.isIntersecting) return; io.disconnect();
+    const keys = [[0, 50], [900, 24], [2000, 76], [2900, 50]], t0 = performance.now() + 500;
+    const tick = now => { if (touched) return; const t = Math.max(0, now - t0); let k = 0; while (k < keys.length - 2 && t > keys[k + 1][0]) k++; set(lerp(keys[k][1], keys[k + 1][1], ease(clamp((t - keys[k][0]) / (keys[k + 1][0] - keys[k][0]))))); if (t < 2900) requestAnimationFrame(tick); };
+    requestAnimationFrame(tick);
+  }, { threshold: .6 });
+  io.observe(box);
+})();
+
+/* ─────────── 03 · LPG 824통 ─────────── */
+(() => {
+  const g = $("#cans"); g.innerHTML = "<i></i>".repeat(824);
+  const cells = [...g.children], swap = $("#fuelSwap"); let lit = 0;
+  cells.forEach(c => c.style.setProperty("--d", (-Math.random() * 1.7).toFixed(2) + "s"));
+  FX.fuel = p => {
+    g.classList.toggle("burn", p > .83 && !reduce);
+    swap.classList.toggle("b", p > .82);
+    emb1.k = clamp((p - .06) / .5) * (1 - clamp((p - .985) / .015));
+    const n = Math.round(824 * easeOut(clamp((p - .10) / .56)));
+    if (n === lit) return;
+    const [lo, hi] = n > lit ? [lit, n] : [n, lit];
+    for (let k = lo; k < hi; k++) cells[k].classList.toggle("on", n > lit);
+    lit = n;
+  };
+})();
+
+/* ─────────── 04 · 빙하 단면 (스크롤로 진행) ─────────── */
+(() => {
+  const svg = $("#xsvg");
+  let seed = 11; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  // 울퉁불퉁한 빙하 표면: 암설(돌 부스러기)로 덮인 쿰부 빙하
+  const sy = x => 188 + Math.sin(x / 41) * 4.5 + Math.sin(x / 13 + 1.2) * 1.8 + Math.sin(x / 97 + 2) * 3;
+  let surf = ""; for (let x = -20; x <= 1020; x += 6) surf += `${x > -20 ? " L" : "M"}${x} ${sy(x).toFixed(1)}`;
+  const bed = x => 426 + Math.sin(x / 70 + .5) * 9 + Math.sin(x / 23) * 3.5 + Math.sin(x / 160) * 12;
+  let bedP = ""; for (let x = 1020; x >= -20; x -= 6) bedP += ` L${x} ${bed(x).toFixed(1)}`;
+  const iceD = surf + bedP + " Z";
+  let bedD = "M-20 " + bed(-20).toFixed(1); for (let x = -14; x <= 1020; x += 6) bedD += ` L${x} ${bed(x).toFixed(1)}`; bedD += " L1020 500 L-20 500 Z";
+  // 뒤로 보이는 능선 두 겹
+  const ridge = (base, amp, f, ph) => { let d = "M-20 250"; for (let x = -20; x <= 1020; x += 10) { const y = base - Math.abs(Math.sin(x / f + ph)) * amp - Math.sin(x / (f * .37) + ph * 2) * amp * .18 - Math.sin(x / (f * .13)) * amp * .05; d += ` L${x} ${y.toFixed(1)}`; } return d + " L1020 250 Z"; };
+  const ridgeLine = (base, amp, f, ph) => { let d = ""; for (let x = -20; x <= 1020; x += 10) { const y = base - Math.abs(Math.sin(x / f + ph)) * amp - Math.sin(x / (f * .37) + ph * 2) * amp * .18 - Math.sin(x / (f * .13)) * amp * .05; d += `${x > -20 ? " L" : "M"}${x} ${y.toFixed(1)}`; } return d; };
+  // 표면의 돌 부스러기
+  let rocks = "";
+  for (let i = 0; i < 260; i++) {
+    const x = rnd() * 1000, s = 1.2 + Math.pow(rnd(), 2.2) * 7, y = sy(x) + .5, k = 5 + Math.floor(rnd() * 3);
+    let d = ""; for (let j = 0; j < k; j++) { const a = Math.PI + j / (k - 1) * Math.PI, r = s * (.7 + rnd() * .5); d += `${j ? " L" : "M"}${(x + Math.cos(a) * r * 1.3).toFixed(1)} ${(y + Math.sin(a) * r * .75).toFixed(1)}`; }
+    const c = ["#4B4843", "#5D5851", "#6F685F", "#3A3835", "#7A7368"][Math.floor(rnd() * 5)];
+    rocks += `<path d="${d} Z" fill="${c}" opacity="${(.75 + rnd() * .25).toFixed(2)}"/>`;
+  }
+  // 크레바스
+  let crev = "";
+  [[128, 70], [246, 44], [880, 82], [955, 52], [760, 36]].forEach(([x, h]) => {
+    const y = sy(x);
+    crev += `<path d="M${x - 9} ${y} C ${x - 5} ${y + h * .4} ${x - 2} ${y + h * .8} ${x + 1} ${y + h} C ${x + 3} ${y + h * .7} ${x + 6} ${y + h * .35} ${x + 10} ${y} Z" fill="url(#xCrev)"/><path d="M${x + 10} ${y} C ${x + 6} ${y + h * .35} ${x + 3} ${y + h * .7} ${x + 1} ${y + h}" fill="none" stroke="rgba(214,236,248,.35)" stroke-width=".8"/>`;
+  });
+  // 얼음 지층과 먼지 띠
+  let strata = '<g class="strata">';
+  for (let i = 0; i < 13; i++) {
+    const y0 = 214 + i * 16.5, dust = i % 4 === 2;
+    let d = ""; for (let x = -40; x <= 1040; x += 20) d += `${x > -40 ? " L" : "M"}${x} ${(y0 + Math.sin(x / 120 + i * .7) * 6 + Math.sin(x / 37 + i) * 1.5).toFixed(1)}`;
+    strata += `<path d="${d}" fill="none" stroke="${dust ? "rgba(40,50,56,.35)" : `rgba(200,228,242,${(.13 - i * .007).toFixed(3)})`}" stroke-width="${dust ? 3.2 : 1}"/>`;
+  }
+  strata += "</g>";
+  let bubbles = ""; for (let i = 0; i < 70; i++) { const x = rnd() * 1000; bubbles += `<circle cx="${x.toFixed(1)}" cy="${(sy(x) + 24 + rnd() * (bed(x) - sy(x) - 40)).toFixed(1)}" r="${(.5 + rnd() * 1.3).toFixed(1)}" fill="rgba(230,244,252,${(.12 + rnd() * .25).toFixed(2)})"/>`; }
+  // 텐트: 돔 텐트, 식당 텐트, 룽다
+  const dome = (x, w, h, col) => { const y = sy(x); return `<g>
+      <ellipse class="win" cx="${x}" cy="${y - h * .35}" rx="${w * .9}" ry="${h * .7}" fill="url(#xLamp)" opacity=".7"/>
+      <path d="M${x - w} ${y} C ${x - w} ${y - h * 1.15} ${x + w} ${y - h * 1.15} ${x + w} ${y} Z" fill="${col}"/>
+      <path d="M${x - w} ${y} C ${x - w} ${y - h * 1.15} ${x + w} ${y - h * 1.15} ${x + w} ${y} Z" fill="url(#xTentShade)"/>
+      <path d="M${x - w * .92} ${y} C ${x - w * .5} ${y - h * 1.1} ${x + w * .3} ${y - h * .95} ${x + w * .75} ${y}" fill="none" stroke="rgba(20,20,20,.45)" stroke-width=".9"/>
+      <path d="M${x - w * .7} ${y} C ${x - w * .3} ${y - h * .95} ${x + w * .5} ${y - h * 1.1} ${x + w * .92} ${y}" fill="none" stroke="rgba(20,20,20,.45)" stroke-width=".9"/>
+      <path d="M${x - w * .28} ${y} Q ${x} ${y - h * .62} ${x + w * .28} ${y} Z" fill="#FFD9A0" class="win" opacity=".75"/>
+      <line x1="${x - w}" y1="${y - h * .3}" x2="${x - w * 1.5}" y2="${y + 1}" stroke="rgba(230,236,240,.35)" stroke-width=".6"/>
+      <line x1="${x + w}" y1="${y - h * .3}" x2="${x + w * 1.5}" y2="${y + 1}" stroke="rgba(230,236,240,.35)" stroke-width=".6"/></g>`; };
+  const mess = x => { const y = sy(x), w = 44, h = 30; return `<g>
+      <ellipse class="win" cx="${x}" cy="${y - 16}" rx="70" ry="34" fill="url(#xLamp)" opacity=".8"/>
+      <path d="M${x - w} ${y} L${x - w} ${y - h * .62} L${x - w * .55} ${y - h} L${x + w * .55} ${y - h} L${x + w} ${y - h * .62} L${x + w} ${y} Z" fill="#4E5A61"/>
+      <path d="M${x - w} ${y} L${x - w} ${y - h * .62} L${x - w * .55} ${y - h} L${x + w * .55} ${y - h} L${x + w} ${y - h * .62} L${x + w} ${y} Z" fill="url(#xTentShade)"/>
+      <line x1="${x - w * .55}" y1="${y - h}" x2="${x - w * .55}" y2="${y}" stroke="rgba(0,0,0,.25)"/><line x1="${x + w * .55}" y1="${y - h}" x2="${x + w * .55}" y2="${y}" stroke="rgba(0,0,0,.25)"/>
+      <rect class="win" x="${x - 9}" y="${y - 19}" width="18" height="19" fill="#FFD9A0" opacity=".8"/>
+      <rect class="win" x="${x - w * .85}" y="${y - h * .5}" width="10" height="6" fill="#FFD9A0" opacity=".7"/><rect class="win" x="${x + w * .85 - 10}" y="${y - h * .5}" width="10" height="6" fill="#FFD9A0" opacity=".7"/></g>`; };
+  const flags = (x1, x2, hgt) => {
+    const y1 = sy(x1) - hgt, y2 = sy(x2) - hgt * .8, mx = (x1 + x2) / 2, my = Math.max(y1, y2) + 22;
+    let f = `<line x1="${x1}" y1="${sy(x1)}" x2="${x1}" y2="${y1}" stroke="rgba(210,220,226,.55)" stroke-width="1.1"/><line x1="${x2}" y1="${sy(x2)}" x2="${x2}" y2="${y2}" stroke="rgba(210,220,226,.55)" stroke-width="1.1"/>
+      <path d="M${x1} ${y1} Q ${mx} ${my} ${x2} ${y2}" fill="none" stroke="rgba(210,220,226,.4)" stroke-width=".7"/>`;
+    const cols = ["#4F79A8", "#D8DCDC", "#B04A3C", "#4F8A5B", "#D1A640"];
+    for (let i = 1; i < 26; i++) { const t = i / 26, x = (1 - t) * (1 - t) * x1 + 2 * (1 - t) * t * mx + t * t * x2, y = (1 - t) * (1 - t) * y1 + 2 * (1 - t) * t * my + t * t * y2; f += `<path class="flag" d="M${(x - 3).toFixed(1)} ${y.toFixed(1)} L${(x + 3).toFixed(1)} ${y.toFixed(1)} L${(x + 2).toFixed(1)} ${(y + 8).toFixed(1)} L${(x - 2).toFixed(1)} ${(y + 8).toFixed(1)} Z" fill="${cols[i % 5]}" opacity=".78" style="transform-origin:${x.toFixed(1)}px ${y.toFixed(1)}px;animation-delay:${(-i * .21).toFixed(2)}s"/>`; }
+    return f;
+  };
+  const pud = [316, 372, 430, 520, 612, 664, 712].map((x, i) => `<ellipse cx="${x + (i % 2 ? 8 : -6)}" cy="${(sy(x) + 1.5).toFixed(1)}" rx="${i === 3 ? 26 : 13}" ry="2.6" fill="#E8B676"/>`).join("");
+  const tents = dome(316, 22, 24, "#C99A3D") + dome(372, 17, 19, "#B5552E") + flags(300, 700, 56) + dome(430, 24, 26, "#D0A847") + mess(520) + dome(612, 20, 22, "#C99A3D") + dome(664, 16, 18, "#3F6E8C") + dome(712, 21, 23, "#B5552E");
+  // 파란 드럼통
+  const drum = (x, s) => { const y = sy(x), w = 15 * s, h = 34 * s; return `<rect x="${x - w}" y="${y - h}" width="${w * 2}" height="${h}" rx="2.5" fill="url(#xDrum)"/><ellipse cx="${x}" cy="${y - h}" rx="${w}" ry="${3.2 * s}" fill="#4F83AE"/><ellipse cx="${x}" cy="${y - h}" rx="${w * .35}" ry="${1.2 * s}" fill="#1E3A52"/>${[.3, .66].map(k => `<line x1="${x - w}" y1="${y - h * k}" x2="${x + w}" y2="${y - h * k}" stroke="rgba(10,30,45,.55)" stroke-width="1.4"/>`).join("")}`; };
+  // 녹는 물길: 텐트 아래에서 얼음 속으로 가지를 치며 내려간다
+  const ch = [
+    "M440 191 C 446 222 438 250 452 284 C 460 305 454 330 468 356",
+    "M452 284 C 470 300 486 306 492 334",
+    "M520 190 C 524 226 516 262 530 300 C 538 322 532 346 540 372",
+    "M530 300 C 512 318 506 336 500 360",
+    "M612 191 C 606 226 618 254 606 290 C 600 312 610 336 598 360",
+    "M606 290 C 628 304 636 322 640 346",
+    "M372 191 C 376 216 368 236 380 262"
+  ];
+  const chG = ch.map(d => `<path d="${d}" pathLength="1" class="ch g" fill="none" stroke="#E0A15E" stroke-width="9" stroke-linecap="round" filter="url(#xBlur)" opacity=".55"/>`).join("") +
+              ch.map(d => `<path d="${d}" pathLength="1" class="ch" fill="none" stroke="#FBE3C2" stroke-width="1.6" stroke-linecap="round"/>`).join("");
+  let drips = "";
+  for (let i = 0; i < 14; i++) drips += `<ellipse class="drip" cx="${448 + (i * 41) % 190}" cy="${250 + (i * 29) % 80}" rx="1.4" ry="2.8" fill="#FBE3C2" style="animation-delay:${(i * .21).toFixed(2)}s;transform-box:fill-box"/>`;
+  let drops = "";
+  for (let i = 0; i < 26; i++) drops += `<path d="M0 -4 C 2.2 -1 2.6 1.2 0 2.6 C -2.6 1.2 -2.2 -1 0 -4 Z" transform="translate(${300 + (i * 53) % 440} 0)" data-x="${300 + (i * 53) % 440}" data-d="${((i * .137) % 1).toFixed(3)}"/>`;
+  const trailY = x => sy(x) - 6;
+  let trail = `M790 ${trailY(790)}`; for (let x = 780; x >= 20; x -= 20) trail += ` L${x} ${trailY(x).toFixed(1)}`;
+  svg.innerHTML = `
+  <defs>
+    <linearGradient id="xSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#04070A" stop-opacity="0"/><stop offset="1" stop-color="#12202B" stop-opacity=".9"/></linearGradient>
+    <linearGradient id="xRidgeA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1E2C37"/><stop offset="1" stop-color="#0C141A"/></linearGradient>
+    <linearGradient id="xRidgeB" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2A3A46"/><stop offset="1" stop-color="#101920"/></linearGradient>
+    <linearGradient id="xIce" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#C8E1EE"/><stop offset=".08" stop-color="#8FBCD2"/><stop offset=".45" stop-color="#3F7593"/><stop offset="1" stop-color="#132C3E"/></linearGradient>
+    <linearGradient id="xDebris" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#4A4640" stop-opacity=".95"/><stop offset="1" stop-color="#4A4640" stop-opacity="0"/></linearGradient>
+    <linearGradient id="xBed" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2E2924"/><stop offset="1" stop-color="#15120F"/></linearGradient>
+    <linearGradient id="xCrev" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#07131C"/><stop offset="1" stop-color="#0E2A3C" stop-opacity="0"/></linearGradient>
+    <linearGradient id="xTentShade" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity=".16"/><stop offset=".55" stop-color="#000" stop-opacity="0"/><stop offset="1" stop-color="#000" stop-opacity=".45"/></linearGradient>
+    <linearGradient id="xDrum" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#2A5A82"/><stop offset=".35" stop-color="#3D76A4"/><stop offset="1" stop-color="#173A57"/></linearGradient>
+    <radialGradient id="xLamp"><stop offset="0" stop-color="#F6C98A" stop-opacity=".55"/><stop offset="1" stop-color="#F6C98A" stop-opacity="0"/></radialGradient>
+    <radialGradient id="xWarm" cx=".5" cy="0" r=".75"><stop offset="0" stop-color="#E0A15E" stop-opacity=".5"/><stop offset=".6" stop-color="#E0A15E" stop-opacity=".12"/><stop offset="1" stop-color="#E0A15E" stop-opacity="0"/></radialGradient>
+    <radialGradient id="xPocketG"><stop offset="0" stop-color="#F7D29F" stop-opacity=".85"/><stop offset=".5" stop-color="#E0A15E" stop-opacity=".35"/><stop offset="1" stop-color="#E0A15E" stop-opacity="0"/></radialGradient>
+    <linearGradient id="xFadeG" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#fff" stop-opacity="0"/><stop offset=".08" stop-color="#fff"/><stop offset=".92" stop-color="#fff"/><stop offset="1" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <mask id="xFade" maskUnits="userSpaceOnUse" x="-20" y="0" width="1040" height="500"><rect x="-20" y="0" width="1040" height="500" fill="url(#xFadeG)"/></mask>
+    <clipPath id="xIceClip"><path d="${iceD}"/></clipPath>
+    <filter id="xTex" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".003 .05" numOctaves="3" seed="4"/><feColorMatrix type="matrix" values="0 0 0 0 .86  0 0 0 0 .94  0 0 0 0 1  0 0 0 1.6 -.72"/></filter>
+    <filter id="xGrit" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".022 .045" numOctaves="4" seed="9" result="t"/><feDiffuseLighting in="t" surfaceScale="3.2" lighting-color="#7A6E60" result="l"><feDistantLight azimuth="235" elevation="42"/></feDiffuseLighting><feComposite in="l" in2="SourceGraphic" operator="in"/></filter>
+    <linearGradient id="xDepthG" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#fff"/><stop offset=".55" stop-color="#fff" stop-opacity=".6"/><stop offset=".9" stop-color="#fff" stop-opacity="0"/></linearGradient>
+    <mask id="xDepth" maskUnits="userSpaceOnUse" x="-20" y="150" width="1040" height="300"><rect x="-20" y="150" width="1040" height="300" fill="url(#xDepthG)"/></mask>
+    <linearGradient id="xBedShade" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#000" stop-opacity=".15"/><stop offset="1" stop-color="#000" stop-opacity=".7"/></linearGradient>
+    <filter id="xBlur" x="-50%" y="-20%" width="200%" height="140%"><feGaussianBlur stdDeviation="4"/></filter>
+    <filter id="xSoft" x="-40%" y="-80%" width="180%" height="260%"><feGaussianBlur stdDeviation="18"/></filter>
+  </defs>
+  <g mask="url(#xFade)">
+    <rect x="-20" y="0" width="1040" height="200" fill="url(#xSky)"/>
+    <path d="${ridge(128, 86, 150, .4)}" fill="url(#xRidgeA)"/>
+    <path d="${ridgeLine(128, 86, 150, .4)}" fill="none" stroke="rgba(220,234,242,.32)" stroke-width="1"/>
+    <path d="${ridge(172, 44, 90, 1.7)}" fill="url(#xRidgeB)"/>
+    <path d="${ridgeLine(172, 44, 90, 1.7)}" fill="none" stroke="rgba(220,234,242,.18)" stroke-width=".8"/>
+    <path d="${iceD}" fill="url(#xIce)"/>
+    <g clip-path="url(#xIceClip)">
+      <rect x="-20" y="150" width="1040" height="300" filter="url(#xTex)" opacity=".32" style="mix-blend-mode:soft-light" mask="url(#xDepth)"/>
+      ${strata}
+      ${bubbles}
+      <path d="${surf} L1020 212 L-20 212 Z" fill="url(#xDebris)"/>
+      ${crev}
+      <g id="xSeep">
+        <ellipse id="xPocket" cx="520" cy="352" rx="120" ry="42" fill="url(#xPocketG)" opacity="0"/>
+        ${chG}
+        <g id="xDrip" opacity="0">${drips}</g>
+      </g>
+    </g>
+    <path d="${bedD}" fill="url(#xBed)"/>
+    <path d="${bedD}" fill="#000" filter="url(#xGrit)" opacity=".75"/>
+    <path d="${bedD}" fill="url(#xBedShade)"/>
+    <path d="${bedD.split(" L1020 500")[0]}" fill="none" stroke="rgba(10,8,6,.8)" stroke-width="2.4"/>
+    <path d="${surf}" fill="none" stroke="rgba(236,242,246,.55)" stroke-width="1.1"/>
+    ${rocks}
+    <g id="xGlow" opacity="0"><ellipse cx="520" cy="196" rx="210" ry="44" fill="#E0A15E" opacity=".38" filter="url(#xSoft)"/></g>
+    ${tents}
+    <g id="xPud" opacity="0"><g filter="url(#xBlur)" opacity=".8">${pud}</g>${pud}</g>
+  </g>
+  <g id="xDrops" fill="#BFE0F0" opacity="0">${drops}</g>
+  <path id="xPath" d="${trail}" fill="none" stroke="rgba(232,238,242,.55)" stroke-width="1.2" stroke-dasharray="2 6" stroke-linecap="round" opacity="0"/>
+  <text id="xPathT" x="40" y="${(trailY(40) - 16).toFixed(0)}" font-size="12.5" letter-spacing="2" fill="rgba(232,238,242,.75)" opacity="0">← 산 아래로</text>
+  <g id="xBar">
+    ${drum(812, 1)}${drum(846, .88)}
+    <line x1="829" y1="${sy(829) - 44}" x2="829" y2="${sy(829) - 62}" stroke="rgba(232,238,242,.45)"/>
+    <text id="xLabDrum" x="829" y="${sy(829) - 70}" text-anchor="middle" font-size="12.5" letter-spacing="1.5" fill="rgba(232,238,242,.8)">대변 저장통</text>
+  </g>
+  <g id="xLabs" font-size="12" letter-spacing="2.5" fill="rgba(232,238,242,.6)">
+    <line class="xl" x1="905" y1="300" x2="935" y2="300" stroke="rgba(232,238,242,.35)"/><text id="xLabIce" x="900" y="304" text-anchor="end">쿰부 빙하</text>
+    <line class="xl" x1="905" y1="${(bed(920) + 26).toFixed(0)}" x2="935" y2="${(bed(920) + 26).toFixed(0)}" stroke="rgba(232,238,242,.25)"/><text id="xLabBed" x="900" y="${(bed(920) + 30).toFixed(0)}" text-anchor="end" fill="rgba(232,238,242,.42)">기반암</text>
+  </g>`;
+  const pudG = svg.querySelector("#xPud"), glow = svg.querySelector("#xGlow"), dropsG = svg.querySelector("#xDrops"), bar = svg.querySelector("#xBar"), path = svg.querySelector("#xPath"), pathT = svg.querySelector("#xPathT"), pocket = svg.querySelector("#xPocket");
+  const drip = svg.querySelector("#xDrip"), dr = [...dropsG.children], wins = [...svg.querySelectorAll(".win")], chs = [...svg.querySelectorAll(".ch")];
+  // 모바일: 텐트~저장통만 남기고 잘라 크게 보이게, 라벨은 화면 안쪽으로 옮기고 키운다
+  const labD = svg.querySelector("#xLabDrum"), labI = svg.querySelector("#xLabIce"), labB = svg.querySelector("#xLabBed"), labG = svg.querySelector("#xLabs"), labL = [...svg.querySelectorAll(".xl")];
+  const setVB = () => {
+    const n = narrow();
+    svg.setAttribute("viewBox", n ? "286 64 594 386" : "0 20 1000 470");
+    labG.setAttribute("font-size", n ? 18 : 12); labG.setAttribute("letter-spacing", n ? 1.5 : 2.5);
+    labL.forEach(l => l.style.display = n ? "none" : "");
+    labI.setAttribute("x", n ? 868 : 900); labI.setAttribute("y", n ? 262 : 304);
+    labB.setAttribute("x", n ? 868 : 900); labB.setAttribute("y", (n ? bed(860) + 24 : bed(920) + 30).toFixed(0));
+    labD.setAttribute("font-size", n ? 18 : 12.5); labD.setAttribute("letter-spacing", n ? 1 : 1.5);
+    labD.setAttribute("x", n ? 818 : 829); labD.setAttribute("y", (sy(829) - (n ? 72 : 70)).toFixed(0));
+    pathT.setAttribute("x", n ? 298 : 40); pathT.setAttribute("font-size", n ? 18 : 12.5);
+    pathT.setAttribute("y", (n ? sy(300) + 34 : trailY(40) - 16).toFixed(0));
+    if (n) { pathT.setAttribute("stroke", "rgba(4,7,10,.8)"); pathT.setAttribute("stroke-width", 4); pathT.style.paintOrder = "stroke"; } else { pathT.removeAttribute("stroke"); }
+  };
+  setVB(); addEventListener("resize", setVB);
+  FX.xsec = p => {
+    // 물방울: 고산·하루 구간 동안 텐트 위로 떨어진다
+    const dOn = clamp((p - .21) / .05) * (1 - clamp((p - .37) / .04));
+    // '마신 만큼 내보낸다': 텐트 밑에 웅덩이가 번지고, 이후 물길의 출발점이 된다
+    pudG.setAttribute("opacity", (clamp((p - .45) / .07) * (1 - clamp((p - .86) / .08) * .4)).toFixed(2));
+    dropsG.setAttribute("opacity", dOn);
+    const fall = (p * 18) % 1;
+    dr.forEach(c => { const f = (fall + +c.dataset.d) % 1; c.setAttribute("transform", `translate(${c.dataset.x} ${(40 + f * 118).toFixed(1)})`); c.setAttribute("opacity", (1 - f).toFixed(2)); });
+    // 저장통이 빙하 위 길을 따라 산 아래로 빠진다
+    const b = ease(clamp((p - .64) / .12));
+    const po = clamp((p - .62) / .03) * (1 - clamp((p - .80) / .05));
+    path.setAttribute("opacity", po); pathT.setAttribute("opacity", po);
+    bar.setAttribute("transform", `translate(${(-b * 790).toFixed(1)} 0)`);
+    bar.setAttribute("opacity", 1 - clamp((b - .75) / .25));
+    // 소변의 열이 물길이 되어 얼음 속으로 번진다
+    const s = ease(clamp((p - .82) / .14));
+    chs.forEach(c => c.style.strokeDashoffset = 1 - s);
+    glow.setAttribute("opacity", s); pocket.setAttribute("opacity", clamp((s - .55) / .45));
+    drip.setAttribute("opacity", clamp((s - .5) / .5));
+    wins.forEach((w, i) => w.style.opacity = (.55 + .35 * Math.abs(Math.sin(p * 24 + i))).toFixed(2));
+  };
+})();
+
+/* ─────────── 05 · 수영장 (스크롤로 채워진다) ───────────
+   앞면을 유리처럼 잘라 속을 보여 주는 입체 수조. 물은 스크롤에 따라 차오른다. */
+(() => {
+  const svg = $("#poolSvg"), box = $("#poolBox"), tEl = $("#poolT");
+  const CAP = 2500, U = 154, ANS = 2492, LO = 1964, HI = 3020, LANES = 8;
+  let V, X0, X1, FB, H, DX, DY, nar = null, e = {}, level = 0, target = 0, amp = 1, vis = false, fs = 13;
+  const yOf = t => FB - H * t / CAP;
+  const P = (x, y) => `${x.toFixed(1)} ${y.toFixed(1)}`;
+  function build() {
+    const n = narrow(); if (n === nar) return; nar = n;
+    if (n) { V = [600, 620]; X0 = 34; X1 = 446; FB = 540; H = 290; DX = 112; DY = -74; fs = 22; }
+    else { V = [1000, 470]; X0 = 70; X1 = 770; FB = 410; H = 226; DX = 160; DY = -86; fs = 12.5; }
+    const FT = FB - H, bx = t => t * DX, by = t => t * DY;
+    svg.setAttribute("viewBox", `0 0 ${V[0]} ${V[1]}`);
+    // 타일 격자
+    let tileBack = "", tileLeft = "", tileFloor = "";
+    for (let i = 1; i < 12; i++) { const y = FT + DY + i * H / 12; tileBack += `<line x1="${X0 + DX}" y1="${y}" x2="${X1 + DX}" y2="${y}"/>`; }
+    for (let i = 1; i < 40; i++) { const x = X0 + DX + i * (X1 - X0) / 40; tileBack += `<line x1="${x}" y1="${FT + DY}" x2="${x}" y2="${FB + DY}"/>`; }
+    for (let i = 1; i < 12; i++) { const y = FT + i * H / 12; tileLeft += `<line x1="${X0}" y1="${y}" x2="${X0 + DX}" y2="${y + DY}"/>`; }
+    for (let i = 1; i < 10; i++) { const t = i / 10; tileLeft += `<line x1="${X0 + bx(t)}" y1="${FT + by(t)}" x2="${X0 + bx(t)}" y2="${FB + by(t)}"/>`; }
+    // 바닥 레인 표시(검은 T자선)
+    for (let i = 0; i < LANES; i++) { const t = (i + .5) / LANES, a = X0 + bx(t) + (X1 - X0) * .03, b = X1 + bx(t) - (X1 - X0) * .03, y = FB + by(t); tileFloor += `<line x1="${a}" y1="${y}" x2="${b}" y2="${y}" stroke="rgba(14,30,44,.75)" stroke-width="${n ? 4 : 3.4}"/><line x1="${b}" y1="${y - 5}" x2="${b}" y2="${y + 5}" stroke="rgba(14,30,44,.75)" stroke-width="${n ? 4 : 3.4}"/>`; }
+    // 출발대
+    let blocks = "";
+    for (let i = 0; i < LANES; i++) { const t = (i + .5) / LANES, x = X0 + bx(t), y = FT + by(t); blocks += `<path d="M${P(x - 6, y - 2)} L${P(x + 8, y - 2)} L${P(x + 11, y - 10)} L${P(x - 3, y - 10)} Z" fill="#C9D6DD"/><path d="M${P(x - 6, y - 2)} L${P(x - 3, y - 10)} L${P(x - 3, y - 4)} L${P(x - 6, y + 3)} Z" fill="#7E8E98"/>`; }
+    svg.innerHTML = `
+    <defs>
+      <linearGradient id="pBack" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#274455"/><stop offset="1" stop-color="#16303F"/></linearGradient>
+      <linearGradient id="pLeft" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#325467"/><stop offset="1" stop-color="#20394A"/></linearGradient>
+      <linearGradient id="pFloor" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#2E5064"/><stop offset="1" stop-color="#1B3444"/></linearGradient>
+      <linearGradient id="pFront" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#8FC6DE" stop-opacity=".62"/><stop offset=".25" stop-color="#4B8FB0" stop-opacity=".62"/><stop offset="1" stop-color="#1B4863" stop-opacity=".82"/></linearGradient>
+      <linearGradient id="pTop" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#C7E6F2" stop-opacity=".85"/><stop offset="1" stop-color="#7DB6CF" stop-opacity=".7"/></linearGradient>
+      <linearGradient id="pUF" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#F3C48F" stop-opacity=".95"/><stop offset="1" stop-color="#A86A31" stop-opacity=".95"/></linearGradient>
+      <linearGradient id="pWall" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#26323A"/><stop offset="1" stop-color="#11181D"/></linearGradient>
+      <linearGradient id="pGlass" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#fff" stop-opacity=".08"/><stop offset=".35" stop-color="#fff" stop-opacity="0"/><stop offset=".62" stop-color="#fff" stop-opacity=".05"/><stop offset=".7" stop-color="#fff" stop-opacity="0"/></linearGradient>
+      <pattern id="pHatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="rgba(170,210,230,.45)" stroke-width="1.2"/></pattern>
+      <radialGradient id="pShadow"><stop offset="0" stop-color="#000" stop-opacity=".6"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
+      <clipPath id="pFrontC"><rect x="${X0}" y="0" width="${X1 - X0}" height="${FB}"/></clipPath>
+    </defs>
+    <ellipse cx="${(X0 + X1 + DX) / 2}" cy="${FB + DY / 2 + 14}" rx="${(X1 - X0) * .62}" ry="${-DY * .9}" fill="url(#pShadow)"/>
+    <path d="M${P(X0 + DX, FT + DY)} L${P(X1 + DX, FT + DY)} L${P(X1 + DX, FB + DY)} L${P(X0 + DX, FB + DY)} Z" fill="url(#pBack)"/>
+    <g stroke="rgba(190,225,240,.08)" stroke-width="1">${tileBack}</g>
+    <path d="M${P(X0, FB)} L${P(X1, FB)} L${P(X1 + DX, FB + DY)} L${P(X0 + DX, FB + DY)} Z" fill="url(#pFloor)"/>
+    ${tileFloor}
+    <path d="M${P(X0, FT)} L${P(X0 + DX, FT + DY)} L${P(X0 + DX, FB + DY)} L${P(X0, FB)} Z" fill="url(#pLeft)"/>
+    <g stroke="rgba(190,225,240,.08)" stroke-width="1">${tileLeft}</g>
+    <path id="pTint" fill="rgba(58,120,150,.38)"/>
+    <g id="pRopes"></g>
+    <path id="pTopS" fill="url(#pTop)"/>
+    <path id="pCau" fill="none" stroke="rgba(240,250,255,.35)" stroke-width="1"/>
+    <g clip-path="url(#pFrontC)">
+      <path id="pWater" fill="url(#pFront)"/>
+      <rect id="pUrine" x="${X0}" width="${X1 - X0}" fill="url(#pUF)"/>
+      <g id="pBub" fill="none" stroke="rgba(230,246,255,.6)" stroke-width="1"></g>
+      <path id="pLine" fill="none" stroke="rgba(255,255,255,.95)" stroke-width="1.4"/>
+    </g>
+    <path d="M${P(X1, FT)} L${P(X1 + DX, FT + DY)} L${P(X1 + DX, FB + DY)} L${P(X1, FB)} Z" fill="url(#pWall)"/>
+    <rect x="${X0}" y="${FT}" width="${X1 - X0}" height="${H}" fill="url(#pGlass)"/>
+    <path d="M${P(X0, FT)} L${P(X0, FB)} L${P(X1, FB)} L${P(X1, FT)}" fill="none" stroke="rgba(232,238,242,.55)" stroke-width="1.2"/>
+    <path d="M${P(X0, FT)} L${P(X1, FT)} L${P(X1 + DX, FT + DY)} L${P(X0 + DX, FT + DY)} Z" fill="none" stroke="#DCE6EB" stroke-width="${n ? 4 : 3.2}" stroke-linejoin="round"/>
+    <path d="M${P(X1, FT)} L${P(X1, FB)} M${P(X1 + DX, FT + DY)} L${P(X1 + DX, FB + DY)} L${P(X1, FB)}" fill="none" stroke="rgba(232,238,242,.35)" stroke-width="1"/>
+    ${blocks}
+    <g id="pBand" opacity="0" stroke-linejoin="round">
+      <path d="M${P(X0, yOf(HI))} L${P(X1, yOf(HI))} L${P(X1, FT)} L${P(X0, FT)} Z" fill="url(#pHatch)"/>
+      <path d="M${P(X0, yOf(HI))} L${P(X1, yOf(HI))} L${P(X1 + DX, yOf(HI) + DY)} L${P(X0 + DX, yOf(HI) + DY)} Z" fill="rgba(170,210,230,.08)" stroke="rgba(207,230,244,.7)" stroke-dasharray="3 4"/>
+      <line x1="${X0}" y1="${yOf(LO)}" x2="${X1}" y2="${yOf(LO)}" stroke="#E6F3FA" stroke-dasharray="3 4"/>
+      <line x1="${X0}" y1="${yOf(LO)}" x2="${X0 + DX}" y2="${yOf(LO) + DY}" stroke="#E6F3FA" stroke-dasharray="3 4" opacity=".6"/>
+      <text x="${X0 + DX + 12}" y="${yOf(HI) + DY - 9}" font-size="${fs}" fill="#E6F3FA" letter-spacing="1" stroke="rgba(4,7,10,.8)" stroke-width="${n ? 5 : 3.5}" style="paint-order:stroke">3020t · 넘친다</text>
+      <text x="${X0 + 10}" y="${yOf(LO) + fs + 5}" font-size="${fs}" fill="#E6F3FA" letter-spacing="1" stroke="rgba(4,7,10,.8)" stroke-width="${n ? 5 : 3.5}" style="paint-order:stroke">1964t</text>
+    </g>
+    <g id="pUTag" opacity="0" font-size="${fs}" fill="#F7D29F" letter-spacing="1" font-weight="600" stroke="rgba(4,7,10,.85)" stroke-width="${n ? 5 : 3.5}" style="paint-order:stroke"><text x="${X0 + 10}" y="${yOf(U) - 9}">소변의 열 · 154t</text></g>
+    <g font-size="${fs - .5}" fill="rgba(232,238,242,.5)" letter-spacing="1.5">
+      <line x1="${X0}" y1="${FB + 22}" x2="${X1}" y2="${FB + 22}" stroke="rgba(232,238,242,.3)"/>
+      <line x1="${X0}" y1="${FB + 16}" x2="${X0}" y2="${FB + 28}" stroke="rgba(232,238,242,.3)"/><line x1="${X1}" y1="${FB + 16}" x2="${X1}" y2="${FB + 28}" stroke="rgba(232,238,242,.3)"/>
+      <text x="${(X0 + X1) / 2}" y="${FB + 28 + fs * 1.3}" text-anchor="middle">올림픽 규격 수영장 · 길이 50m</text>
+    </g>`;
+    e = {}; ["pTint", "pRopes", "pTopS", "pCau", "pWater", "pUrine", "pBub", "pLine", "pBand", "pUTag"].forEach(id => e[id] = svg.querySelector("#" + id));
+  }
+  const bubbles = Array.from({ length: 26 }, () => ({ x: Math.random(), v: .12 + Math.random() * .25, o: Math.random(), r: (1.1 + Math.random() * 2.1).toFixed(1) }));
+  function draw(now) {
+    const y0 = yOf(level), a = reduce ? 0 : amp, ph = now / 650, show = level > 3;
+    const wave = x => y0 + Math.sin(x / 58 + ph) * a + Math.sin(x / 25 - ph * 1.4) * a * .4;
+    let front = "", fwd = [];
+    for (let x = 0; x <= X1 - X0; x += 12) fwd.push([X0 + x, wave(x)]);
+    fwd.push([X1, wave(X1 - X0)]);
+    front = fwd.map((q, i) => `${i ? "L" : "M"}${P(q[0], q[1])}`).join(" ");
+    const back = `L${P(X1 + DX, y0 + DY)} L${P(X0 + DX, y0 + DY)} Z`;
+    e.pWater.setAttribute("d", show ? `M${P(X0, FB)} ` + fwd.map(q => `L${P(q[0], q[1])}`).join(" ") + ` L${P(X1, FB)} Z` : "");
+    e.pLine.setAttribute("d", show ? front : "");
+    e.pTopS.setAttribute("d", show ? front + " " + back : "");
+    e.pTopS.setAttribute("fill", level <= U + 2 ? "#E8B676" : "url(#pTop)");
+    e.pTint.setAttribute("d", show ? `M${P(X0, FB)} L${P(X0, y0)} L${P(X0 + DX, y0 + DY)} L${P(X1 + DX, y0 + DY)} L${P(X1 + DX, FB + DY)} L${P(X1, FB)} Z` : "");
+    const uTop = Math.max(yOf(Math.min(level, U)), y0);
+    e.pUrine.setAttribute("y", uTop); e.pUrine.setAttribute("height", Math.max(0, FB - uTop)); e.pUrine.style.display = show ? "" : "none";
+    // 레인 로프: 수면 위에 떠 있다
+    let r = "";
+    if (level > 60) for (let i = 1; i < LANES; i++) {
+      const t = i / LANES, ax = X0 + t * DX, ay = y0 + t * DY + Math.sin(ph + i) * a * .5, bx2 = X1 + t * DX;
+      r += `<line x1="${ax}" y1="${ay}" x2="${bx2}" y2="${ay}" stroke="#E6EEF2" stroke-width="${nar ? 2.6 : 2}" stroke-dasharray="5 5" opacity=".85"/><line x1="${ax}" y1="${ay}" x2="${bx2}" y2="${ay}" stroke="#C4553E" stroke-width="${nar ? 2.6 : 2}" stroke-dasharray="5 5" stroke-dashoffset="5" opacity=".75"/>`;
+    }
+    e.pRopes.innerHTML = r;
+    if (reduce) return;
+    // 수면의 물결빛
+    let cd = "";
+    if (level > 20) for (let k = 0; k < 5; k++) { const t = (k + .5) / 5, sx = X0 + t * DX, syy = y0 + t * DY; cd += `M${P(sx + 20, syy)}`; for (let x = 20; x <= X1 - X0 - 20; x += 18) cd += ` L${P(sx + x, syy + Math.sin(x / 30 + now / 520 + k * 1.7) * 1.8)}`; }
+    e.pCau.setAttribute("d", cd);
+    let bs = "";
+    if (level > 40) bubbles.forEach(b => {
+      const f = (now / 1000 * b.v + b.o) % 1, y = FB - 6 - f * (FB - y0 - 10);
+      if (y > y0 + 4) bs += `<circle cx="${(X0 + b.x * (X1 - X0) + Math.sin(now / 500 + b.o * 9) * 3).toFixed(1)}" cy="${y.toFixed(1)}" r="${b.r}" stroke-opacity="${(.75 * (1 - f)).toFixed(2)}"/>`;
+    });
+    e.pBub.innerHTML = bs;
+  }
+  const ro = $("#poolRo");
+  function loop(now) {
+    level += (target - level) * .12;
+    amp += ((Math.abs(target - level) > 4 ? 4.5 : 1.1) - amp) * .08;
+    draw(now); if (vis) requestAnimationFrame(loop);
+  }
+  new IntersectionObserver(([x]) => { vis = x.isIntersecting; if (vis) requestAnimationFrame(loop); }).observe(box);
+  build(); addEventListener("resize", () => { nar = null; build(); });
+  FX.pool = p => {
+    box.style.opacity = clamp((p - .19) / .04);
+    const a = ease(clamp((p - .35) / .10)), b = ease(clamp((p - .56) / .14));
+    target = U * a + (ANS - U) * b;
+    tEl.textContent = fmt(target) + "t";
+    ro.classList.toggle("hit", target > 2480);
+    e.pUTag.setAttribute("opacity", clamp((p - .42) / .04) * (1 - clamp((p - .86) / .04) * .4));
+    e.pBand.setAttribute("opacity", clamp((p - .87) / .04));
+    if (reduce) { level = target; draw(0); }
+  };
+})();
+
+/* ─────────── 06 · 위성 지도 ─────────── */
+(() => {
+  const c = $("#satCanvas"), yEl = $("#satY"), mk = $("#satMk"), hot = $("#hot");
+  new IntersectionObserver(([e]) => c.parentElement.classList.toggle("live", e.isIntersecting && !reduce), { threshold: .3 }).observe(c);
+  const Wc = 320, Hc = 200, off = document.createElement("canvas"); off.width = Wc; off.height = Hc;
+  const octx = off.getContext("2d"), img = octx.createImageData(Wc, Hc);
+  const R = (() => { let s = 12345; return () => (s = (s * 16807) % 2147483647) / 2147483647; })();
+  const G = 32, grid = Array.from({ length: (G + 1) * (G + 1) }, R);
+  const vn = (x, y) => { const xi = Math.floor(x), yi = Math.floor(y), xf = x - xi, yf = y - yi, s = t => t * t * (3 - 2 * t), g = (i, j) => grid[((j % G) + G) % G * (G + 1) + ((i % G) + G) % G]; return lerp(lerp(g(xi, yi), g(xi + 1, yi), s(xf)), lerp(g(xi, yi + 1), g(xi + 1, yi + 1), s(xf)), s(yf)); };
+  const fbm = (x, y) => vn(x, y) * .55 + vn(x * 2.1, y * 2.1) * .28 + vn(x * 4.3, y * 4.3) * .17;
+  const tongue = y => .5 + Math.sin(y * 3 + .7) * .1, wid = y => .07 + y * .05;
+  const campY = .55, campX = tongue(campY) + .01;
+  const N = Wc * Hc, field = new Float32Array(N), isGl = new Float32Array(N), camp = new Float32Array(N), shade = new Float32Array(N);
+  for (let j = 0; j < Hc; j++) for (let i = 0; i < Wc; i++) { const x = i / Wc, y = j / Hc, k = j * Wc + i; isGl[k] = clamp(1.2 - Math.abs(x - tongue(y)) / wid(y)); const dx = (x - campX) * 1.6, dy = y - campY; camp[k] = Math.exp(-(dx * dx + dy * dy) * 70); field[k] = fbm(x * 9, y * 6); }
+  for (let j = 1; j < Hc - 1; j++) for (let i = 1; i < Wc - 1; i++) { const k = j * Wc + i; shade[k] = clamp(.5 - (field[k + 1] - field[k - 1] + field[k + Wc] - field[k - Wc]) * 9) - .5; }
+  for (let j = 0; j < Hc; j++) for (let i = 0; i < Wc; i++) { const k = j * Wc + i, u = (i / Wc - tongue(j / Hc)) / wid(j / Hc); field[k] += isGl[k] * Math.sin(u * 22 + vn(j / Hc * 3, u * 2) * 2) * .035; }
+  const stops = [[27, 42, 85], [31, 111, 139], [107, 176, 138], [233, 196, 106], [224, 122, 63], [183, 50, 44]];
+  const pal = v => { v = clamp(v) * 5; const i = Math.min(4, Math.floor(v)), t = v - i, a = stops[i], b = stops[i + 1]; return [lerp(a[0], b[0], t), lerp(a[1], b[1], t), lerp(a[2], b[2], t)]; };
+  let curK = -1;
+  function paint(k) {
+    const d = img.data;
+    for (let n = 0; n < N; n++) { const g = isGl[n], gv = 50 + field[n] * 56 + shade[n] * 44, [r, gg, b] = pal(.1 + field[n] * .12 + k * .18 + camp[n] * k * .5); d[n * 4] = lerp(gv, r, g); d[n * 4 + 1] = lerp(gv + 5, gg, g); d[n * 4 + 2] = lerp(gv + 10, b, g); d[n * 4 + 3] = 255; }
+    octx.putImageData(img, 0, 0);
+    const dpr = Math.min(devicePixelRatio || 1, 2), cw = c.clientWidth, ch = c.clientHeight;
+    if (c.width !== Math.round(cw * dpr) || c.height !== Math.round(ch * dpr)) { c.width = Math.round(cw * dpr); c.height = Math.round(ch * dpr); }
+    const x = c.getContext("2d"); x.setTransform(dpr, 0, 0, dpr, 0, 0); x.imageSmoothingQuality = "high";
+    const s = Math.max(cw / Wc, ch / Hc), dw = Wc * s, dh = Hc * s, ox = (cw - dw) / 2, oy = (ch - dh) / 2;
+    x.drawImage(off, ox, oy, dw, dh);
+    x.fillStyle = "rgba(4,7,10,.22)"; x.fillRect(0, 0, cw, ch);
+    x.strokeStyle = "rgba(232,238,242,.4)"; x.lineWidth = 1; x.setLineDash([3, 5]);
+    [-1, 1].forEach(sd => { x.beginPath(); for (let j = 0; j <= 60; j++) { const y = j / 60, xx = tongue(y) + sd * wid(y); j ? x.lineTo(ox + xx * dw, oy + y * dh) : x.moveTo(ox + xx * dw, oy + y * dh); } x.stroke(); });
+    x.setLineDash([]);
+    const cx = ox + campX * dw, cy = oy + campY * dh, rr = Math.max(14, dw * .026), left = cx + rr + 110 > cw, dir = left ? -1 : 1;
+    x.strokeStyle = "rgba(232,238,242,.92)"; x.beginPath(); x.arc(cx, cy, rr, 0, 6.283); x.stroke();
+    x.beginPath(); x.moveTo(cx + dir * rr, cy); x.lineTo(cx + dir * (rr + 22), cy); x.stroke();
+    x.fillStyle = "rgba(232,238,242,.95)"; x.font = '600 13px "Pretendard Variable", sans-serif'; x.textAlign = left ? "right" : "left";
+    x.fillText("베이스캠프", cx + dir * (rr + 28), cy + 4);
+    hot.style.left = cx + "px"; hot.style.top = cy + "px"; hot.style.setProperty("--hk", (.15 + k * .85).toFixed(2));
+    x.fillStyle = "rgba(232,238,242,.55)"; x.font = '500 12px "Pretendard Variable", sans-serif'; x.textAlign = "center";
+    x.fillText("쿰부 빙하", ox + tongue(.2) * dw, oy + .2 * dh);
+  }
+  addEventListener("resize", () => { const k = curK; curK = -1; paint(Math.max(0, k)); curK = k; });
+  const cb = $("#cmpbar"), cbA = $("#cbA"), cbB = $("#cbB");
+  FX.sat = p => {
+    cb.classList.toggle("ron", p >= .64 && p <= .97);
+    const g = ease(clamp((p - .66) / .08));
+    cbA.style.transform = `scaleX(${g})`; cbB.style.transform = `scaleX(${ease(clamp((p - .70) / .08))})`;
+    const k = ease(clamp((p - .03) / .6)), y = Math.round(1991 + k * 32);
+    yEl.textContent = y; mk.style.left = (k * 100) + "%";
+    if (Math.abs(k - curK) > .002) { curK = k; paint(k); }
+  };
+})();
+
+/* ─────────── 07 · 계산 제외: 줄이 그어지고 도장이 찍힌다 ─────────── */
+(() => {
+  const lis = [...document.querySelectorAll("#exList li")];
+  FX.excl = p => lis.forEach((li, j) => {
+    const s = clamp((p - (.2 + j * .12)) / .08);
+    li.querySelector("span").style.setProperty("--s", (s * 100) + "%");
+    li.classList.toggle("hit", s >= 1);
+  });
+})();
+
+/* ─────────── 08 · 줌 아웃 ─────────── */
+(() => {
+  const img = $("#zImg"), ring = $("#ring"), lab = $("#zLab"), camp = $("#zCamp"), cimg = camp.querySelector("img");
+  const names = ["베이스캠프", "쿰부 빙하", "힌두쿠시 히말라야"];
+  FX.zoom = p => {
+    // 캠프 사진이 조리개처럼 좁아지며 히말라야 속 한 점으로 녹아든다
+    const iz = ease(clamp((p - .03) / .24));
+    if (!reduce) { cimg.style.transform = `scale(${lerp(1, .62, iz)})`; cimg.style.clipPath = `circle(${lerp(78, 11, iz)}% at 50% 50%)`; }
+    camp.style.opacity = 1 - clamp((p - .2) / .08);
+    img.style.opacity = clamp((p - .06) / .14);
+    const z = ease(clamp((p - .1) / .5));
+    if (!reduce) img.style.transform = `scale(${lerp(2.8, 1, z)})`;
+    const d = lerp(Math.min(innerWidth, innerHeight) * .3, 9, z) * clamp((p - .16) / .06);
+    ring.style.width = ring.style.height = d + "px";
+    ring.style.opacity = 1 - clamp((p - .6) / .1) * .6;
+    lab.textContent = names[z < .25 ? 0 : z < .78 ? 1 : 2];
+  };
+})();
+
+/* ─────────── 09 · 타메: 수면이 차오른다 ─────────── */
+/* ─────────── 09 · 타메: 25채 → 135명 → 618만 달러를 한 번씩 찍는다 ───────────
+   스크롤 속도와 상관없이, 문장이 떠오르면 짧게 세고 쾅 찍힌다. 찍힐 때마다 수면이 한 단 솟는다.
+   구간 앞으로 되돌아가면 다시 0이 되어 다음 진입 때 또 찍힌다. */
+(() => {
+  const f = $("#flood"), stage = document.querySelector("#thame .stage");
+  const acts9 = acts.find(a => a.el.id === "thame");
+  const items = acts9.beats.map(beat => ({ beat, fig: beat.b.querySelector(".fig.stamp"), n: beat.b.querySelector("[data-stamp]") })).filter(o => o.n)
+    .map(o => ({ ...o, to: +o.n.dataset.stamp, st: 0, raf: 0 }));   // st: 0 대기, 1 세는 중, 2 찍힘
+  const COUNT = 560;
+  function hit(o) {
+    o.st = 2; o.n.textContent = fmt(o.to);
+    o.fig.classList.remove("counting", "hit"); void o.fig.offsetWidth; o.fig.classList.add("hit");
+    stage.classList.remove("shake"); void stage.offsetWidth; stage.classList.add("shake");
+    try { if (navigator.userActivation?.hasBeenActive) navigator.vibrate?.(22); } catch (e) {}
+    dispatchEvent(new CustomEvent("stamp"));
+    req();   // 스크롤이 멈춰 있어도 수면이 솟도록 한 번 더 그린다
+  }
+  function run(o) {
+    if (o.st !== 1 || !o.beat.active) return;
+    if (reduce) { hit(o); return; } o.fig.classList.add("counting"); const t0 = performance.now();
+    const step = now => {
+      if (o.st !== 1) return;
+      const k = clamp((now - t0) / COUNT);
+      o.n.textContent = fmt(o.to * easeOut(k));
+      if (k < 1) o.raf = requestAnimationFrame(step); else hit(o);
+    };
+    o.raf = requestAnimationFrame(step);
+  }
+  function reset(o) { clearTimeout(o.dl); cancelAnimationFrame(o.raf); o.st = 0; o.n.textContent = "0"; o.fig.classList.remove("counting", "hit"); }
+  FX.thame = p => {
+    let lvl = 4 * ease(clamp((p - .04) / .14));
+    items.forEach((o, i) => {
+      const { active, past } = o.beat;
+      if (!active && !past) { if (o.st) reset(o); }                          // 되돌아가면 처음으로
+      else if (active && o.st === 0) { o.st = 1; o.dl = setTimeout(() => run(o), 260); }   // 문장이 떠오른 직후 찍기 시작
+      else if (past && o.st < 2) { clearTimeout(o.dl); cancelAnimationFrame(o.raf); o.st = 2; o.n.textContent = fmt(o.to); o.fig.classList.remove("counting"); }
+      if (o.st === 2 || past) lvl += [10, 10, 12][i];   // 찍힌 만큼 수면이 솟는다
+    });
+    f.style.height = lvl + "vh";
+  };
+})();
+
+/* ─────────── 10 · 캠프가 빙하를 벗어난다 ───────────
+   위에서 내려다본 쿰부 빙하. 지형 음영, 빙하 흐름을 따른 돌 띠(중앙 빙퇴석), 가장자리 크레바스. */
+(() => {
+  const svg = $("#mvSvg");
+  let VW, VH, nar = null, el = {}, pNow = 0, vis = false;
+  const cxOf = v => .52 + Math.sin(v * 3.1 + .5) * .09;
+  const hw = v => (nar ? .17 : .105) + v * (nar ? .04 : .03);
+  const home = () => ({ u: cxOf(.55), v: .55 });
+  const dest = () => nar ? { u: .13, v: .74 } : { u: .17, v: .64 };
+  const pt = (k, v) => [((cxOf(v) + hw(v) * k) * VW), v * VH];
+  const line = (k, a = 0, b = 1, st = 40) => { let d = ""; for (let i = 0; i <= st; i++) { const v = a + (b - a) * i / st, [x, y] = pt(k, v); d += `${i ? " L" : "M"}${x.toFixed(1)} ${y.toFixed(1)}`; } return d; };
+  function gPath() { const L = [], R = []; for (let i = 0; i <= 60; i++) { const v = -.02 + i / 60 * 1.04; L.push(pt(-1, v).map(n => n.toFixed(1)).join(" ")); R.push(pt(1, v).map(n => n.toFixed(1)).join(" ")); } return "M" + L.join(" L") + " L" + R.reverse().join(" L") + " Z"; }
+  function build() {
+    const n = narrow(); if (n === nar) return; nar = n;
+    [VW, VH] = n ? [600, 760] : [1000, 560];
+    svg.setAttribute("viewBox", `0 0 ${VW} ${VH}`);
+    let seed = 5; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+    const fs = n ? 19 : 13, h = home(), d = dest(), G = gPath();
+    // 흐름선(움직이는 점선)과 중앙 빙퇴석
+    let flow = "";
+    [-.72, -.45, -.18, .1, .38, .64].forEach((k, i) => flow += `<path class="fl" d="${line(k, -.02, 1.02)}" fill="none" stroke="rgba(255,255,255,${(.16 + (i % 2) * .06).toFixed(2)})" stroke-width="1" stroke-dasharray="${18 + i * 3} ${14 + i * 2}"/>`);
+    const moraine = [-.3, .5].map(k => `<path d="${line(k, -.02, 1.02)}" fill="none" stroke="rgba(72,66,58,.75)" stroke-width="${n ? 10 : 7}" stroke-linecap="round" filter="url(#mRough)"/><path d="${line(k, -.02, 1.02)}" fill="none" stroke="rgba(120,112,100,.35)" stroke-width="${n ? 3 : 2}" stroke-dasharray="2 5"/>`).join("");
+    // 가장자리 크레바스: 흐름을 가로지르는 짧은 호
+    let crev = "";
+    for (let i = 0; i < 70; i++) {
+      const v = rnd(), side = rnd() < .5 ? -1 : 1, k = side * (.62 + rnd() * .3), [x, y] = pt(k, v), len = (n ? 10 : 8) + rnd() * 10, [x2, y2] = pt(k - side * .22, v + .006);
+      const ang = Math.atan2(y2 - y, x2 - x), cx = x + Math.cos(ang) * len * .5 + Math.sin(ang) * 3, cy = y + Math.sin(ang) * len * .5 - Math.cos(ang) * 3;
+      crev += `<path d="M${x.toFixed(1)} ${y.toFixed(1)} Q${cx.toFixed(1)} ${cy.toFixed(1)} ${(x + Math.cos(ang) * len).toFixed(1)} ${(y + Math.sin(ang) * len).toFixed(1)}" stroke="rgba(18,40,56,.6)" stroke-width="1.3" fill="none" stroke-linecap="round"/>`;
+    }
+    // 빙하 호수(표면 웅덩이) 몇 개
+    let ponds = "";
+    for (let i = 0; i < 6; i++) { const [x, y] = pt(-.6 + rnd() * 1.2, .1 + rnd() * .85); ponds += `<ellipse cx="${x.toFixed(1)}" cy="${y.toFixed(1)}" rx="${(3 + rnd() * 6).toFixed(1)}" ry="${(2 + rnd() * 3).toFixed(1)}" fill="#1E5670" stroke="rgba(190,230,245,.4)" stroke-width=".6"/>`; }
+    // 텐트 무리
+    let tents = ""; const tc = ["#D0A847", "#C9772F", "#B5552E", "#3F6E8C", "#D8DCDC"];
+    for (let i = 0; i < (n ? 34 : 40); i++) { const a = i * 2.39996, r = (n ? 4 : 3.2) + Math.sqrt(i) * (n ? 6.4 : 5.2), x = Math.cos(a) * r, y = Math.sin(a) * r * .78, w = (n ? 5.5 : 4.6) + rnd() * 2; tents += `<rect x="${(x - w / 2).toFixed(1)}" y="${(y - w / 2).toFixed(1)}" width="${w.toFixed(1)}" height="${(w * .8).toFixed(1)}" rx="1" fill="${tc[i % 5]}" transform="rotate(${(rnd() * 50 - 25).toFixed(0)} ${x.toFixed(1)} ${y.toFixed(1)})"/>`; }
+    const [dx, dy] = [d.u * VW, d.v * VH], R0 = n ? 60 : 48;
+    svg.innerHTML = `
+    <defs>
+      <filter id="mRelief" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="${n ? .011 : .008}" numOctaves="5" seed="7" result="t"/><feDiffuseLighting in="t" surfaceScale="${n ? 7 : 6}" lighting-color="#8E877B" result="l"><feDistantLight azimuth="300" elevation="38"/></feDiffuseLighting><feColorMatrix in="l" type="matrix" values=".62 0 0 0 0  0 .6 0 0 0  0 0 .58 0 0  0 0 0 1 0"/></filter>
+      <filter id="mIceTex" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="3" seed="3" result="t"/><feDiffuseLighting in="t" surfaceScale="1.6" lighting-color="#DCEFF8"><feDistantLight azimuth="300" elevation="50"/></feDiffuseLighting></filter>
+      <filter id="mRough" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".08" numOctaves="2" seed="2" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="6"/></filter>
+      <filter id="mEdge" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="${n ? 7 : 5}"/></filter>
+      <linearGradient id="mIce" x1="0" y1="0" x2="1" y2="0"><stop offset="0" stop-color="#6F97AC"/><stop offset=".5" stop-color="#A9CADA"/><stop offset="1" stop-color="#6A91A6"/></linearGradient>
+      <radialGradient id="mHalo"><stop offset="0" stop-color="#E0A15E" stop-opacity=".85"/><stop offset=".5" stop-color="#E0A15E" stop-opacity=".25"/><stop offset="1" stop-color="#E0A15E" stop-opacity="0"/></radialGradient>
+      <radialGradient id="mScar"><stop offset="0" stop-color="#16384B" stop-opacity=".95"/><stop offset=".7" stop-color="#1D4A62" stop-opacity=".4"/><stop offset="1" stop-color="#1D4A62" stop-opacity="0"/></radialGradient>
+      <radialGradient id="mVig" cx=".5" cy=".5" r=".72"><stop offset=".6" stop-color="#04070A" stop-opacity="0"/><stop offset="1" stop-color="#04070A" stop-opacity=".92"/></radialGradient>
+      <clipPath id="mGl"><path d="${G}"/></clipPath>
+      <marker id="mArrow" viewBox="0 0 10 10" refX="6" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 1 L8 5 L0 9" fill="none" stroke="rgba(232,238,242,.8)" stroke-width="1.4"/></marker>
+    </defs>
+    <rect width="${VW}" height="${VH}" filter="url(#mRelief)"/>
+    <rect width="${VW}" height="${VH}" fill="rgba(10,16,20,.28)"/>
+    <path d="${G}" fill="none" stroke="rgba(30,28,25,.9)" stroke-width="${n ? 20 : 16}" filter="url(#mEdge)"/>
+    <path d="${G}" fill="url(#mIce)"/>
+    <g clip-path="url(#mGl)">
+      <rect width="${VW}" height="${VH}" filter="url(#mIceTex)" opacity=".38" style="mix-blend-mode:multiply"/>
+      ${moraine}
+      ${crev}
+      ${ponds}
+      <circle id="mScarC" cx="${(h.u * VW).toFixed(1)}" cy="${(h.v * VH).toFixed(1)}" r="${n ? 78 : 62}" fill="url(#mScar)" opacity="0"/>
+      ${flow}
+    </g>
+    <path d="${G}" fill="none" stroke="rgba(220,236,244,.45)" stroke-width="1"/>
+    <g id="mPad" opacity=".5">
+      <circle cx="${dx}" cy="${dy}" r="${R0}" fill="rgba(143,186,212,.06)" stroke="rgba(207,230,244,.8)" stroke-width="1.2" stroke-dasharray="4 5"/>
+      <path d="M${dx - R0 - 10} ${dy} h14 M${dx + R0 - 4} ${dy} h14 M${dx} ${dy - R0 - 10} v14 M${dx} ${dy + R0 - 4} v14" stroke="rgba(207,230,244,.8)" stroke-width="1.2"/>
+    </g>
+    <g font-size="${fs}" letter-spacing="2" font-weight="600">
+      <text x="${pt(0, .09)[0].toFixed(0)}" y="${(.09 * VH).toFixed(0)}" text-anchor="middle" fill="#0B1820" style="paint-order:stroke" stroke="rgba(200,225,238,.6)" stroke-width="3">쿰부 빙하</text>
+      <text id="mGround" x="${dx}" y="${(dy - R0 - 14).toFixed(0)}" text-anchor="middle" fill="rgba(232,238,242,.5)" style="paint-order:stroke" stroke="rgba(4,7,10,.7)" stroke-width="4">안정된 지반</text>
+    </g>
+    <path id="mTrail" fill="none" stroke="rgba(232,238,242,.75)" stroke-dasharray="3 6" stroke-width="1.4" stroke-linecap="round" marker-end="url(#mArrow)"/>
+    <g id="mCamp">
+      <circle id="mHaloC" r="${n ? 120 : 96}" fill="url(#mHalo)"/>
+      <g id="mRip" fill="none" stroke="#DDF1FA"></g>
+      <circle id="mRing" r="${n ? 46 : 38}" fill="none" stroke="#E0A15E" stroke-width="1.4" stroke-dasharray="2 3"/>
+      ${tents}
+      <text y="${n ? 76 : 62}" text-anchor="middle" font-size="${fs}" font-weight="600" fill="#E8EEF2" letter-spacing="1.5" style="paint-order:stroke" stroke="rgba(4,7,10,.85)" stroke-width="4">베이스캠프</text>
+    </g>
+    <rect width="${VW}" height="${VH}" fill="url(#mVig)" pointer-events="none"/>`;
+    el = { camp: svg.querySelector("#mCamp"), rip: svg.querySelector("#mRip"), scar: svg.querySelector("#mScarC"), halo: svg.querySelector("#mHaloC"), ring: svg.querySelector("#mRing"), trail: svg.querySelector("#mTrail"), ground: svg.querySelector("#mGround"), pad: svg.querySelector("#mPad"), flows: [...svg.querySelectorAll(".fl")] };
+    place(pNow);
+  }
+  function pos(p) { const h = home(), d = dest(), t = ease(clamp((p - .5) / .22)); return { u: lerp(h.u, d.u, t), v: lerp(h.v, d.v, t) - Math.sin(t * Math.PI) * .05, t }; }
+  function place(p) {
+    const q = pos(p), h = home();
+    el.camp.setAttribute("transform", `translate(${(q.u * VW).toFixed(1)} ${(q.v * VH).toFixed(1)})`);
+    // 문장에 맞춰: 처음엔 흔적이 번지고(열을 더한다), "지속하기 어렵다"에서 가장 짙다
+    el.scar.setAttribute("opacity", (clamp(p / .44) * .95).toFixed(2));
+    const warm = 1 - clamp((q.t - .55) / .45);
+    el.halo.setAttribute("opacity", (.2 + .8 * warm).toFixed(2));
+    el.ring.setAttribute("stroke", warm > .5 ? "#E0A15E" : "#8FBAD4");
+    // 제안 문장이 나오면 이전 자리 표시가 켜지고, 캠프가 들어서면 선명해진다
+    el.pad.setAttribute("opacity", (lerp(0, .55, clamp((p - .46) / .04)) + .45 * q.t).toFixed(2));
+    el.trail.setAttribute("d", p > .48 ? `M${(h.u * VW).toFixed(1)} ${(h.v * VH).toFixed(1)} Q${(lerp(h.u, dest().u, .5) * VW).toFixed(1)} ${((lerp(h.v, dest().v, .5) - .09) * VH).toFixed(1)} ${(dest().u * VW).toFixed(1)} ${(dest().v * VH).toFixed(1)}` : "");
+    el.trail.setAttribute("opacity", (clamp((p - .48) / .03) * (1 - q.t * .6)).toFixed(2));
+    el.ground.setAttribute("fill", `rgba(232,238,242,${(.45 + .5 * q.t).toFixed(2)})`);
+  }
+  function tick(now) {
+    if (!reduce && el.rip) {
+      const q = pos(pNow), on = q.t < .6, k = 1 + clamp((pNow - .26) / .1) * .6; let s = "";
+      if (on) for (let j = 0; j < 3; j++) { const f = ((now / 2300) + j / 3) % 1; s += `<circle r="${(22 + f * (nar ? 96 : 76) * k).toFixed(1)}" stroke-opacity="${(.55 * (1 - f) * (1 - q.t / .6)).toFixed(2)}" stroke-width="1.4"/>`; }
+      el.rip.innerHTML = s;
+      el.flows.forEach((f, i) => f.style.strokeDashoffset = (-(now / 90) - i * 7).toFixed(1));
+    }
+    if (vis) requestAnimationFrame(tick);
+  }
+  new IntersectionObserver(([x]) => { vis = x.isIntersecting; if (vis) requestAnimationFrame(tick); }).observe(svg);
+  build(); addEventListener("resize", build);
+  FX.move = p => { pNow = p; place(p); };
+})();
+
+/* ─────────── 11 · 마무리: 읽은 시간만큼 녹은 얼음 ─────────── */
+(() => {
+  const KG_PER_MIN = 2492000 / (50 * 24 * 60); // 약 34.6kg
+  const t0 = performance.now(), el = $("#meltKg"), img = $("#codaImg");
+  let vis = false, last = "";
+  const tick = () => {
+    const s = fmt((performance.now() - t0) / 60000 * KG_PER_MIN);
+    if (s !== last) { el.textContent = s; last = s; }
+    if (vis) setTimeout(tick, 120);
+  };
+  new IntersectionObserver(([x]) => { const was = vis; vis = x.isIntersecting; if (vis && !was) tick(); }).observe($("#coda"));
+  tick();
+  // 숫자가 사라지면 표지의 새벽 텐트촌이 다시 떠오른다
+  FX.coda = p => { img.style.opacity = ease(clamp((p - .46) / .12)) * .9; };
+})();
+
+/* ─────────── 스크롤 루프 ─────────── */
+const rail = document.querySelector("#rail i");
+let ticking = false;
+// 스크롤 진행도를 짧은 관성으로 따라간다(휠 한 칸씩 내려도 뚝뚝 끊기지 않게)
+const TAU = 120;
+let running = false, lastT = 0;
+function loop(now) {
+  const dt = Math.min(64, now - lastT); lastT = now;
+  const k = 1 - Math.exp(-dt / TAU), vh = innerHeight;
+  let busy = false;
+  acts.forEach(a => {
+    const r = a.el.getBoundingClientRect(), span = r.height - vh;
+    const pt = span > 0 ? clamp(-r.top / span) : 0;
+    if (r.bottom < -vh * .3 || r.top > vh * 1.3) { a.ps = pt; return; }   // 화면 밖이면 바로 맞춘다
+    if (a.ps === null || Math.abs(pt - a.ps) > .12) a.ps = pt;          // 스크롤바를 끌어 크게 건너뛰면 바로 맞춘다
+    a.ps += (pt - a.ps) * k;
+    if (Math.abs(pt - a.ps) < 2e-4) a.ps = pt; else busy = true;
+    if (r.top <= vh * .5 && r.bottom > vh * .5 && a.el.id in TEMP) { heat.target = TEMP[a.el.id](a.ps); heat.dTarget = DENS[a.el.id]; }
+    if (render(a, a.ps, now)) busy = true;
+  });
+  const d = document.documentElement;
+  rail.style.transform = `scaleX(${clamp(scrollY / (d.scrollHeight - vh))})`;
+  if (busy) requestAnimationFrame(loop); else running = false;
+}
+const req = () => { if (!running) { running = true; lastT = performance.now(); requestAnimationFrame(loop); } };
+if (reduce) {
+  acts.forEach(a => { a.ps = 1; render(a, 1, performance.now()); a.beats.forEach(o => { o.rv = 1; }); render(a, 1, performance.now()); });
+  document.querySelectorAll(".beat").forEach(b => { b.style.opacity = 1; b.style.transform = "none"; });
+} else {
+  addEventListener("scroll", req, { passive: true });
+  addEventListener("resize", req);
+  req();
+}
+})();
+</script>
+</body>
+</html>
