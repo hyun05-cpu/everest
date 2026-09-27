@@ -173,6 +173,9 @@ img,svg,canvas{display:block;max-width:100%}
 @keyframes burn{0%,100%{opacity:1}50%{opacity:.5;background:#F6D2A6}}
 
 .line em{white-space:nowrap}
+html{scrollbar-gutter:stable}
+html{scrollbar-gutter:stable}
+html.hold,html.hold body{overflow:hidden;overscroll-behavior:none}
 .swap{display:grid}
 .swap>*{grid-area:1/1;transition:opacity .8s ease,filter .8s ease,transform .9s cubic-bezier(.16,1,.3,1)}
 .swap>*:last-child{opacity:0;transform:translateY(12px);filter:blur(6px)}
@@ -243,6 +246,14 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 .beat .fig{transition:transform 1.6s cubic-bezier(.16,1,.3,1),letter-spacing 1.6s cubic-bezier(.16,1,.3,1)}
 .beat:not(.on) .fig{transform:scale(.94);letter-spacing:-.02em}
 .fig.glow span{animation:figglow 3.6s ease-in-out infinite}
+/* 라면 비교: 그릇 위로 김이 오른다 */
+.ramen .bowl{width:clamp(96px,11vw,138px);margin:8px auto 0}
+.ramen .bowl svg{display:block;width:100%;height:auto}
+.ramen .steam path{stroke-dasharray:40;animation:steam 2.4s ease-in-out infinite;opacity:0}
+.ramen .steam path:nth-child(2){animation-delay:.5s}
+.ramen .steam path:nth-child(3){animation-delay:1s}
+@keyframes steam{0%{stroke-dashoffset:40;opacity:0;transform:translateY(4px)}35%{opacity:1}100%{stroke-dashoffset:-40;opacity:0;transform:translateY(-6px)}}
+.ramen .fig{margin-top:2px}
 /* 타메: 수치를 한 번씩 힘주어 찍는다 */
 .fig.stamp{position:relative;display:inline-block;transform-origin:50% 60%}
 .beat.centre .fig.stamp{display:block}
@@ -387,7 +398,8 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 /* reduced motion — 스크롤 연출을 끄고 읽기 문서로 */
 @media (prefers-reduced-motion:reduce){
   .sound.armed .bars i,.sound.armed::before{animation:none}
-  .fig.stamp.hit,.fig.stamp.hit::after,#thame .stage.shake,#xsvg .rec{animation:none}
+  .fig.stamp.hit,.fig.stamp.hit::after,#thame .stage.shake,#xsvg .rec,.ramen .steam path{animation:none}
+  .ramen .steam path{opacity:.7}
   .act{height:auto!important}
   .stage{position:static;height:auto;min-height:0;padding:56px var(--gut);display:block}
   .plate{position:relative;inset:auto;height:52vh;margin-bottom:30px}
@@ -526,16 +538,24 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 <!-- ═══════════ 05 · 열 → 수영장 ═══════════ -->
 <section class="act" id="pool" data-fx="pool" style="height:900vh">
   <div class="stage">
-    <p class="readout" id="poolRo" data-ro="0.20,0.99">녹는 얼음 <b id="poolT">0t</b><span>올림픽 규격 수영장 한 개 ≈ 2500t</span></p>
+    <p class="readout" id="poolRo" data-ro="0.235,0.99">녹는 얼음 <b id="poolT">0t</b><span>올림픽 규격 수영장 한 개 ≈ 2500t</span></p>
     <div class="pool" id="poolBox" style="opacity:0"><svg id="poolSvg" viewBox="0 0 1000 420" aria-hidden="true"></svg></div>
     <div class="beat centre" data-band="0.01,0.10">
       <p class="line">연구진은 연료와 소변에서 나온<br>한 시즌의 열을 모두 더했다.</p>
     </div>
-    <div class="beat centre" data-band="0.10,0.20">
-      <p class="fig warm glow"><span data-c="0,849174,0.10,0.16,comma">0</span><small>MJ</small></p>
+    <div class="beat centre" data-band="0.09,0.155">
+      <p class="fig warm glow"><span data-c="0,849174,0.09,0.14,comma">0</span><small>MJ</small></p>
       <p class="figcap">50일 동안 베이스캠프가 낸 열에너지</p>
     </div>
-    <div class="beat lower" data-band="0.21,0.33">
+    <div class="beat centre ramen" data-band="0.16,0.225">
+      <p class="kicker">이 열로 라면 물을 끓이면</p>
+      <div class="bowl" aria-hidden="true">
+        <svg viewBox="0 0 120 90"><g class="steam" fill="none" stroke="rgba(232,238,242,.7)" stroke-width="2.2" stroke-linecap="round"><path d="M44 34 C 38 26 50 20 44 10"/><path d="M60 32 C 54 22 66 16 60 4"/><path d="M76 34 C 70 26 82 20 76 10"/></g><path d="M16 44 H104 C 104 68 86 84 60 84 C 34 84 16 68 16 44 Z" fill="#E0A15E"/><path d="M16 44 H104" stroke="#F7D29F" stroke-width="3" stroke-linecap="round"/><path d="M30 52 C 40 58 50 50 60 56 C 70 62 80 52 90 58" fill="none" stroke="rgba(4,7,10,.35)" stroke-width="2"/></svg>
+      </div>
+      <p class="fig"><span data-c="0,460,0.16,0.20,int">0</span><small>만 그릇</small></p>
+      <p class="figcap">한국인 열한 명 중 한 명에게<br>한 그릇씩 돌아간다</p>
+    </div>
+    <div class="beat lower" data-band="0.235,0.33">
       <p class="line">이 열로 녹일 수 있는 얼음을<br>수영장에 부어 본다.</p>
     </div>
     <div class="beat lower" data-band="0.34,0.50">
@@ -702,11 +722,11 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
     </div>
     <div class="imgnote">
       <h2>계산에 대하여</h2>
-      <p>연료 장부의 일별 증가는 시즌 사용량을 50일에 고르게 나눈 값입니다. 마지막 화면의 분당 약 35kg은 2492t을 50일(7만 2000분)로 나눈 시즌 평균입니다. 생수병 1만 2000병은 하루 6000L를 500mL로, 소변 몫 약 6%는 154t을 2492t으로 나눈 값입니다. 수영장 한 개는 약 2500t으로 봤습니다.</p>
+      <p>연료 장부의 일별 증가는 시즌 사용량을 50일에 고르게 나눈 값입니다. 마지막 화면의 분당 약 35kg은 2492t을 50일(7만 2000분)로 나눈 시즌 평균입니다. 생수병 1만 2000병은 하루 6000L를 500mL로, 소변 몫 약 6%는 154t을 2492t으로 나눈 값입니다. 수영장 한 개는 약 2500t으로 봤습니다. 라면 460만 그릇은 849,174MJ를 라면 한 그릇 물(550mL)을 20도에서 100도로 데우는 열(약 184kJ)로 나눈 값으로, 버려지는 열은 빼고 계산했습니다. 한국 인구는 약 5100만 명으로 봤습니다.</p>
     </div>
     <div class="imgnote">
       <h2>연구</h2>
-      <p>네팔 토지관리 당국 킴 랄 가우탐 수석측량관 등 국제 연구진, 「인간 활동이 쿰부 빙하에 미치는 영향: 지속 가능한 에베레스트 베이스캠프를 향하여」, 『Regional Environmental Change』. 함께 참고한 기사: <a class="inl" href="https://www.joongang.co.kr/article/25457611" target="_blank" rel="noopener">중앙일보</a></p>
+      <p>네팔 토지관리 당국 킴 랄 가우탐 수석측량관 등 국제 연구진, 「인간 활동이 쿰부 빙하에 미치는 영향: 지속 가능한 에베레스트 베이스캠프를 향하여」, 『Regional Environmental Change』.</p>
     </div>
     <a class="src-card" href="https://www.asiae.co.kr/article/2026083108345434038" target="_blank" rel="noopener">
       <div class="src-thumb"><img src="./06-thumb.png" alt=""></div>
@@ -1283,7 +1303,42 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
     if (n) { pathT.setAttribute("stroke", "rgba(4,7,10,.8)"); pathT.setAttribute("stroke-width", 4); pathT.style.paintOrder = "stroke"; } else { pathT.removeAttribute("stroke"); }
   };
   setVB(); addEventListener("resize", setVB);
-  let th = 0, thLast = 0, thFired = false;
+  let th = 0, thLast = 0, thFired = false, seepS = 0, seepT0 = 0;
+  const SEEP = 2200;
+  /* 장면 끝에서 잠깐 멈춤: 열화상 연출이 다 끝나기 전에 장면 끝(단면이 위로 빠지기 직전)에 닿으면
+     스크롤을 그 자리에 잡아 두었다가, 열 줄기가 바닥에 닿고 0.5초 뒤 풀어 준다. 최대 3.2초. */
+  (() => {
+    const HOLD_P = .965, TAIL = 500, MAX = 3900;
+    let once = false, prevY = scrollY;
+    const act4 = () => acts.find(a => a.el.id === "urine");
+    let locked = false, until = 0, holdAt = 0, tm = 0;
+    const html = document.documentElement;
+    const stop = e => { if (locked) e.preventDefault(); };
+    const keys = e => { if (locked && [" ", "PageDown", "ArrowDown", "End", "Spacebar"].includes(e.key)) e.preventDefault(); };
+    function release() { locked = false; clearTimeout(tm); html.classList.remove("hold"); if (seepS >= 1) once = true; else if (performance.now() - holdStart > MAX - 50) once = true; }
+    let holdStart = 0;
+    function lock(y) {
+      locked = true; holdAt = y; holdStart = performance.now(); html.classList.add("hold");
+      scrollTo(0, y);
+      // 아직 문장이 켜지기 전(빠르게 휙 내린 경우)이면 지금부터 전체 연출 길이만큼 붙잡는다
+      const doneAt = seepT0 ? seepT0 + 1000 + SEEP + TAIL : performance.now() + 250 + 1000 + SEEP + TAIL;
+      const left = Math.min(MAX, Math.max(0, doneAt - performance.now()));
+      tm = setTimeout(release, left);
+    }
+    addEventListener("wheel", stop, { passive: false });
+    addEventListener("touchmove", stop, { passive: false });
+    addEventListener("keydown", keys);
+    addEventListener("scroll", () => {
+      if (reduce) return;
+      if (locked) { if (scrollY > holdAt + 1) scrollTo(0, holdAt); return; }
+      const py = prevY; prevY = scrollY;
+      if (once || seepS >= 1) return;                       // 이미 한 번 봤거나 연출이 끝났으면 그냥 지나간다
+      const a = act4(); if (!a) return;
+      const span = a.el.offsetHeight - innerHeight, y = a.el.offsetTop + span * HOLD_P;
+      // 위에서 내려오며 붙잡는 지점을 지나간 경우만(큰 점프·새로고침 복원은 제외)
+      if (py <= y + 1 && scrollY > y && scrollY - py < innerHeight * 3) lock(y);
+    }, { passive: true });
+  })();
   FX.xsec = (p, el, act, now = performance.now()) => {
     const ub = act ? act.beats[act.beats.length - 1] : null, want = !!ub && (ub.active || ub.past);
     const dt = thLast ? Math.min(64, now - thLast) : 16; thLast = now;
@@ -1313,7 +1368,8 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
     bar.setAttribute("transform", `translate(${(-b * 790).toFixed(1)} 0)`);
     bar.setAttribute("opacity", 1 - clamp((b - .75) / .25));
     // 소변의 열이 물길이 되어 얼음 속으로 번진다 — 열화상이 켜진 뒤 약 2.6초 동안 스스로 스며든다
-    const s = want ? (reduce ? 1 : ease(clamp((now - ub.t0 - 1000) / 2600))) : ease(clamp((p - .82) / .14));
+    const s = want ? (reduce ? 1 : ease(clamp((now - ub.t0 - 1000) / SEEP))) : ease(clamp((p - .82) / .14));
+    seepS = want ? s : 0; seepT0 = want ? ub.t0 : 0;
     // 갈래(1·3·5번)는 본줄기가 갈림점에 닿은 뒤에 뻗는다
     const grow = (c, i) => { const k = i % 7, v = k === 1 || k === 3 || k === 5 ? clamp((s - .55) / .45) : clamp(s / .95); c.style.strokeDashoffset = 1 - v; };
     thcs.forEach(grow);
@@ -1454,7 +1510,7 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
   new IntersectionObserver(([x]) => { vis = x.isIntersecting; if (vis) requestAnimationFrame(loop); }).observe(box);
   build(); addEventListener("resize", () => { nar = null; build(); });
   FX.pool = p => {
-    box.style.opacity = clamp((p - .19) / .04);
+    box.style.opacity = clamp((p - .228) / .035);
     const a = ease(clamp((p - .35) / .10)), b = ease(clamp((p - .56) / .14));
     target = U * a + (ANS - U) * b;
     tEl.textContent = fmt(target) + "t";
