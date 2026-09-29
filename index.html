@@ -203,9 +203,7 @@ html.hold,html.hold body{overflow:hidden;overscroll-behavior:none}
 /* 크레딧 */
 footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,84px) var(--gut) clamp(56px,10vh,96px);border-top:1px solid rgba(110,132,146,.18)}
 .credits{max-width:860px;margin:0 auto;display:grid;gap:40px}
-.imgnote{padding-bottom:clamp(30px,4vw,44px);border-bottom:1px solid rgba(169,188,199,.14);display:grid;gap:14px;align-content:start}
-.notes2{display:grid;grid-template-columns:1fr 1fr;gap:clamp(28px,4vw,48px)}
-.notes2 .imgnote p{max-width:none}
+.imgnote{padding-bottom:clamp(30px,4vw,44px);border-bottom:1px solid rgba(169,188,199,.14);display:grid;grid-template-columns:minmax(0,34%) 1fr;gap:clamp(20px,3.4vw,38px);align-items:start}
 .imgnote h2{font-size:11.5px;letter-spacing:.18em;color:var(--slate);margin:0;font-weight:600;padding-top:3px}
 .imgnote p{margin:0;font-size:13px;line-height:2;color:rgba(169,188,199,.72);font-weight:350;max-width:52ch}
 .src-card{display:grid;grid-template-columns:minmax(0,34%) 1fr;align-items:stretch;text-decoration:none;overflow:hidden;border:1px solid rgba(169,188,199,.16);background:rgba(255,255,255,.012);transition:border-color .4s,background .4s}
@@ -375,7 +373,7 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
   .pool{top:112px;height:46vh}
   .pool svg{width:96vw}
   .move{top:70px;bottom:44vh}
-  .imgnote,.src-card,.notes2{grid-template-columns:1fr}
+  .imgnote,.src-card{grid-template-columns:1fr}
   .src-thumb{min-height:128px}
   .cat-link{padding:20px 18px 19px}
   .cat-link span{font-size:16px;gap:10px}
@@ -720,15 +718,13 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 
 <footer>
   <div class="credits">
-    <div class="notes2">
-      <div class="imgnote">
+    <div class="imgnote">
       <h2>이미지에 대하여</h2>
       <p>화면에 쓰인 사진은 생성형 AI로 제작한 재현 이미지입니다. 실제 베이스캠프나 실존 인물의 사진이 아닙니다. 빙하 단면, 수영장, 위성 지도, 이전 모식도는 연구 결과를 이해하기 쉽게 그린 재현 그래픽입니다.</p>
     </div>
-      <div class="imgnote">
+    <div class="imgnote">
       <h2>계산에 대하여</h2>
       <p>연료 장부의 일별 증가는 시즌 사용량을 50일에 고르게 나눈 값입니다. 마지막 화면의 분당 약 35kg은 2492t을 50일(7만 2000분)로 나눈 시즌 평균입니다. 생수병 1만 2000병은 하루 6000L를 500mL로, 소변 몫 약 6%는 154t을 2492t으로 나눈 값입니다. 수영장 한 개는 약 2500t으로 봤습니다. 라면 460만 그릇은 849,174MJ를 라면 한 그릇 물(550mL)을 20도에서 100도로 데우는 열(약 184kJ)로 나눈 값으로, 버려지는 열은 빼고 계산했습니다. 한국 인구는 약 5100만 명으로 봤습니다.</p>
-    </div>
     </div>
     <div class="imgnote">
       <h2>연구</h2>
@@ -738,7 +734,7 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
       <div class="src-thumb"><img src="./06-thumb.png" alt=""></div>
       <div class="src-body">
         <span class="src-title">"소변까지 빙하 녹였다" 에베레스트 등반객이 한 시즌 녹인 얼음 '2500t'</span>
-        <span class="src-go"><b>기사로 보기</b><i></i></span>
+        <span class="src-go"><b>기사 전문 보기</b><i></i></span>
       </div>
     </a>
     <a class="cat-link" href="https://www.asiae.co.kr/list/world" target="_blank" rel="noopener"><span>국제 기사 더 보기</span><i></i></a>
