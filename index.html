@@ -200,8 +200,7 @@ html{scrollbar-gutter:stable}
 /* 기사 페이지에 iframe으로 삽입됐을 때: 자체 스크롤바를 숨겨 바깥 페이지와 한 화면처럼 보이게 */
 html.embedded{scrollbar-gutter:auto;scrollbar-width:none}
 html.embedded::-webkit-scrollbar{display:none}
-/* 기사 페이지가 스크롤을 넘겨주는 동안: 스스로는 스크롤하지 않고 받은 위치로만 움직인다 */
-html.driven{overflow:hidden}
+/* 기사 페이지가 스크롤을 넘겨주는 동안에도 overflow는 건드리지 않는다(안쪽 sticky 장면이 풀리지 않게). 직접 스크롤 입력은 스크립트가 가로채 기사 페이지로 넘긴다 */
 html.hold,html.hold body{overflow:hidden;overscroll-behavior:none}
 .swap{display:grid}
 .swap>*{grid-area:1/1;transition:opacity .8s ease,filter .8s ease,transform .9s cubic-bezier(.16,1,.3,1)}
