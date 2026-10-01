@@ -1,6 +1,7 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
+<script>try{if(window.self!==window.top)document.documentElement.classList.add("embedded")}catch(e){document.documentElement.classList.add("embedded")}</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>빙하 위의 마을 — 에베레스트 베이스캠프</title>
@@ -174,7 +175,9 @@ img,svg,canvas{display:block;max-width:100%}
 
 .line em{white-space:nowrap}
 html{scrollbar-gutter:stable}
-html{scrollbar-gutter:stable}
+/* 기사 페이지에 iframe으로 삽입됐을 때: 자체 스크롤바를 숨겨 바깥 페이지와 한 화면처럼 보이게 */
+html.embedded{scrollbar-gutter:auto;scrollbar-width:none}
+html.embedded::-webkit-scrollbar{display:none}
 html.hold,html.hold body{overflow:hidden;overscroll-behavior:none}
 .swap{display:grid}
 .swap>*{grid-area:1/1;transition:opacity .8s ease,filter .8s ease,transform .9s cubic-bezier(.16,1,.3,1)}
@@ -202,10 +205,12 @@ html.hold,html.hold body{overflow:hidden;overscroll-behavior:none}
 
 /* 크레딧 */
 footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,84px) var(--gut) clamp(56px,10vh,96px);border-top:1px solid rgba(110,132,146,.18)}
-.credits{max-width:860px;margin:0 auto;display:grid;gap:40px}
-.imgnote{padding-bottom:clamp(30px,4vw,44px);border-bottom:1px solid rgba(169,188,199,.14);display:grid;grid-template-columns:minmax(0,34%) 1fr;gap:clamp(20px,3.4vw,38px);align-items:start}
+.credits{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:40px}
+/* 카드·더보기 막대는 860px로 가운데. 설명·연구 줄은 전체 폭을 쓰되 본문 시작선을 카드 제목 시작선에 맞춘다 */
+.credits>.src-card,.credits>.cat-link{width:min(860px,100%);justify-self:center}
+.imgnote{padding-bottom:clamp(30px,4vw,44px);border-bottom:1px solid rgba(169,188,199,.14);display:grid;grid-template-columns:calc((100% - min(860px,100%))/2 + min(860px,100%)*.34) minmax(0,1fr);gap:clamp(24px,3.4vw,38px);align-items:start}
 .imgnote h2{font-size:11.5px;letter-spacing:.18em;color:var(--slate);margin:0;font-weight:600;padding-top:3px}
-.imgnote p{margin:0;font-size:13px;line-height:2;color:rgba(169,188,199,.72);font-weight:350;max-width:52ch}
+.imgnote p{margin:0;font-size:13px;line-height:2;color:rgba(169,188,199,.72);font-weight:350}
 .src-card{display:grid;grid-template-columns:minmax(0,34%) 1fr;align-items:stretch;text-decoration:none;overflow:hidden;border:1px solid rgba(169,188,199,.16);background:rgba(255,255,255,.012);transition:border-color .4s,background .4s}
 .src-card:hover{border-color:rgba(143,186,212,.42);background:rgba(143,186,212,.05)}
 .src-thumb{position:relative;overflow:hidden;min-height:150px;background:#0A1015}
@@ -332,10 +337,13 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 .sound.on .bars i:nth-child(2){height:calc(3px + var(--g2,0) * 11px)}
 .sound.on .bars i:nth-child(3){height:calc(3px + var(--g3,0) * 11px)}
 /* 켜기/끄기 스위치 */
-.sound .sw{position:relative;width:34px;height:20px;border-radius:999px;background:rgba(110,132,146,.35);transition:background .3s}
-.sound .sw::after{content:"";position:absolute;left:3px;top:3px;width:14px;height:14px;border-radius:50%;background:#A9BCC7;transition:transform .3s cubic-bezier(.16,1,.3,1),background .3s}
+.sound .sw{position:relative;width:50px;height:22px;border-radius:999px;background:rgba(110,132,146,.35);transition:background .3s}
+.sound .sw::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#A9BCC7;transition:transform .3s cubic-bezier(.16,1,.3,1),background .3s}
+/* 스위치 안 ON/OFF 글자: 손잡이 반대편에 */
+.sound .sw::before{content:"OFF";position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:9.5px;font-weight:800;letter-spacing:.06em;line-height:1;color:rgba(232,238,242,.7)}
 .sound.on .sw{background:color-mix(in srgb,var(--c) 45%,rgba(4,7,10,.6))}
-.sound.on .sw::after{transform:translateX(14px);background:#fff;box-shadow:0 0 8px var(--c)}
+.sound.on .sw::before{content:"ON";right:auto;left:8px;color:#fff}
+.sound.on .sw::after{transform:translateX(28px);background:#fff;box-shadow:0 0 8px var(--c)}
 /* 켜져 있지만 브라우저가 아직 소리를 막고 있을 때: 막대가 스스로 숨 쉬고 테두리가 맥박친다 */
 .sound.armed .bars i{animation:armBar 1.4s ease-in-out infinite}
 .sound.armed .bars i:nth-child(2){animation-delay:.2s}
@@ -416,7 +424,7 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
   .alt,.scan,.hot,.flood,#grain,.dawn{display:none}
 }
 </style>
-<script>document.documentElement.className="js";</script>
+<script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
 <div id="rail"><i></i></div>
