@@ -94,6 +94,8 @@ img,svg,canvas{display:block;max-width:100%}
 /* 대형 수치 */
 .fig{font-size:clamp(58px,13vw,168px);line-height:.94;font-weight:700;letter-spacing:-.045em;color:#fff;font-variant-numeric:tabular-nums;margin:0;text-shadow:0 2px 40px rgba(4,7,10,.7)}
 .fig small{font-size:.32em;font-weight:500;letter-spacing:-.02em;margin-left:.12em}
+/* 숫자 앞의 "약"은 단위와 같은 크기로 */
+.fig small.pre{margin-left:0;margin-right:.18em}
 .fig.warm{color:#F6D2A6;text-shadow:0 0 30px rgba(224,161,94,.45),0 0 90px rgba(224,161,94,.35)}
 .figcap{font-size:clamp(15px,1.5vw,19px);color:#E4EDF2;margin:28px auto 0;line-height:1.75;max-width:38ch;text-wrap:balance;text-shadow:0 1px 14px rgba(4,7,10,.95),0 0 30px rgba(4,7,10,.8)}
 .figsub{font-size:clamp(12.5px,1.2vw,15px);color:var(--slate-lt);margin:14px auto 0;line-height:1.8;max-width:38ch;text-wrap:balance;text-shadow:0 1px 12px rgba(4,7,10,.98)}
@@ -701,12 +703,12 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
       <p class="line">지구 전체의 <em>기후변화</em>다.</p>
     </div>
     <div class="beat centre" data-band="0.56,0.76">
-      <p class="fig glow">약 <span data-c="0,2,0.56,0.62,int">0</span><small>배</small></p>
+      <p class="fig glow"><small class="pre">약</small><span data-c="0,2,0.56,0.62,int">0</span><small>배</small></p>
       <p class="figcap">2000년 이후 빨라진 힌두쿠시 히말라야의 빙하 손실 속도</p>
       <p class="figsub">국제산악종합개발센터(ICIMOD) 보고서</p>
     </div>
     <div class="beat centre" data-band="0.79,0.99">
-      <p class="fig">약 <span data-c="0,20,0.79,0.86,int">0</span><small>억 명</small></p>
+      <p class="fig"><small class="pre">약</small><span data-c="0,20,0.79,0.86,int">0</span><small>억 명</small></p>
       <p class="figcap">힌두쿠시 히말라야의 빙하를 주요 수자원으로 삼는 사람들</p>
     </div>
   </div>
@@ -734,7 +736,7 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
       <p class="figcap">삶의 터전을 잃은 주민</p>
     </div>
     <div class="beat centre" data-band="0.76,0.98">
-      <p class="fig stamp">약 <span data-stamp="618">0</span><small>만 달러</small></p>
+      <p class="fig stamp"><small class="pre">약</small><span data-stamp="618">0</span><small>만 달러</small></p>
       <p class="figcap">지역 경제 피해 추산</p>
     </div>
   </div>
@@ -771,7 +773,7 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
       <p class="kicker">당신이 이 기사를 읽는 동안</p>
       <p class="fig glow"><span id="meltKg">0</span><small>kg</small></p>
       <p class="figcap">베이스캠프의 열이 녹였을 눈과 얼음</p>
-      <p class="figsub">시즌 50일 동안 2492t이면 1분에 약 35kg. 이 페이지를 연 순간부터 흐른 시간으로 셉니다.</p>
+      <p class="figsub">시즌 50일 동안 2492t이면 1분에 약 35kg.<br>이 페이지를 연 순간부터 흐른 시간으로 셉니다.</p>
     </div>
     <div class="beat centre" data-band="0.52,0.88">
       <p class="line">봄이 오면,<br>수천 명이 다시 빙하 위로 모인다.</p>
