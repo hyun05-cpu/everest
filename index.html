@@ -278,7 +278,7 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 .fig .ods{display:block;will-change:transform}
 .fig .ods b{display:block;height:1em;line-height:1;font-weight:inherit}
 .fig .odc{display:inline-block;line-height:1;vertical-align:top}
-.fig.odo-fig small{opacity:0;transform:translateY(.12em);transition:opacity .55s ease .05s,transform .55s ease .05s}
+.fig.odo-fig small{opacity:0;transform:translateY(.08em);transition:opacity .7s ease .08s,transform .7s cubic-bezier(.16,1,.3,1) .08s}
 .fig.odo-fig.settled small{opacity:1;transform:none}
 /* ── 반짝임 ── */
 /* 숫자: 다 세어지면 서리빛(차가운 숫자) 또는 금빛(열 숫자)이 한 번 훑고 지나간다 */
@@ -2031,13 +2031,20 @@ const chapMarks = [];
   place(); addEventListener("resize", place); addEventListener("load", place); setTimeout(place, 1500);
 })();
 
-/* 숫자 오도미터: 자릿수마다 숫자판이 굴러가다 왼쪽부터 차례로 멈춘다. 다 멈추면 일반 글자로 바꿔(글린트·복사용) 둔다 */
+/* 숫자 오도미터: 자릿수마다 숫자 몇 개가 빠르게 스치며 올라오다가, 살짝 지나쳤다 제자리로 '탁' 돌아온다.
+   왼쪽 자리부터 차례로 착지해 리듬감은 있되, 움직이는 시간이 짧아 어지럽지 않다. 다 멈추면 일반 글자로 바꿔 둔다 */
 function buildOdo(c) {
-  const fin = fmtC(c.t, c.k), fig = c.n.closest(".fig");
-  c.final = fin; c.odo = true; c.odoLive = true; c.n.setAttribute("aria-label", fin);
-  const strip = Array.from({ length: 30 }, (_, i) => `<b>${i % 10}</b>`).join("");
-  c.n.innerHTML = [...fin].map(ch => /\d/.test(ch) ? `<span class="od"><span class="ods">${strip}</span></span>` : `<span class="odc">${ch}</span>`).join("");
-  c.cols = [...c.n.querySelectorAll(".ods")].map((el, j, all) => ({ el, d: +fin.replace(/\D/g, "")[j], j, m: all.length }));
+  const N = 6, fin = fmtC(c.t, c.k), fig = c.n.closest(".fig");
+  c.N = N; c.final = fin; c.odo = true; c.odoLive = true; c.n.setAttribute("aria-label", fin);
+  const ds = fin.replace(/\D/g, "");
+  let j = 0;
+  c.n.innerHTML = [...fin].map(ch => {
+    if (!/\d/.test(ch)) return `<span class="odc">${ch}</span>`;
+    const d = +ds[j++], seq = Array.from({ length: N + 1 }, (_, i) => (d - (N - 1) + i + 20) % 10);   // 마지막 한 칸은 지나칠 때 보이는 여유
+    return `<span class="od"><span class="ods">${seq.map(v => `<b>${v}</b>`).join("")}</span></span>`;
+  }).join("");
+  c.cols = [...c.n.querySelectorAll(".ods")].map((el, i, all) => ({ el, j: i, m: all.length }));
+  c.cols.forEach(o => { o.el.style.transform = "translateY(0%)"; o.el.style.filter = "blur(3px)"; o.el.style.opacity = "0"; });
   if (fig) { fig.classList.add("odo-fig"); fig.classList.remove("settled"); }
 }
 function tickOdo(c, k) {
@@ -2045,9 +2052,13 @@ function tickOdo(c, k) {
   if (k <= 0 && !c.odoLive) buildOdo(c);
   if (!c.odoLive) return;
   if (k >= 1) { c.odoLive = false; c.n.textContent = c.final; if (fig) fig.classList.add("settled"); return; }
+  const N = c.N, cell = 100 / (N + 1);
   c.cols.forEach(o => {
-    const st = (o.j / Math.max(1, o.m)) * .28, kk = easeOut(clamp((k - st) / (1 - st)));   // 왼쪽 자리부터 먼저 멈춘다
-    o.el.style.transform = `translateY(${(-(20 + o.d) * kk / 30 * 100).toFixed(3)}%)`;
+    const st = (o.j / Math.max(1, o.m)) * .4, kk = clamp((k - st) / .6);
+    const x = kk - 1, e = 1 + 2.2 * x * x * x + 1.2 * x * x;          // 살짝 지나쳤다 돌아오는 곡선
+    o.el.style.transform = `translateY(${(-(N - 1) * e * cell).toFixed(3)}%)`;
+    o.el.style.opacity = Math.min(1, kk * 4).toFixed(3);
+    o.el.style.filter = kk >= .7 ? "none" : `blur(${(3 * (1 - kk / .7)).toFixed(2)}px)`;
   });
 }
 document.addEventListener("animationend", e => { if (e.animationName === "glint" && e.target.classList && e.target.classList.contains("glint")) e.target.classList.remove("glint"); });
