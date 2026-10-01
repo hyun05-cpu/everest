@@ -200,6 +200,8 @@ html{scrollbar-gutter:stable}
 /* 기사 페이지에 iframe으로 삽입됐을 때: 자체 스크롤바를 숨겨 바깥 페이지와 한 화면처럼 보이게 */
 html.embedded{scrollbar-gutter:auto;scrollbar-width:none}
 html.embedded::-webkit-scrollbar{display:none}
+/* 기사 페이지가 스크롤을 넘겨주는 동안: 스스로는 스크롤하지 않고 받은 위치로만 움직인다 */
+html.driven{overflow:hidden}
 html.hold,html.hold body{overflow:hidden;overscroll-behavior:none}
 .swap{display:grid}
 .swap>*{grid-area:1/1;transition:opacity .8s ease,filter .8s ease,transform .9s cubic-bezier(.16,1,.3,1)}
@@ -278,8 +280,6 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 .fig .ods{display:block;will-change:transform}
 .fig .ods b{display:block;height:1em;line-height:1;font-weight:inherit}
 .fig .odc{display:inline-block;line-height:1;vertical-align:top}
-.fig.odo-fig small{opacity:0;transform:translateY(.08em);transition:opacity .7s ease .08s,transform .7s cubic-bezier(.16,1,.3,1) .08s}
-.fig.odo-fig.settled small{opacity:1;transform:none}
 /* ── 반짝임 ── */
 /* 숫자: 다 세어지면 서리빛(차가운 숫자) 또는 금빛(열 숫자)이 한 번 훑고 지나간다 */
 .fig span.glint{--gl:#CBEBFF;background:linear-gradient(100deg,#fff 0%,#fff 40%,var(--gl) 47%,#fff 54%,#fff 100%);background-size:320% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 2px 26px rgba(4,7,10,.65));animation:glint 1.25s cubic-bezier(.3,.6,.3,1) .05s 1 both!important}
@@ -1999,6 +1999,74 @@ function loop(now) {
 }
 const req = () => { if (!running) { running = true; lastT = performance.now(); requestAnimationFrame(loop); } };
 
+/* ─────────── 기사 페이지에 삽입됐을 때: 기사 페이지 스크롤을 넘겨받아 진행 ───────────
+   (냉동인간과 같은 구조) 기사 본문의 긴 칸 안에 이 페이지가 화면 크기로 고정되고, 독자는 기사 페이지를 스크롤한다.
+   기사 페이지가 보내는 진행도(0~1)에 맞춰 이 페이지를 그 위치로 옮긴다. 이 안에서 굴린 휠·터치·키는 기사 페이지로 넘긴다.
+   이 페이지의 실제 길이를 알려 줘서, 기사 페이지의 칸 길이와 1:1로 맞춘다. */
+(() => {
+  if (window.self === window.top) return;
+  const html = document.documentElement;
+  let driven = false;
+  const send = m => { try { parent.postMessage(m, "*"); } catch (e) {} };
+  window.__everSend = send;
+  const maxY = () => Math.max(0, html.scrollHeight - innerHeight);
+  const size = () => send({ type: "ever:size", h: html.scrollHeight, vh: innerHeight });
+  addEventListener("message", e => {
+    if (e.source !== parent || !e.data || typeof e.data !== "object") return;
+    const t = e.data.type;
+    if (t === "ever:host") {
+      if (!driven) { driven = true; window.__everDriven = true; html.classList.add("driven"); send({ type: "ever:ack" }); }
+      size();
+    } else if (t === "ever:progress" && driven) {
+      const y = Math.round(clamp(+e.data.progress || 0) * maxY());
+      if (Math.abs(scrollY - y) >= 1) scrollTo(0, y);
+    }
+  });
+  addEventListener("resize", () => { if (driven) size(); });
+  addEventListener("load", () => { if (driven) size(); setTimeout(() => driven && size(), 800); });
+  // 휠
+  addEventListener("wheel", e => {
+    if (!driven) return;
+    e.preventDefault();
+    if (window.__everHoldLocked && e.deltaY > 0) return;           // 핵심 장면 붙잡는 동안엔 아래로 넘기지 않는다
+    send({ type: "ever:wheel", deltaY: e.deltaY, deltaMode: e.deltaMode });
+  }, { passive: false });
+  // 키보드(이 안을 눌러 초점이 들어온 경우)
+  addEventListener("keydown", e => {
+    if (!driven) return;
+    const k = e.key, pg = innerHeight * .9;
+    const dy = k === "ArrowDown" ? 80 : k === "ArrowUp" ? -80 : (k === "PageDown" || k === " " || k === "Spacebar") ? (e.shiftKey ? -pg : pg) : k === "PageUp" ? -pg : 0;
+    if (k === "Home" || k === "End") { e.preventDefault(); send({ type: "ever:goto", progress: k === "End" ? 1 : 0 }); return; }
+    if (!dy) return;
+    e.preventDefault();
+    if (window.__everHoldLocked && dy > 0) return;
+    send({ type: "ever:wheel", deltaY: dy, deltaMode: 0 });
+  });
+  // 터치: 손가락 움직임을 넘기고, 손을 떼면 관성으로 조금 더 미끄러진다
+  let ty = 0, tt = 0, v = 0, glide = 0;
+  addEventListener("touchstart", e => { if (!driven) return; cancelAnimationFrame(glide); ty = e.touches[0].clientY; tt = performance.now(); v = 0; }, { passive: true });
+  addEventListener("touchmove", e => {
+    if (!driven) return;
+    const y = e.touches[0].clientY, now = performance.now(), dy = ty - y, dt = Math.max(1, now - tt);
+    ty = y; tt = now; v = v * .4 + (dy / dt) * .6;
+    e.preventDefault();
+    if (window.__everHoldLocked && dy > 0) return;
+    if (dy) send({ type: "ever:touchscroll", deltaY: dy });
+  }, { passive: false });
+  addEventListener("touchend", () => {
+    if (!driven) return;
+    let vel = v * 16, last = performance.now();
+    const step = now => {
+      const dt = Math.min(48, now - last); last = now;
+      vel *= Math.pow(.94, dt / 16);
+      if (Math.abs(vel) < .6 || (window.__everHoldLocked && vel > 0)) return;
+      send({ type: "ever:touchscroll", deltaY: vel * dt / 16 });
+      glide = requestAnimationFrame(step);
+    };
+    glide = requestAnimationFrame(step);
+  }, { passive: true });
+})();
+
 /* 표지 깊이감: PC에서 마우스를 움직이면 사진은 반대로 조금, 글은 같은 쪽으로 아주 조금, 눈발은 더 많이 움직인다 */
 (() => {
   if (reduce || !matchMedia("(pointer:fine)").matches) return;
@@ -2024,7 +2092,9 @@ const chapMarks = [];
   Object.entries(names).forEach(([id, label]) => {
     const el = document.getElementById(id); if (!el) return;
     const a = document.createElement("a"); a.href = "#" + id; a.setAttribute("aria-label", label + " 장으로 이동"); a.innerHTML = `<span>${label}</span>`;
-    a.addEventListener("click", ev => { ev.preventDefault(); window.__nav = true; scrollTo({ top: el.offsetTop + 2, behavior: reduce ? "auto" : "smooth" }); clearTimeout(a.t); a.t = setTimeout(() => { window.__nav = false; }, 1800); });
+    a.addEventListener("click", ev => { ev.preventDefault(); window.__nav = true;
+      if (window.__everDriven && window.__everSend) { const mx = Math.max(1, document.documentElement.scrollHeight - innerHeight); window.__everSend({ type: "ever:goto", progress: Math.min(1, (el.offsetTop + 2) / mx) }); }
+      else scrollTo({ top: el.offsetTop + 2, behavior: reduce ? "auto" : "smooth" }); clearTimeout(a.t); a.t = setTimeout(() => { window.__nav = false; }, 1800); });
     box.appendChild(a); chapMarks.push({ a, el, top: 0 });
   });
   const place = () => { const max = document.documentElement.scrollHeight - innerHeight; chapMarks.forEach(m => { m.top = m.el.offsetTop; const x = clamp(m.top / max) * 100; m.a.style.left = x + "%"; m.a.classList.toggle("edge-r", x > 88); }); };
@@ -2085,9 +2155,11 @@ document.addEventListener("animationend", e => { if (e.animationName === "glint"
   const html = document.documentElement;
   let armed = false, prevY = scrollY, cur = null, at = 0, t0 = 0, doneAt = 0, poll = 0;
   ["wheel", "touchstart", "keydown", "pointerdown"].forEach(t => addEventListener(t, () => { armed = true; }, { passive: true, capture: true }));
-  function release() { if (!cur) return; cur.used = true; cur = null; clearInterval(poll); html.classList.remove("hold"); prevY = scrollY; }
+  function release() { if (!cur) return; cur.used = true; cur = null; clearInterval(poll); html.classList.remove("hold"); prevY = scrollY; window.__everHoldLocked = false; if (window.__everSend) window.__everSend({ type: "ever:hold", on: false }); }
   function lock(h, y) {
     cur = h; at = y; t0 = performance.now(); doneAt = 0; html.classList.add("hold"); scrollTo(0, y);
+    window.__everHoldLocked = true;
+    if (window.__everSend) { const mx = Math.max(1, document.documentElement.scrollHeight - innerHeight); window.__everSend({ type: "ever:hold", on: true, progress: y / mx }); }
     poll = setInterval(() => {
       const now = performance.now();
       if (!doneAt && h.done()) doneAt = now;
