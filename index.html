@@ -102,6 +102,13 @@ img,svg,canvas{display:block;max-width:100%}
 .cover-wrap{position:relative;z-index:3;padding:0 var(--gut);width:100%;max-width:980px}
 .brand{font-size:12px;letter-spacing:.16em;color:var(--slate-lt);margin:0 0 26px;opacity:0;animation:rise .9s .25s ease-out forwards}
 .title{font-family:var(--serif);font-weight:400;font-size:clamp(46px,9vw,116px);line-height:1.08;letter-spacing:-.02em;margin:0;color:#fff;opacity:0;animation:rise 1.1s .45s cubic-bezier(.16,1,.3,1) forwards}
+.credit{margin:26px 0 0;font-size:13px;letter-spacing:.06em;color:rgba(232,238,242,.66);opacity:0;animation:rise 1s 1.05s ease-out forwards;text-shadow:0 1px 8px rgba(4,7,10,.7)}
+.credit b{font-weight:600;color:#E8EEF2;margin-left:4px}
+/* 마지막 문장 아래 서명: 짧은 선과 함께, 문장이 뜬 뒤 조금 늦게 */
+.signoff{margin:clamp(34px,5vh,52px) 0 0;font-size:13px;letter-spacing:.08em;color:rgba(232,238,242,.6);opacity:0;transform:translateY(8px);transition:opacity .9s ease .9s,transform .9s ease .9s}
+.signoff::before{content:"";display:block;width:28px;height:1px;margin:0 auto 16px;background:rgba(232,238,242,.4)}
+.signoff b{font-weight:600;color:#E8EEF2;margin-left:4px}
+.beat.on .signoff{opacity:1;transform:none}
 .deck{font-size:clamp(15px,1.6vw,19px);line-height:1.85;color:#BCCBD4;margin:30px 0 0;max-width:34ch;font-weight:350;text-wrap:pretty;opacity:0;animation:rise 1s .85s ease-out forwards;text-shadow:0 1px 10px rgba(4,7,10,.72),0 0 22px rgba(4,7,10,.42)}
 @keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:none}}
 .cue{position:absolute;left:50%;bottom:clamp(64px,9vh,92px);transform:translateX(-50%);z-index:4;display:flex;flex-direction:column;align-items:center;gap:12px;opacity:0;animation:rise .8s 1.5s ease-out forwards}
@@ -110,9 +117,12 @@ img,svg,canvas{display:block;max-width:100%}
 @keyframes drop{0%,100%{transform:scaleY(.35);transform-origin:top;opacity:.4}50%{transform:scaleY(1);transform-origin:top;opacity:1}}
 
 /* 1600동 */
-.tents{display:grid;grid-template-columns:repeat(40,1fr);gap:2px;width:min(70vw,34vh,300px);margin:22px auto 0}
-.tents i{display:block;aspect-ratio:1/1;background:rgba(110,132,146,.12);transition:background .25s,box-shadow .25s}
-.tents i.on{background:#DCEAF2;box-shadow:0 0 6px rgba(143,186,212,.55)}
+/* 1600동: 밤의 빙하 위에 텐트 불빛이 하나씩 켜져 마을이 된다 */
+.camp{position:relative;width:min(80vw,760px);margin:20px auto 0}
+.camp canvas{display:block;width:100%;aspect-ratio:2.3/1;height:auto;-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 54%,#000 55%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 54%,#000 55%,transparent 100%)}
+.camp-key{position:absolute;right:2px;bottom:-22px;display:flex;align-items:center;gap:6px;font-size:11.5px;letter-spacing:.04em;color:rgba(232,238,242,.6)}
+.camp+.figsub{margin-top:34px}
+.camp-key i{display:block;width:6px;height:6px;border-radius:50%;background:#FFC46B;box-shadow:0 0 6px #FFB347}
 .amen{display:flex;flex-wrap:wrap;justify-content:center;gap:10px clamp(16px,3vw,34px);margin:34px auto 0;max-width:40rem}
 .amen b{font-size:clamp(15px,1.6vw,19px);font-weight:500;letter-spacing:.02em;color:rgba(150,170,182,.4);transition:color .5s,text-shadow .5s}
 .amen b.lit{color:#FBE7CF;text-shadow:0 0 18px rgba(224,161,94,.85),0 0 42px rgba(224,161,94,.4)}
@@ -373,7 +383,8 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
   .title{font-size:clamp(40px,11vw,66px);line-height:1.1}
   .deck{font-size:15px;line-height:1.7;margin-top:20px;max-width:100%}
   #cover .cover-wrap{padding-bottom:92px}
-  .tents{width:min(58vw,24vh);gap:1.5px;margin-top:18px}
+  .camp{width:92vw;margin-top:16px}
+  .camp canvas{aspect-ratio:1.45/1}
   .cans{grid-template-columns:repeat(28,1fr);width:min(86vw,32vh*.95);gap:2px}
   .compare{aspect-ratio:4/3;width:90vw}
   .xsec{top:auto;bottom:calc(clamp(52px,9vh,96px) + 196px + 5vh);height:auto}
@@ -418,7 +429,7 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
   #satCanvas{position:relative;height:60vh}
   .beat,.readout{position:static!important;opacity:1!important;transform:none!important;max-width:60ch;margin:0 0 46px;pointer-events:auto}
   .beat.centre{text-align:left}
-  .title,.brand,.deck{animation:none;opacity:1}
+  .title,.brand,.deck,.credit{animation:none;opacity:1}
   *{transition:none!important;animation:none!important}
   .ln>span{transform:none!important}
   .alt,.scan,.hot,.flood,#grain,.dawn{display:none}
@@ -445,6 +456,7 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
       <p class="brand">에베레스트 베이스캠프 · 해발 5300m</p>
       <h1 class="title">빙하 위의<br>마을</h1>
       <p class="deck">봄마다 수천 명이 빙하 위에 텐트를 세운다. 50일 동안 그들이 태운 연료와 흘려보낸 소변의 열은 얼음 약 2500t을 녹일 수 있다.</p>
+      <p class="credit">기획·제작 <b>오현영 기자</b></p>
     </div>
     <div class="cue"><i></i><span>SCROLL</span></div>
     <p class="disclaimer"><b>재현 이미지</b>기사 내용을 바탕으로 제작했으며 실제 사진이 아닙니다.</p>
@@ -471,7 +483,7 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
     <div class="beat centre" data-band="0.41,0.64" data-rev="1500">
       <p class="fig" style="font-size:clamp(52px,9vw,124px)"><span data-c="0,1600,0.42,0.56,comma" id="tentN">0</span><small>동</small></p>
       <p class="figcap" style="margin-top:16px">빙하 위에 세운 텐트</p>
-      <div class="tents" id="tents" aria-hidden="true"></div>
+      <div class="camp" aria-hidden="true"><canvas id="camp"></canvas><span class="camp-key"><i></i>텐트 1동</span></div>
       <p class="figsub">등반객과 셰르파, 가이드, 지원 인력 수천 명이 머문다.</p>
     </div>
     <div class="beat centre" data-band="0.70,0.98" data-rev="2200">
@@ -718,6 +730,7 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
     </div>
     <div class="beat centre" data-band="0.52,0.88">
       <p class="line">봄이 오면,<br>수천 명이 다시 빙하 위로 모인다.</p>
+      <p class="signoff">기획·제작 <b>오현영 기자</b></p>
     </div>
   </div>
 </section>
@@ -1011,11 +1024,56 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
 
 /* ─────────── 01 · 텐트 1600칸, 편의시설 점등 ─────────── */
 (() => {
-  const g = $("#tents"); g.innerHTML = "<i></i>".repeat(1600);
-  const cells = [...g.children], amen = [...document.querySelectorAll("#amen b")];
+  // 빙하 단면 대신 위에서 내려다본 밤의 베이스캠프: 푸른 아이스폴 옆 돌무더기 띠를 따라 원정대 캠프가 모여 있다
+  const cv = $("#camp"), cx = cv.getContext("2d"), amen = [...document.querySelectorAll("#amen b")];
   const img = document.querySelector("#numbers .plate img");
-  // 가운데에서 바깥으로 불이 번지도록 순서를 섞는다
-  const order = cells.map((_, i) => { const x = i % 40 - 19.5, y = Math.floor(i / 40) - 19.5; return [i, Math.hypot(x, y) + Math.random() * 6]; }).sort((a, b) => a[1] - b[1]).map(a => a[0]);
+  let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
+  const gauss = () => (rnd() + rnd() + rnd() - 1.5) / 1.5;
+  // 캠프 띠: 왼쪽 위에서 오른쪽 아래로 휘어 내려가는 곡선 (정규 좌표 0~1)
+  const band = t => ({ x: .05 + .9 * t, y: .34 + .42 * t - .16 * t * t + .035 * Math.sin(t * 9) });
+  const N = 1600, pts = [];
+  { const C = 38; let left = Math.round(N * .9); const cl = [];
+    for (let c = 0; c < C; c++) { const t = (c + .5 + (rnd() - .5) * .8) / C; cl.push({ t, w: .4 + rnd() * 1.6 }); }
+    const W = cl.reduce((a, b) => a + b.w, 0);
+    const NC = left; cl.forEach((c, i) => { const n = i === C - 1 ? left : Math.round(NC * c.w / W); left -= n; c.n = Math.max(0, n); });
+    const rank = cl.map((_, i) => [i, rnd()]).sort((a, b) => a[1] - b[1]).map(a => a[0]);   // 캠프가 켜지는 순서
+    rank.forEach((ci, r) => { const c = cl[ci], o = band(c.t), sp = .009 + .009 * c.w;
+      for (let k = 0; k < c.n; k++) pts.push({ x: o.x + gauss() * sp * 2, y: o.y + gauss() * sp * 1.5 + .03, ord: r + k / Math.max(1, c.n) * .9 + rnd() * .3, a: .65 + rnd() * .35, s: .8 + rnd() * .5 }); });
+    // 나머지 10%는 캠프 사이사이 흩어진 텐트
+    for (let k = pts.length; k < N; k++) { const t = rnd(), o = band(t); pts.push({ x: o.x + gauss() * .03, y: o.y + gauss() * .045 + .03, ord: rnd() * C, a: .5 + rnd() * .4, s: .7 + rnd() * .4 }); }
+    pts.sort((a, b) => a.ord - b.ord); }
+  // 아이스폴 얼룩(고정)
+  const ice = []; for (let i = 0; i < 900; i++) { const t = rnd(), o = band(t), d = .03 + Math.pow(rnd(), .7) * .6; ice.push({ x: o.x + (rnd() - .5) * .08 + d * .35, y: o.y - d, r: .4 + rnd() * 1.6, a: .04 + rnd() * .1 }); }
+  let W = 0, H = 0, dpr = 1, bg = null, glow = null;
+  function size() {
+    const r = cv.getBoundingClientRect(); if (!r.width) return;
+    dpr = Math.min(2, devicePixelRatio || 1); W = Math.round(r.width * dpr); H = Math.round(r.height * dpr);
+    cv.width = W; cv.height = H;
+    // 배경(빙하·돌무더기)은 한 번 그려 둔다
+    bg = document.createElement("canvas"); bg.width = W; bg.height = H; const b = bg.getContext("2d");
+    // 띠 위쪽 = 얼음
+    for (let i = 0; i <= 24; i++) { const o = band(i / 24), gx = o.x * W + W * .06, gy = (o.y - .2) * H, R = H * .32;
+      const ig = b.createRadialGradient(gx, gy, 0, gx, gy, R); ig.addColorStop(0, "rgba(170,200,218,.07)"); ig.addColorStop(1, "rgba(170,200,218,0)"); b.fillStyle = ig; b.fillRect(gx - R, gy - R, R * 2, R * 2); }
+    ice.forEach(p => { b.fillStyle = `rgba(205,225,238,${p.a})`; b.beginPath(); b.arc(p.x * W, p.y * H, p.r * dpr, 0, 7); b.fill(); });
+    // 얼음 가장자리 선
+    b.beginPath(); for (let i = 0; i <= 60; i++) { const o = band(i / 60); b.lineTo(o.x * W, (o.y - .035) * H); } b.strokeStyle = "rgba(190,215,230,.12)"; b.lineWidth = dpr; b.setLineDash([2 * dpr, 4 * dpr]); b.stroke(); b.setLineDash([]);
+    // 불빛 스프라이트
+    glow = document.createElement("canvas"); const gs = 12 * dpr; glow.width = glow.height = gs; const g2 = glow.getContext("2d");
+    const rg = g2.createRadialGradient(gs / 2, gs / 2, 0, gs / 2, gs / 2, gs / 2); rg.addColorStop(0, "rgba(255,226,170,1)"); rg.addColorStop(.14, "rgba(255,190,100,.9)"); rg.addColorStop(.4, "rgba(255,150,60,.16)"); rg.addColorStop(1, "rgba(255,140,50,0)");
+    g2.fillStyle = rg; g2.fillRect(0, 0, gs, gs);
+    draw(lit, true);
+  }
+  function draw(n) {
+    if (!bg) return;
+    cx.clearRect(0, 0, W, H); cx.drawImage(bg, 0, 0);
+    const gs = glow.width;
+    cx.globalCompositeOperation = "lighter";
+    const small = W < 700 * dpr, kS = small ? .62 : 1, kA = small ? .34 : .55;   // 작은 화면은 같은 1600개가 몰리니 더 작고 옅게
+    for (let k = 0; k < n; k++) { const p = pts[k], s = gs * p.s * kS; cx.globalAlpha = p.a * kA; cx.drawImage(glow, p.x * W - s / 2, p.y * H - s / 2, s, s); }
+    cx.globalAlpha = 1; cx.globalCompositeOperation = "source-over";
+  }
+  addEventListener("resize", () => { clearTimeout(size.t); size.t = setTimeout(size, 120); });
+  requestAnimationFrame(size);
   let lit = 0;
   const altMk = $("#altMk"), days = $("#days"); days.innerHTML = "<i></i>".repeat(50);
   const dcells = [...days.children];
@@ -1025,7 +1083,8 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
     const dn = Math.round(50 * easeOut(B[1].rv));
     dcells.forEach((c, i) => c.classList.toggle("on", i < dn));
     const n = Math.round(1600 * easeOut(B[2].rv));
-    if (n !== lit) { const [lo, hi] = n > lit ? [lit, n] : [n, lit]; for (let k = lo; k < hi; k++) cells[order[k]].classList.toggle("on", n > lit); lit = n; }
+    if (!bg && B[2].b.classList.contains("on")) size();
+    if (n !== lit) { lit = n; draw(n); }
     const a = Math.round(clamp(B[3].rv * 1.15) * 5);
     amen.forEach((b, j) => b.classList.toggle("lit", j < a));
     if (!reduce) img.style.filter = `brightness(${.55 + a * .09}) saturate(${.5 + a * .1})`;
