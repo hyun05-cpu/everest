@@ -9,14 +9,14 @@
 <meta property="og:title" content="빙하 위의 마을">
 <meta property="og:description" content="봄마다 수천 명이 빙하 위에 모여 산다. 그들이 머무는 50일 동안 얼음 약 2500t이 녹을 수 있다.">
 <!-- 배포 폴더명이 다르면 이 주소만 바꿔 주세요. 공유 썸네일은 절대 주소여야 뜹니다. -->
-<meta property="og:image" content="https://hyun05-cpu.github.io/everest/00-cover.png">
+<meta property="og:image" content="https://hyun05-cpu.github.io/everest/00-cover.jpg">
 <meta property="og:type" content="article">
 <meta name="theme-color" content="#04070A">
 <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendardvariable-dynamic-subset.min.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Song+Myung&family=Noto+Serif+KR:wght@500;700&display=swap">
-<link rel="preload" as="image" href="./00-cover.png" fetchpriority="high">
+<link rel="preload" as="image" href="./00-cover.jpg" fetchpriority="high">
 <style>
 /* ─────────────────────────────────────────────
    tokens — 냉동인간 편과 같은 체계
@@ -486,14 +486,14 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 <div id="grain" aria-hidden="true"></div>
 <canvas id="snow" aria-hidden="true"></canvas>
 <div class="vignette" aria-hidden="true"></div><div class="grain" id="grainC" aria-hidden="true"></div><div class="grain" id="grainW" aria-hidden="true"></div>
-<button class="sound on" id="sound" type="button" role="switch" aria-checked="true" aria-label="바람 소리"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span><span id="soundLabel">바람 소리</span><span class="sw" aria-hidden="true"></span></button>
+<button class="sound on" id="sound" type="button" role="switch" aria-checked="true" aria-label="현장음: 바람, 버너, 물, 텐트 불빛 소리"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span><span id="soundLabel">현장음</span><span class="sw" aria-hidden="true"></span></button>
 <p class="sound-hint" id="soundHint" aria-hidden="true">화면을 한 번 누르면 소리가 나요</p>
 <main>
 
 <!-- ═══════════ 00 · 표지 ═══════════ -->
 <section class="act" id="cover" style="height:200vh">
   <div class="stage">
-    <div class="plate"><img src="./00-cover.png" alt="새벽빛 속 쿰부 빙하 위에 늘어선 베이스캠프 텐트들" data-k="1.14,1.0" fetchpriority="high"></div>
+    <div class="plate"><img decoding="async" src="./00-cover.jpg" alt="새벽빛 속 쿰부 빙하 위에 늘어선 베이스캠프 텐트들" data-k="1.14,1.0" fetchpriority="high"></div>
     <div class="dawn"></div>
     <div class="scrim full"></div>
     <div class="scrim dim" data-dim="0.72,1,0,1"></div>
@@ -511,7 +511,7 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 <!-- ═══════════ 01 · 숫자 ═══════════ -->
 <section class="act" id="numbers" data-fx="numbers" style="height:820vh">
   <div class="stage">
-    <div class="plate"><img src="./01-camp.png" alt="빙하 위 텐트촌" data-k="1.0,1.12"></div>
+    <div class="plate"><img loading="lazy" decoding="async" src="./01-camp.jpg" alt="빙하 위 텐트촌" data-k="1.0,1.12"></div>
     <div class="scrim heavy"></div>
     <div class="alt" data-ro="0.0,0.18" aria-hidden="true"><b style="bottom:0">0 m</b><b style="bottom:47.2%">2,500</b><b style="bottom:94.3%">5,000</b><i id="altMk"></i></div>
     <div class="beat centre" data-band="0.02,0.17">
@@ -546,8 +546,8 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
       <p class="kicker">같은 자리</p>
       <p class="line">야영지는 마을이 됐다.</p>
       <div class="compare idle" id="cmp" tabindex="0" role="slider" aria-label="과거와 지금의 베이스캠프 비교" aria-valuemin="0" aria-valuemax="100" aria-valuenow="50">
-        <div class="pl"><img src="./03-now.png" alt="대형 돔 텐트와 조명이 가득한 지금의 베이스캠프"></div>
-        <div class="pl top"><img src="./02-then.png" alt="텐트 몇 동뿐인 과거의 베이스캠프"></div>
+        <div class="pl"><img loading="lazy" decoding="async" src="./03-now.jpg" alt="대형 돔 텐트와 조명이 가득한 지금의 베이스캠프"></div>
+        <div class="pl top"><img loading="lazy" decoding="async" src="./02-then.jpg" alt="텐트 몇 동뿐인 과거의 베이스캠프"></div>
         <span class="handle"></span>
         <span class="tag l">과거</span><span class="tag r">지금</span>
       </div>
@@ -669,7 +669,7 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 <!-- ═══════════ 07 · 계산 제외 ═══════════ -->
 <section class="act" id="excl" data-fx="excl" style="height:440vh">
   <div class="stage">
-    <div class="plate"><img src="./04-heli-yak.png" alt="" data-k="1.0,1.1"></div>
+    <div class="plate"><img loading="lazy" decoding="async" src="./04-heli-yak.jpg" alt="" data-k="1.0,1.1"></div>
     <div class="scrim" style="background:linear-gradient(90deg,rgba(4,7,10,.9),rgba(4,7,10,.4) 80%)"></div>
     <div class="beat lower" data-band="0.02,0.70" style="max-width:none">
       <p class="kicker warm">이번 계산에 들어가지 않은 것</p>
@@ -688,8 +688,8 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 <!-- ═══════════ 08 · 줌 아웃 ═══════════ -->
 <section class="act" id="zoom" data-fx="zoom" style="height:640vh">
   <div class="stage">
-    <div class="plate"><img src="./05-himalaya.png" alt="고고도에서 내려다본 히말라야 산맥과 빙하" id="zImg" style="opacity:0"></div>
-    <div class="plate" id="zCamp"><img src="./01-camp.png" alt=""></div>
+    <div class="plate"><img loading="lazy" decoding="async" src="./05-himalaya.jpg" alt="고고도에서 내려다본 히말라야 산맥과 빙하" id="zImg" style="opacity:0"></div>
+    <div class="plate" id="zCamp"><img loading="lazy" decoding="async" src="./01-camp.jpg" alt=""></div>
     <div class="scrim full"></div>
     <i class="ring" id="ring"></i>
     <p class="readout" data-ro="0.02,0.99">시야 <b id="zLab">베이스캠프</b></p>
@@ -763,7 +763,7 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 <!-- ═══════════ 11 · 마무리 ═══════════ -->
 <section class="act" id="coda" data-fx="coda" style="height:520vh">
   <div class="stage">
-    <div class="plate"><img src="./00-cover.png" alt="" id="codaImg" data-k="1.18,1.0" style="opacity:0"></div>
+    <div class="plate"><img loading="lazy" decoding="async" src="./00-cover.jpg" alt="" id="codaImg" data-k="1.18,1.0" style="opacity:0"></div>
     <div class="scrim full"></div>
     <div class="scrim dim" data-dim="0.9,1,0,1"></div>
     <div class="beat centre" data-band="0.03,0.46">
@@ -796,7 +796,7 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
       <p>네팔 토지관리 당국 킴 랄 가우탐 수석측량관 등 국제 연구진, 「인간 활동이 쿰부 빙하에 미치는 영향: 지속 가능한 에베레스트 베이스캠프를 향하여」, 『Regional Environmental Change』.</p>
     </div>
     <a class="src-card" href="https://www.asiae.co.kr/article/2026083108345434038" target="_blank" rel="noopener">
-      <div class="src-thumb"><img src="./06-thumb.png" alt=""></div>
+      <div class="src-thumb"><img loading="lazy" decoding="async" src="./06-thumb.jpg" alt=""></div>
       <div class="src-body">
         <span class="src-title">"소변까지 빙하 녹였다" 에베레스트 등반객이 한 시즌 녹인 얼음 '2500t'</span>
         <span class="src-go"><b>기사 전문 보기</b><i></i></span>
@@ -997,7 +997,7 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
 /* ─────────── 소리: 차가우면 바람, 뜨거우면 버너 (파일 없이 합성) ─────────── */
 (() => {
   const btn = $("#sound"), hint = $("#soundHint");
-  let ac = null, master, windG, whistle, fireG, crackG, lp, on = false, timer = 0;
+  let ac = null, master, windG, whistle, fireG, crackG, lp, waterG, on = false, timer = 0;
   const buf = (fn) => { const len = ac.sampleRate * 6, b = ac.createBuffer(2, len, ac.sampleRate); for (let ch = 0; ch < 2; ch++) fn(b.getChannelData(ch)); return b; };
   const play = b => { const s = ac.createBufferSource(); s.buffer = b; s.loop = true; s.start(); return s; };
   function start() {
@@ -1021,6 +1021,27 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
     const hp = ac.createBiquadFilter(); hp.type = "highpass"; hp.frequency.value = 1500;
     crackG = ac.createGain(); crackG.gain.value = 0;
     play(crack).connect(hp).connect(crackG).connect(master);
+    // 물: 차오르는 동안 낮게 콸콸거리는 물소리(띠 필터를 지난 잡음, 천천히 흔들림)
+    const white = buf(d => { for (let i = 0; i < d.length; i++) d[i] = Math.random() * 2 - 1; });
+    const wbp = ac.createBiquadFilter(); wbp.type = "bandpass"; wbp.frequency.value = 620; wbp.Q.value = 1.1;
+    const wlfo = ac.createOscillator(), wlfoG = ac.createGain(); wlfo.frequency.value = 1.7; wlfoG.gain.value = 240; wlfo.connect(wlfoG).connect(wbp.frequency); wlfo.start();
+    waterG = ac.createGain(); waterG.gain.value = 0;
+    play(white).connect(wbp).connect(waterG).connect(master);
+  }
+  // 물방울: 짧게 위로 미끄러지는 소리
+  function bubble(at, k) {
+    const o = ac.createOscillator(), g = ac.createGain(), f = 380 + Math.random() * 420;
+    o.type = "sine"; o.frequency.setValueAtTime(f, at); o.frequency.exponentialRampToValueAtTime(f * (2.2 + Math.random()), at + .07);
+    g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(.05 * k, at + .006); g.gain.exponentialRampToValueAtTime(.0008, at + .09);
+    o.connect(g).connect(master); o.start(at); o.stop(at + .1);
+  }
+  // 텐트 불빛: 아주 작은 유리 종소리 같은 '띵'(좌우로 흩어진다)
+  function ping(at) {
+    const o = ac.createOscillator(), g = ac.createGain(), pn = ac.createStereoPanner ? ac.createStereoPanner() : null, f = 1700 + Math.random() * 1600;
+    o.type = "sine"; o.frequency.setValueAtTime(f, at);
+    g.gain.setValueAtTime(0, at); g.gain.linearRampToValueAtTime(.03, at + .004); g.gain.exponentialRampToValueAtTime(.0006, at + .22);
+    if (pn) { pn.pan.value = Math.random() * 1.6 - .8; o.connect(g).connect(pn).connect(master); } else o.connect(g).connect(master);
+    o.start(at); o.stop(at + .24);
   }
   function steer() {
     if (!ac || !on) return;
@@ -1031,6 +1052,13 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
     lp.frequency.setTargetAtTime(lerp(500, 300, T), now, .8);
     fireG.gain.setTargetAtTime(T * 1.15, now, .7);
     crackG.gain.setTargetAtTime(T * T * .2, now, .5);
+    // 물 차는 소리: 수영장이 보이고 물이 차오르는 동안만
+    const flow = performance.now() - (window.__poolFlowT || 0) < 400 ? (window.__poolFlow || 0) : 0;
+    waterG.gain.setTargetAtTime(flow * .32, now, .25);
+    if (flow > .04) { const nb = 1 + Math.floor(Math.random() * 3 * flow + flow * 2); for (let i = 0; i < nb; i++) bubble(now + Math.random() * .2, .5 + flow * .5); }
+    // 텐트 불빛이 켜지는 소리: 0.2초 사이 새로 켜진 수만큼(최대 6번)
+    const nc = window.__campNew || 0; window.__campNew = 0;
+    if (nc > 0) { const np = Math.min(6, Math.max(1, Math.round(nc / 45))); for (let i = 0; i < np; i++) ping(now + .02 + Math.random() * .18); }
     const lv = k => clamp(lerp(gust(t + k), .4 + .6 * Math.abs(Math.sin(t * 7 + k)), T)).toFixed(2);
     btn.style.setProperty("--g", lv(0)); btn.style.setProperty("--g2", lv(1.7)); btn.style.setProperty("--g3", lv(3.1));
   }
@@ -1188,7 +1216,7 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
     altMk.style.bottom = (easeOut(B[0].rv) * 100).toFixed(2) + "%";
     const n = Math.round(1600 * easeOut(B[2].rv));
     if (!bg && B[2].b.classList.contains("on")) size();
-    if (n !== lit) { lit = n; draw(n); }
+    if (n !== lit) { if (n > lit) window.__campNew = (window.__campNew || 0) + (n - lit); lit = n; draw(n); }   // 현장음: 불빛 켜지는 소리
     twinkle(!reduce && B[2].active && document.visibilityState === "visible");
     const a = Math.round(clamp(B[3].rv * 1.15) * 5);
     amen.forEach((b, j) => b.classList.toggle("lit", j < a));
@@ -1671,7 +1699,9 @@ const CAUSTIC = (() => {
   }
   const ro = $("#poolRo");
   function loop(now) {
-    level += (target - level) * .12;
+    const rise = target - level;
+    level += rise * .12;
+    window.__poolFlow = rise > 2 ? clamp(rise / 320) : 0; window.__poolFlowT = performance.now();   // 현장음: 물 차는 소리
     amp += ((Math.abs(target - level) > 4 ? 4.5 : 1.1) - amp) * .08;
     draw(now); if (vis) requestAnimationFrame(loop);
   }
