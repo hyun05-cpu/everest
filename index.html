@@ -43,6 +43,18 @@ img,svg,canvas{display:block;max-width:100%}
 
 #rail{position:fixed;inset:0 0 auto 0;height:2px;z-index:60;background:rgba(110,132,146,.16)}
 #rail>i{display:block;height:100%;width:100%;background:var(--frost);transform-origin:0 50%;transform:scaleX(0)}
+/* 진행선 장(章) 눈금: 지나간 장은 밝게. PC에서는 마우스를 올리면 장 이름, 누르면 그 장으로 */
+#chap{position:absolute;inset:0}
+#chap a{position:absolute;top:0;width:14px;height:14px;margin-left:-7px;cursor:pointer;text-decoration:none}
+#chap a::before{content:"";position:absolute;left:6.5px;top:0;width:1px;height:6px;background:rgba(232,238,242,.35);transition:background .3s,height .3s}
+#chap a.past::before{background:rgba(255,255,255,.85)}
+#chap a:hover::before{height:9px;background:#fff}
+#chap a span{position:absolute;top:14px;left:50%;transform:translate(-50%,-3px);white-space:nowrap;font-size:11px;letter-spacing:.06em;color:#E8EEF2;background:rgba(4,7,10,.82);border:1px solid rgba(169,188,199,.22);padding:4px 9px;border-radius:6px;opacity:0;pointer-events:none;transition:opacity .2s,transform .2s}
+#chap a:hover span,#chap a:focus-visible span{opacity:1;transform:translate(-50%,0)}
+#chap a.edge-r span{left:auto;right:-4px;transform:translateY(-3px)}
+#chap a.edge-r:hover span{transform:none}
+@media (hover:none){#chap a{pointer-events:none}#chap a span{display:none}}
+
 
 /* act / stage */
 .act{position:relative}
@@ -120,9 +132,9 @@ img,svg,canvas{display:block;max-width:100%}
 /* 1600동: 밤의 빙하 위에 텐트 불빛이 하나씩 켜져 마을이 된다 */
 .camp{position:relative;width:min(80vw,760px);margin:20px auto 0}
 .camp canvas{display:block;width:100%;aspect-ratio:2.3/1;height:auto;-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 54%,#000 55%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 54%,#000 55%,transparent 100%)}
-.camp-key{position:absolute;right:2px;bottom:-22px;display:flex;align-items:center;gap:6px;font-size:11.5px;letter-spacing:.04em;color:rgba(232,238,242,.6)}
-.camp+.figsub{margin-top:34px}
-.camp-key i{display:block;width:6px;height:6px;border-radius:50%;background:#FFC46B;box-shadow:0 0 6px #FFB347}
+.camp-key{position:absolute;right:5%;top:85%;display:flex;align-items:center;gap:6px;font-size:11.5px;letter-spacing:.04em;color:rgba(232,238,242,.6)}
+.camp+.figsub{margin-top:18px}
+.camp-key i{display:block;width:3.4px;height:3.4px;border-radius:50%;background:#FFDCA0;box-shadow:0 0 5px rgba(255,190,100,.75)}
 .amen{display:flex;flex-wrap:wrap;justify-content:center;gap:10px clamp(16px,3vw,34px);margin:34px auto 0;max-width:40rem}
 .amen b{font-size:clamp(15px,1.6vw,19px);font-weight:500;letter-spacing:.02em;color:rgba(150,170,182,.4);transition:color .5s,text-shadow .5s}
 .amen b.lit{color:#FBE7CF;text-shadow:0 0 18px rgba(224,161,94,.85),0 0 42px rgba(224,161,94,.4)}
@@ -215,10 +227,9 @@ html.hold,html.hold body{overflow:hidden;overscroll-behavior:none}
 
 /* 크레딧 */
 footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,84px) var(--gut) clamp(56px,10vh,96px);border-top:1px solid rgba(110,132,146,.18)}
-.credits{max-width:1080px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:40px}
-/* 카드·더보기 막대는 860px로 가운데. 설명·연구 줄은 전체 폭을 쓰되 본문 시작선을 카드 제목 시작선에 맞춘다 */
-.credits>.src-card,.credits>.cat-link{width:min(860px,100%);justify-self:center}
-.imgnote{padding-bottom:clamp(30px,4vw,44px);border-bottom:1px solid rgba(169,188,199,.14);display:grid;grid-template-columns:calc((100% - min(860px,100%))/2 + min(860px,100%)*.34) minmax(0,1fr);gap:clamp(24px,3.4vw,38px);align-items:start}
+.credits{max-width:860px;margin:0 auto;display:grid;grid-template-columns:minmax(0,1fr);gap:40px}
+/* 설명·연구 줄과 카드·더보기 막대의 양 끝을 860px 한 폭으로 맞춘다. 제목 칸은 좁게 두어 본문을 가까이 붙인다 */
+.imgnote{padding-bottom:clamp(30px,4vw,44px);border-bottom:1px solid rgba(169,188,199,.14);display:grid;grid-template-columns:minmax(140px,20%) minmax(0,1fr);gap:clamp(24px,3vw,36px);align-items:start}
 .imgnote h2{font-size:11.5px;letter-spacing:.18em;color:var(--slate);margin:0;font-weight:600;padding-top:3px}
 .imgnote p{margin:0;font-size:13px;line-height:2;color:rgba(169,188,199,.72);font-weight:350}
 .src-card{display:grid;grid-template-columns:minmax(0,34%) 1fr;align-items:stretch;text-decoration:none;overflow:hidden;border:1px solid rgba(169,188,199,.16);background:rgba(255,255,255,.012);transition:border-color .4s,background .4s}
@@ -261,6 +272,32 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 .beat .fig{transition:transform 1.6s cubic-bezier(.16,1,.3,1),letter-spacing 1.6s cubic-bezier(.16,1,.3,1)}
 .beat:not(.on) .fig{transform:scale(.94);letter-spacing:-.02em}
 .fig.glow span{animation:figglow 3.6s ease-in-out infinite}
+
+/* 오도미터 */
+.fig .od{display:inline-block;height:1em;overflow:hidden;vertical-align:top;line-height:1}
+.fig .ods{display:block;will-change:transform}
+.fig .ods b{display:block;height:1em;line-height:1;font-weight:inherit}
+.fig .odc{display:inline-block;line-height:1;vertical-align:top}
+.fig.odo-fig small{opacity:0;transform:translateY(.12em);transition:opacity .55s ease .05s,transform .55s ease .05s}
+.fig.odo-fig.settled small{opacity:1;transform:none}
+/* ── 반짝임 ── */
+/* 숫자: 다 세어지면 서리빛(차가운 숫자) 또는 금빛(열 숫자)이 한 번 훑고 지나간다 */
+.fig span.glint{--gl:#CBEBFF;background:linear-gradient(100deg,#fff 0%,#fff 40%,var(--gl) 47%,#fff 54%,#fff 100%);background-size:320% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;color:transparent;text-shadow:none;filter:drop-shadow(0 2px 26px rgba(4,7,10,.65));animation:glint 1.25s cubic-bezier(.3,.6,.3,1) .05s 1 both!important}
+.fig.warm span.glint{--gl:#FFD98F;background-image:linear-gradient(100deg,#F6D2A6 0%,#F6D2A6 40%,#FFF4DA 47%,#F6D2A6 54%,#F6D2A6 100%);filter:drop-shadow(0 0 22px rgba(224,161,94,.5))}
+@keyframes glint{from{background-position:100% 0}to{background-position:0% 0}}
+/* 표지 제목: 글자 위로 서리빛이 한 번 스친다 */
+.title{background:linear-gradient(100deg,#fff 0%,#fff 42%,#D6F0FF 48%,#fff 54%,#fff 100%);background-size:320% 100%;background-position:100% 0;-webkit-background-clip:text;background-clip:text;color:transparent;animation:rise 1.1s .45s cubic-bezier(.16,1,.3,1) forwards,glint 2.4s 1.7s cubic-bezier(.4,0,.2,1) 1 forwards}
+/* 빙하 단면 얼음 속 결정 */
+#xsvg .glints path{fill:#F2FAFF;transform-box:fill-box;transform-origin:center;opacity:0;animation:crystal 4.2s ease-in-out infinite}
+@keyframes crystal{0%,62%,100%{opacity:0;transform:scale(.3) rotate(0deg)}74%{opacity:.95;transform:scale(1) rotate(25deg)}86%{opacity:0;transform:scale(.4) rotate(45deg)}}
+/* 텐트 불빛 깜빡임은 위에 겹친 캔버스로 */
+.camp #campTw{position:absolute;left:0;top:0;width:100%;height:100%;pointer-events:none;aspect-ratio:auto;-webkit-mask-image:radial-gradient(ellipse 50% 50% at 50% 54%,#000 55%,transparent 100%);mask-image:radial-gradient(ellipse 50% 50% at 50% 54%,#000 55%,transparent 100%)}
+/* 원 기사 카드: 마우스를 올리면 빛이 한 번 쓸고 지나간다 */
+.src-card{position:relative}
+.src-card::after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,transparent 35%,rgba(203,235,255,.10) 48%,transparent 60%);background-size:260% 100%;background-position:120% 0;opacity:0}
+.src-card:hover::after{animation:sheen 1.1s ease-out 1 forwards}
+@keyframes sheen{0%{opacity:1;background-position:120% 0}100%{opacity:1;background-position:-30% 0}}
+
 /* 라면 비교: 그릇 위로 김이 오른다 */
 .ramen .bowl{width:clamp(96px,11vw,138px);margin:8px auto 0}
 .ramen .bowl svg{display:block;width:100%;height:auto}
@@ -299,9 +336,6 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 .alt i{position:absolute;right:-5px;bottom:0;width:24px;height:1.5px;background:#EAF6FF;box-shadow:0 0 12px rgba(190,226,245,1)}
 .alt i::after{content:"";position:absolute;right:-2px;top:-3.5px;width:8px;height:8px;border-radius:50%;background:#EAF6FF;box-shadow:0 0 14px rgba(190,226,245,1)}
 /* 50일 눈금 */
-.days{display:flex;gap:3px;width:min(80vw,440px);margin:28px auto 0}
-.days i{flex:1;height:22px;background:rgba(110,132,146,.16);transform:scaleY(.4);transform-origin:bottom;transition:transform .5s cubic-bezier(.16,1,.3,1),background .4s,box-shadow .4s}
-.days i.on{transform:none;background:#DCEAF2;box-shadow:0 0 8px rgba(143,186,212,.6)}
 /* 열기 입자 */
 /* 단면 */
 #xsvg .drip{animation:drip 2.6s linear infinite}
@@ -336,6 +370,14 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 .flood::after{content:"";position:absolute;left:0;right:0;top:36px;bottom:0;background:linear-gradient(rgba(62,104,128,.55),rgba(14,30,40,.9))}
 @keyframes wave{to{transform:translateX(-50%)}}
 #snow{position:fixed;inset:0;width:100%;height:100%;z-index:40;pointer-events:none}
+/* 필름 입자: 차가울 땐 곱고 푸르게, 뜨거우면 조금 굵고 호박색으로. 아주 옅게 */
+.grain{position:fixed;inset:-12%;z-index:39;pointer-events:none;background-repeat:repeat;will-change:transform;animation:grain .5s steps(8) infinite}
+#grainC{background-size:200px;opacity:calc(.16 * (1 - var(--te,0)))}
+#grainW{background-size:260px;opacity:calc(.155 * var(--te,0))}
+/* 영화 화면처럼 가장자리를 은은하게 어둡게 */
+.vignette{position:fixed;inset:0;z-index:38;pointer-events:none;background:radial-gradient(ellipse 85% 80% at 50% 48%,transparent 55%,rgba(2,4,6,.42) 100%)}
+@keyframes grain{0%{transform:translate(0,0)}17%{transform:translate(-3%,2%)}34%{transform:translate(2%,-4%)}51%{transform:translate(-4%,-1%)}68%{transform:translate(3%,3%)}85%{transform:translate(-1%,4%)}100%{transform:translate(0,0)}}
+
 #rail>i{background:var(--rc,#8FBAD4)}
 /* 소리 버튼 — 진행선과 같은 색(--rc)을 따라 서리색 → 호박색 */
 .sound{--c:var(--rc,#8FBAD4);position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 16px);z-index:61;display:flex;align-items:center;gap:11px;min-height:42px;padding:0 12px 0 14px;border:1px solid rgba(143,186,212,.55);border:1px solid color-mix(in srgb,var(--c) 55%,transparent);border-radius:999px;background:rgba(4,7,10,.74);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#E8EEF2;font-family:var(--sans);font-size:13.5px;letter-spacing:.02em;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.45);transition:border-color .3s,background .3s,box-shadow .4s,opacity .6s}
@@ -424,12 +466,14 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
   .stage{position:static;height:auto;min-height:0;padding:56px var(--gut);display:block}
   .plate{position:relative;inset:auto;height:52vh;margin-bottom:30px}
   .plate img{transform:none!important}
-  .scrim,#snow,.cue,.ring{display:none}
+  .scrim,#snow,.cue,.ring,.grain{display:none}
   .xsec,.pool,.move{position:relative;inset:auto;height:auto;margin-bottom:30px}
   #satCanvas{position:relative;height:60vh}
   .beat,.readout{position:static!important;opacity:1!important;transform:none!important;max-width:60ch;margin:0 0 46px;pointer-events:auto}
   .beat.centre{text-align:left}
   .title,.brand,.deck,.credit{animation:none;opacity:1}
+  .fig span.glint,#xsvg .glints path,.src-card:hover::after{animation:none}
+  #xsvg .glints{display:none}
   *{transition:none!important;animation:none!important}
   .ln>span{transform:none!important}
   .alt,.scan,.hot,.flood,#grain,.dawn{display:none}
@@ -438,9 +482,10 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 <script>document.documentElement.classList.add("js");</script>
 </head>
 <body>
-<div id="rail"><i></i></div>
+<div id="rail"><i></i><div id="chap"></div></div>
 <div id="grain" aria-hidden="true"></div>
 <canvas id="snow" aria-hidden="true"></canvas>
+<div class="vignette" aria-hidden="true"></div><div class="grain" id="grainC" aria-hidden="true"></div><div class="grain" id="grainW" aria-hidden="true"></div>
 <button class="sound on" id="sound" type="button" role="switch" aria-checked="true" aria-label="바람 소리"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span><span id="soundLabel">바람 소리</span><span class="sw" aria-hidden="true"></span></button>
 <p class="sound-hint" id="soundHint" aria-hidden="true">화면을 한 번 누르면 소리가 나요</p>
 <main>
@@ -477,13 +522,12 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
     <div class="beat centre" data-band="0.22,0.36">
       <p class="fig"><span data-c="0,50,0.22,0.30,int">0</span><small>일</small></p>
       <p class="figcap">2023년 봄, 한 번의 등반 시즌</p>
-      <div class="days" id="days" aria-hidden="true"></div>
       <p class="figsub">국제 연구진이 베이스캠프의 에너지 사용을 따져 본 기간이다.</p>
     </div>
     <div class="beat centre" data-band="0.41,0.64" data-rev="1500">
       <p class="fig" style="font-size:clamp(52px,9vw,124px)"><span data-c="0,1600,0.42,0.56,comma" id="tentN">0</span><small>동</small></p>
       <p class="figcap" style="margin-top:16px">빙하 위에 세운 텐트</p>
-      <div class="camp" aria-hidden="true"><canvas id="camp"></canvas><span class="camp-key"><i></i>텐트 1동</span></div>
+      <div class="camp" aria-hidden="true"><canvas id="camp"></canvas><canvas id="campTw"></canvas><span class="camp-key"><i></i>텐트 1동</span></div>
       <p class="figsub">등반객과 셰르파, 가이드, 지원 인력 수천 명이 머문다.</p>
     </div>
     <div class="beat centre" data-band="0.70,0.98" data-rev="2200">
@@ -822,7 +866,7 @@ const HOLD = .06;          // 문장 사이 빈 구간이 이보다 짧으면 �
 acts.forEach(a => {
   a.ps = null;
   a.beats.forEach(o => { o.active = false; o.past = false; o.t0 = 0; o.rv = 0; o.rev = +o.b.dataset.rev || 1100; });
-  a.counters.forEach(c => { c.beat = a.beats.find(o => o.b.contains(c.n)) || null; c.reveal = !!c.beat && (c.z - c.a) <= .16; });
+  a.counters.forEach(c => { c.beat = a.beats.find(o => o.b.contains(c.n)) || null; c.reveal = !!c.beat && (c.z - c.a) <= .16; if (c.reveal && !reduce) buildOdo(c); });
 });
 function activeIndex(a, p) {
   const B = a.beats; let idx = -1;
@@ -843,7 +887,13 @@ function render(act, p, now) {
   });
   act.counters.forEach(c => {
     const k = c.reveal ? c.beat.rv : clamp((p - c.a) / (c.z - c.a));
-    const s = fmtC(lerp(c.f, c.t, easeOut(k)), c.k); if (s !== c.last) { c.n.textContent = s; c.last = s; }
+    if (c.odo) { tickOdo(c, k); }
+    else { const s = fmtC(lerp(c.f, c.t, easeOut(k)), c.k); if (s !== c.last) { c.n.textContent = s; c.last = s; } }
+    // 다 세어진 순간 빛이 한 번 훑고 지나간다(다시 처음부터 세면 또 한 번). 끝나면 클래스를 떼어 원래 모습으로
+    if (c.reveal && !reduce) {
+      if (c.beat.rv >= 1 && c.beat.active && !c.glint) { c.glint = true; c.n.classList.remove("glint"); void c.n.offsetWidth; c.n.classList.add("glint"); }
+      else if (c.beat.rv === 0 && c.glint) { c.glint = false; c.n.classList.remove("glint"); }
+    }
   });
   act.kb.forEach(({ i, k }) => { if (!reduce) i.style.transform = `scale(${lerp(k[0], k[1], p)})`; });
   act.ro.forEach(({ r, band }) => r.classList.toggle("ron", p >= band[0] && p <= band[1]));
@@ -881,7 +931,7 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
   const c = $("#snow"), x = c.getContext("2d");
   let Wd = 0, H = 0, last = performance.now();
   const N = innerWidth <= 720 ? 110 : 190;
-  const ps = Array.from({ length: N }, () => ({ x: Math.random(), y: Math.random(), r: .4 + Math.random() * 1.7, v: .012 + Math.random() * .035, w: Math.random() * 6, z: .4 + Math.random() * .6, a: .35 + Math.random() * .65 }));
+  const ps = Array.from({ length: N }, () => ({ x: Math.random(), y: Math.random(), r: .4 + Math.random() * 1.7, v: .012 + Math.random() * .035, w: Math.random() * 6, z: .4 + Math.random() * .6, a: .35 + Math.random() * .65, g: Math.random() < .12 }));
   const size = () => { const d = Math.min(devicePixelRatio || 1, 2); Wd = innerWidth; H = innerHeight; c.width = Wd * d; c.height = H * d; x.setTransform(d, 0, 0, d, 0, 0); };
   size(); addEventListener("resize", size);
   const root = document.documentElement.style;
@@ -916,12 +966,32 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
       if (Te > .25) { x.globalAlpha = al * .16 * Te; x.beginPath(); x.arc(px, py, rr * 4, 0, 6.283); x.fill(); }  // 불티의 번짐
       x.globalAlpha = al;
       x.beginPath(); x.arc(px, py, rr, 0, 6.283); x.fill();
+      // 반짝이는 눈송이: 대부분은 꺼져 있다가 아주 잠깐 십자 빛을 낸다(차가울 때만)
+      if (f.g && Te < .5) { const tw = Math.pow(Math.max(0, Math.sin(now / 820 + f.w * 13)), 14) * (1 - Te * 2); if (tw > .02) {
+        const L = rr * 5.5 + 2; x.globalAlpha = tw * .8; x.fillRect(px - L, py - .5, L * 2, 1); x.fillRect(px - .5, py - L, 1, L * 2);
+        x.globalAlpha = tw * .35; x.beginPath(); x.arc(px, py, rr * 2.4, 0, 6.283); x.fill(); } }
     }
     x.globalAlpha = 1;
+    root.setProperty("--te", Te.toFixed(3));
     root.setProperty("--rc", `rgb(${[lerp(143, 224, Te), lerp(186, 161, Te), lerp(212, 94, Te)].map(Math.round)})`);
     requestAnimationFrame(loop);
   }
   requestAnimationFrame(loop);
+})();
+
+
+// 필름 입자 텍스처(한 번 만들어 배경으로)
+(() => {
+  const mk = (S, cell, rgb, amax) => { const c = document.createElement("canvas"); c.width = c.height = S; const x = c.getContext("2d");
+    for (let j = 0; j < S; j += cell) for (let i = 0; i < S; i += cell) {
+      const g = (Math.random() + Math.random() + Math.random()) / 3 - .5;   // 가운데 몰린 분포: 대부분 옅고 가끔 진하다
+      if (Math.abs(g) < .06) continue;
+      x.fillStyle = g > 0 ? `rgba(${rgb},${Math.min(1, g * 2.6 * amax).toFixed(3)})` : `rgba(0,0,0,${Math.min(1, -g * 2.8 * amax).toFixed(3)})`;
+      x.fillRect(i, j, cell, cell); }
+    return `url(${c.toDataURL()})`; };
+  const gc = document.getElementById("grainC"), gw = document.getElementById("grainW");
+  if (gc) gc.style.backgroundImage = mk(200, 1, "214,232,244", 1);
+  if (gw) gw.style.backgroundImage = mk(260, 2, "246,196,140", 1);
 })();
 
 /* ─────────── 소리: 차가우면 바람, 뜨거우면 버너 (파일 없이 합성) ─────────── */
@@ -1025,22 +1095,31 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
 /* ─────────── 01 · 텐트 1600칸, 편의시설 점등 ─────────── */
 (() => {
   // 빙하 단면 대신 위에서 내려다본 밤의 베이스캠프: 푸른 아이스폴 옆 돌무더기 띠를 따라 원정대 캠프가 모여 있다
+  const twc = $("#campTw"), twx = twc.getContext("2d");
   const cv = $("#camp"), cx = cv.getContext("2d"), amen = [...document.querySelectorAll("#amen b")];
   const img = document.querySelector("#numbers .plate img");
   let seed = 7; const rnd = () => (seed = (seed * 16807) % 2147483647) / 2147483647;
   const gauss = () => (rnd() + rnd() + rnd() - 1.5) / 1.5;
   // 캠프 띠: 왼쪽 위에서 오른쪽 아래로 휘어 내려가는 곡선 (정규 좌표 0~1)
-  const band = t => ({ x: .05 + .9 * t, y: .34 + .42 * t - .16 * t * t + .035 * Math.sin(t * 9) });
+  const band = t => ({ x: .05 + .9 * t, y: .42 + .42 * t - .16 * t * t + .035 * Math.sin(t * 9) });
   const N = 1600, pts = [];
-  { const C = 38; let left = Math.round(N * .9); const cl = [];
-    for (let c = 0; c < C; c++) { const t = (c + .5 + (rnd() - .5) * .8) / C; cl.push({ t, w: .4 + rnd() * 1.6 }); }
-    const W = cl.reduce((a, b) => a + b.w, 0);
-    const NC = left; cl.forEach((c, i) => { const n = i === C - 1 ? left : Math.round(NC * c.w / W); left -= n; c.n = Math.max(0, n); });
-    const rank = cl.map((_, i) => [i, rnd()]).sort((a, b) => a[1] - b[1]).map(a => a[0]);   // 캠프가 켜지는 순서
-    rank.forEach((ci, r) => { const c = cl[ci], o = band(c.t), sp = .009 + .009 * c.w;
-      for (let k = 0; k < c.n; k++) pts.push({ x: o.x + gauss() * sp * 2, y: o.y + gauss() * sp * 1.5 + .03, ord: r + k / Math.max(1, c.n) * .9 + rnd() * .3, a: .65 + rnd() * .35, s: .8 + rnd() * .5 }); });
-    // 나머지 10%는 캠프 사이사이 흩어진 텐트
-    for (let k = pts.length; k < N; k++) { const t = rnd(), o = band(t); pts.push({ x: o.x + gauss() * .03, y: o.y + gauss() * .045 + .03, ord: rnd() * C, a: .5 + rnd() * .4, s: .7 + rnd() * .4 }); }
+  // 점 하나 = 텐트 1동. 서로 겹치지 않게(최소 간격) 띠 안에 하나씩 놓아, 개수와 밀도가 눈에 보이게 한다
+  { const AR = 2.3, D = .0068;                       // 가로 기준 최소 간격(정규 좌표), 세로는 화면비로 보정
+    const thick = t => .05 + .028 * Math.sin(t * 23 + 1) + .02 * Math.sin(t * 7);   // 띠 두께가 오르내리며 캠프 덩어리처럼
+    const cell = D, grid = new Map(), key = (x, y) => Math.floor(x / cell) + "," + Math.floor(y * AR / cell);
+    let tries = 0;
+    while (pts.length < N && tries < 400000) {
+      tries++;
+      const t = rnd(), o = band(t), th = Math.max(.018, thick(t));
+      const x = o.x + (rnd() - .5) * .012, y = o.y + .03 + gauss() * th;
+      const gx = Math.floor(x / cell), gy = Math.floor(y * AR / cell); let ok = true;
+      for (let i = -1; i <= 1 && ok; i++) for (let j = -1; j <= 1 && ok; j++) { const q = grid.get((gx + i) + "," + (gy + j)); if (q && Math.hypot(q.x - x, (q.y - y) * AR) < D) ok = false; }
+      if (!ok) continue;
+      const p = { x, y, t, a: .78 + rnd() * .22 }; pts.push(p); grid.set(gx + "," + gy, p);
+    }
+    // 켜지는 순서: 띠를 38구간(캠프)으로 나눠 구간 순서를 섞고, 구간 안에서는 차례로
+    const C = 38, rank = [...Array(C).keys()].map(i => [i, rnd()]).sort((a, b) => a[1] - b[1]).map(a => a[0]), rk = []; rank.forEach((c, r) => rk[c] = r);
+    pts.forEach(p => p.ord = rk[Math.min(C - 1, Math.floor(p.t * C))] + rnd() * .95);
     pts.sort((a, b) => a.ord - b.ord); }
   // 아이스폴 얼룩(고정)
   const ice = []; for (let i = 0; i < 900; i++) { const t = rnd(), o = band(t), d = .03 + Math.pow(rnd(), .7) * .6; ice.push({ x: o.x + (rnd() - .5) * .08 + d * .35, y: o.y - d, r: .4 + rnd() * 1.6, a: .04 + rnd() * .1 }); }
@@ -1048,7 +1127,7 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
   function size() {
     const r = cv.getBoundingClientRect(); if (!r.width) return;
     dpr = Math.min(2, devicePixelRatio || 1); W = Math.round(r.width * dpr); H = Math.round(r.height * dpr);
-    cv.width = W; cv.height = H;
+    cv.width = W; cv.height = H; twc.width = W; twc.height = H;
     // 배경(빙하·돌무더기)은 한 번 그려 둔다
     bg = document.createElement("canvas"); bg.width = W; bg.height = H; const b = bg.getContext("2d");
     // 띠 위쪽 = 얼음
@@ -1066,25 +1145,51 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
   function draw(n) {
     if (!bg) return;
     cx.clearRect(0, 0, W, H); cx.drawImage(bg, 0, 0);
-    const gs = glow.width;
+    const small = W < 700 * dpr, r = Math.max(1.05 * dpr, W / 520);
+    // 1) 넓고 옅은 후광을 빛 더하기로 겹쳐 캠프 전체가 은은하게 달아오르게
+    const g1 = glow.width * (small ? 1.5 : 2.2);
     cx.globalCompositeOperation = "lighter";
-    const small = W < 700 * dpr, kS = small ? .62 : 1, kA = small ? .34 : .55;   // 작은 화면은 같은 1600개가 몰리니 더 작고 옅게
-    for (let k = 0; k < n; k++) { const p = pts[k], s = gs * p.s * kS; cx.globalAlpha = p.a * kA; cx.drawImage(glow, p.x * W - s / 2, p.y * H - s / 2, s, s); }
-    cx.globalAlpha = 1; cx.globalCompositeOperation = "source-over";
+    for (let k = 0; k < n; k++) { const p = pts[k]; cx.globalAlpha = small ? .035 : .045; cx.drawImage(glow, p.x * W - g1 / 2, p.y * H - g1 / 2, g1, g1); }
+    // 2) 점마다 작은 후광
+    const g2 = glow.width * (small ? .5 : .7);
+    for (let k = 0; k < n; k++) { const p = pts[k]; cx.globalAlpha = small ? .16 : .2; cx.drawImage(glow, p.x * W - g2 / 2, p.y * H - g2 / 2, g2, g2); }
+    cx.globalCompositeOperation = "source-over";
+    // 3) 선명한 점(텐트 1동) — 가운데가 밝은 불빛 색
+    for (let k = 0; k < n; k++) { const p = pts[k], x = p.x * W, y = p.y * H;
+      cx.globalAlpha = p.a; cx.fillStyle = "#FFDCA0"; cx.beginPath(); cx.arc(x, y, r, 0, 6.2832); cx.fill(); }
+    cx.globalAlpha = 1;
   }
   addEventListener("resize", () => { clearTimeout(size.t); size.t = setTimeout(size, 120); });
   requestAnimationFrame(size);
+  // 다 켜진 텐트 가운데 일부가 랜턴처럼 번갈아 깜빡인다(위에 겹친 캔버스에만 그려 1600개를 다시 그리지 않는다)
+  const TWK = Array.from({ length: 90 }, () => ({ i: Math.floor(rnd() * N), ph: rnd() * 6.28, sp: 900 + rnd() * 1400 }));
+  let twOn = false;
+  function twLoop(now) {
+    if (!twOn) return;
+    // 화면 밖이거나 장면이 꺼지면 멈춘다(스크롤로 막을 빠르게 벗어난 경우 대비)
+    const rb = twc.getBoundingClientRect();
+    if (rb.bottom < 0 || rb.top > innerHeight || !twc.closest(".beat").classList.contains("on")) { twOn = false; twx.clearRect(0, 0, W, H); return; }
+    twx.clearRect(0, 0, W, H);
+    if (glow) {
+      const small = W < 700 * dpr, gsz = glow.width * (small ? 1.1 : 1.6), r = Math.max(1.05 * dpr, W / 520) * 1.25;
+      for (const t of TWK) { if (t.i >= lit) continue; const v = Math.pow(Math.max(0, Math.sin(now / t.sp + t.ph)), 6); if (v < .03) continue;
+        const p = pts[t.i], x = p.x * W, y = p.y * H;
+        twx.globalCompositeOperation = "lighter"; twx.globalAlpha = v * .55; twx.drawImage(glow, x - gsz / 2, y - gsz / 2, gsz, gsz);
+        twx.globalCompositeOperation = "source-over"; twx.globalAlpha = v; twx.fillStyle = "#FFF4DA"; twx.beginPath(); twx.arc(x, y, r, 0, 6.2832); twx.fill(); }
+      twx.globalAlpha = 1;
+    }
+    requestAnimationFrame(twLoop);
+  }
+  const twinkle = want => { if (want && !twOn) { twOn = true; requestAnimationFrame(twLoop); } else if (!want && twOn) { twOn = false; twx.clearRect(0, 0, W, H); } };
   let lit = 0;
-  const altMk = $("#altMk"), days = $("#days"); days.innerHTML = "<i></i>".repeat(50);
-  const dcells = [...days.children];
+  const altMk = $("#altMk");
   FX.numbers = (p, el, act) => {
     const B = act.beats;
     altMk.style.bottom = (easeOut(B[0].rv) * 100).toFixed(2) + "%";
-    const dn = Math.round(50 * easeOut(B[1].rv));
-    dcells.forEach((c, i) => c.classList.toggle("on", i < dn));
     const n = Math.round(1600 * easeOut(B[2].rv));
     if (!bg && B[2].b.classList.contains("on")) size();
     if (n !== lit) { lit = n; draw(n); }
+    twinkle(!reduce && B[2].active && document.visibilityState === "visible");
     const a = Math.round(clamp(B[3].rv * 1.15) * 5);
     amen.forEach((b, j) => b.classList.toggle("lit", j < a));
     if (!reduce) img.style.filter = `brightness(${.55 + a * .09}) saturate(${.5 + a * .1})`;
@@ -1252,6 +1357,10 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
       <g filter="url(#thB4)">${thPud}</g>
       <rect x="-20" y="0" width="1040" height="500" filter="url(#thNoise)" opacity=".5"/>
     </g></svg>`;
+  // 얼음 속 결정: 차가운 단면에서만 은은하게 반짝인다
+  let gs7 = 11; const gr7 = () => (gs7 = (gs7 * 16807) % 2147483647) / 2147483647;
+  const glints = Array.from({ length: 18 }, (_, i) => { const x = 300 + gr7() * 560, y0 = sy(x) + 22, y1 = bed(x) - 26, y = y0 + gr7() * (y1 - y0), k = .7 + gr7() * .9;
+    return `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><path d="M0 -${(7 * k).toFixed(1)} L${(1.1 * k).toFixed(1)} -${(1.1 * k).toFixed(1)} L${(7 * k).toFixed(1)} 0 L${(1.1 * k).toFixed(1)} ${(1.1 * k).toFixed(1)} L0 ${(7 * k).toFixed(1)} L-${(1.1 * k).toFixed(1)} ${(1.1 * k).toFixed(1)} L-${(7 * k).toFixed(1)} 0 L-${(1.1 * k).toFixed(1)} -${(1.1 * k).toFixed(1)} Z" style="animation-delay:${(-gr7() * 4.2).toFixed(2)}s;animation-duration:${(3.6 + gr7() * 2.2).toFixed(2)}s"/></g>`; }).join("");
   const thermal = `
     <g id="xTh" clip-path="url(#xThClip)">
       <image href="data:image/svg+xml;charset=utf-8,${encodeURIComponent(thBase)}" x="-20" y="0" width="1040" height="500" preserveAspectRatio="none"/>
@@ -1319,6 +1428,7 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
     <g id="xGlow" opacity="0"><ellipse cx="520" cy="196" rx="210" ry="44" fill="#E0A15E" opacity=".38" filter="url(#xSoft)"/></g>
     ${tents}
     <g id="xPud" opacity="0"><g filter="url(#xBlur)" opacity=".8">${pud}</g>${pud}</g>
+    <g class="glints">${glints}</g>
    </g>
     ${thermal}
   </g>
@@ -1374,40 +1484,7 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
   setVB(); addEventListener("resize", setVB);
   let th = 0, thLast = 0, thFired = false, seepS = 0, seepT0 = 0;
   const SEEP = 2200;
-  /* 장면 끝에서 잠깐 멈춤: 열화상 연출이 다 끝나기 전에 장면 끝(단면이 위로 빠지기 직전)에 닿으면
-     스크롤을 그 자리에 잡아 두었다가, 열 줄기가 바닥에 닿고 0.5초 뒤 풀어 준다. 최대 3.2초. */
-  (() => {
-    const HOLD_P = .965, TAIL = 500, MAX = 3900;
-    let once = false, prevY = scrollY;
-    const act4 = () => acts.find(a => a.el.id === "urine");
-    let locked = false, until = 0, holdAt = 0, tm = 0;
-    const html = document.documentElement;
-    const stop = e => { if (locked) e.preventDefault(); };
-    const keys = e => { if (locked && [" ", "PageDown", "ArrowDown", "End", "Spacebar"].includes(e.key)) e.preventDefault(); };
-    function release() { locked = false; clearTimeout(tm); html.classList.remove("hold"); if (seepS >= 1) once = true; else if (performance.now() - holdStart > MAX - 50) once = true; }
-    let holdStart = 0;
-    function lock(y) {
-      locked = true; holdAt = y; holdStart = performance.now(); html.classList.add("hold");
-      scrollTo(0, y);
-      // 아직 문장이 켜지기 전(빠르게 휙 내린 경우)이면 지금부터 전체 연출 길이만큼 붙잡는다
-      const doneAt = seepT0 ? seepT0 + 1000 + SEEP + TAIL : performance.now() + 250 + 1000 + SEEP + TAIL;
-      const left = Math.min(MAX, Math.max(0, doneAt - performance.now()));
-      tm = setTimeout(release, left);
-    }
-    addEventListener("wheel", stop, { passive: false });
-    addEventListener("touchmove", stop, { passive: false });
-    addEventListener("keydown", keys);
-    addEventListener("scroll", () => {
-      if (reduce) return;
-      if (locked) { if (scrollY > holdAt + 1) scrollTo(0, holdAt); return; }
-      const py = prevY; prevY = scrollY;
-      if (once || seepS >= 1) return;                       // 이미 한 번 봤거나 연출이 끝났으면 그냥 지나간다
-      const a = act4(); if (!a) return;
-      const span = a.el.offsetHeight - innerHeight, y = a.el.offsetTop + span * HOLD_P;
-      // 위에서 내려오며 붙잡는 지점을 지나간 경우만(큰 점프·새로고침 복원은 제외)
-      if (py <= y + 1 && scrollY > y && scrollY - py < innerHeight * 3) lock(y);
-    }, { passive: true });
-  })();
+  FX.xsecSeep = () => seepS;                                   // 붙잡기 관리자가 "열 줄기가 바닥에 닿았나"를 묻는다
   FX.xsec = (p, el, act, now = performance.now()) => {
     const ub = act ? act.beats[act.beats.length - 1] : null, want = !!ub && (ub.active || ub.past);
     const dt = thLast ? Math.min(64, now - thLast) : 16; thLast = now;
@@ -1457,12 +1534,25 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
   };
 })();
 
+// 물빛 텍스처: 겹친 물결이 만드는 가는 빛줄기 무늬(이음매 없이 반복)
+const CAUSTIC = (() => {
+  const S = 128, c = document.createElement("canvas"); c.width = c.height = S; const x = c.getContext("2d"), im = x.createImageData(S, S), T = Math.PI * 2 / S;
+  const W = [[1, 2, 0], [2, -1, 1.3], [-3, 1, 2.1], [1, 3, .7]];
+  for (let j = 0; j < S; j++) for (let i = 0; i < S; i++) {
+    let v = 0; W.forEach(([a, b, ph], n) => { const u = (a * i + b * j) * T; v += Math.sin(u * 2 + ph + 1.6 * Math.sin((b * i - a * j) * T * 3 + n)); });
+    const L = Math.pow(Math.max(0, 1 - Math.abs(v) / 1.15), 5), k = (j * S + i) * 4;
+    im.data[k] = 205; im.data[k + 1] = 238; im.data[k + 2] = 255; im.data[k + 3] = Math.round(L * 255);
+  }
+  x.putImageData(im, 0, 0); return c.toDataURL();
+})();
+
 /* ─────────── 05 · 수영장 (스크롤로 채워진다) ───────────
    앞면을 유리처럼 잘라 속을 보여 주는 입체 수조. 물은 스크롤에 따라 차오른다. */
 (() => {
   const svg = $("#poolSvg"), box = $("#poolBox"), tEl = $("#poolT");
   const CAP = 2500, U = 154, ANS = 2492, LO = 1964, HI = 3020, LANES = 8;
   let V, X0, X1, FB, H, DX, DY, nar = null, e = {}, level = 0, target = 0, amp = 1, vis = false, fs = 13;
+  FX.poolLevel = () => level;
   const yOf = t => FB - H * t / CAP;
   const P = (x, y) => `${x.toFixed(1)} ${y.toFixed(1)}`;
   function build() {
@@ -1495,12 +1585,15 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
       <pattern id="pHatch" width="7" height="7" patternUnits="userSpaceOnUse" patternTransform="rotate(45)"><line x1="0" y1="0" x2="0" y2="7" stroke="rgba(170,210,230,.45)" stroke-width="1.2"/></pattern>
       <radialGradient id="pShadow"><stop offset="0" stop-color="#000" stop-opacity=".6"/><stop offset="1" stop-color="#000" stop-opacity="0"/></radialGradient>
       <clipPath id="pFrontC"><rect x="${X0}" y="0" width="${X1 - X0}" height="${FB}"/></clipPath>
+      <pattern id="pCa1" patternUnits="userSpaceOnUse" width="300" height="300"><image href="${CAUSTIC}" width="300" height="300"/></pattern>
+      <pattern id="pCa2" patternUnits="userSpaceOnUse" width="380" height="380"><image href="${CAUSTIC}" width="380" height="380"/></pattern>
     </defs>
     <ellipse cx="${(X0 + X1 + DX) / 2}" cy="${FB + DY / 2 + 14}" rx="${(X1 - X0) * .62}" ry="${-DY * .9}" fill="url(#pShadow)"/>
     <path d="M${P(X0 + DX, FT + DY)} L${P(X1 + DX, FT + DY)} L${P(X1 + DX, FB + DY)} L${P(X0 + DX, FB + DY)} Z" fill="url(#pBack)"/>
     <g stroke="rgba(190,225,240,.08)" stroke-width="1">${tileBack}</g>
     <path d="M${P(X0, FB)} L${P(X1, FB)} L${P(X1 + DX, FB + DY)} L${P(X0 + DX, FB + DY)} Z" fill="url(#pFloor)"/>
     ${tileFloor}
+    <path id="pFloorC" d="M${P(X0, FB)} L${P(X1, FB)} L${P(X1 + DX, FB + DY)} L${P(X0 + DX, FB + DY)} Z" fill="url(#pCa1)" opacity="0" style="mix-blend-mode:screen"/>
     <path d="M${P(X0, FT)} L${P(X0 + DX, FT + DY)} L${P(X0 + DX, FB + DY)} L${P(X0, FB)} Z" fill="url(#pLeft)"/>
     <g stroke="rgba(190,225,240,.08)" stroke-width="1">${tileLeft}</g>
     <path id="pTint" fill="rgba(58,120,150,.38)"/>
@@ -1509,6 +1602,7 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
     <path id="pCau" fill="none" stroke="rgba(240,250,255,.35)" stroke-width="1"/>
     <g clip-path="url(#pFrontC)">
       <path id="pWater" fill="url(#pFront)"/>
+      <path id="pWaterC" fill="url(#pCa2)" opacity="0" style="mix-blend-mode:screen"/>
       <rect id="pUrine" x="${X0}" width="${X1 - X0}" fill="url(#pUF)"/>
       <g id="pBub" fill="none" stroke="rgba(230,246,255,.6)" stroke-width="1"></g>
       <path id="pLine" fill="none" stroke="rgba(255,255,255,.95)" stroke-width="1.4"/>
@@ -1533,7 +1627,7 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
       <line x1="${X0}" y1="${FB + 16}" x2="${X0}" y2="${FB + 28}" stroke="rgba(232,238,242,.3)"/><line x1="${X1}" y1="${FB + 16}" x2="${X1}" y2="${FB + 28}" stroke="rgba(232,238,242,.3)"/>
       <text x="${(X0 + X1) / 2}" y="${FB + 28 + fs * 1.3}" text-anchor="middle">올림픽 규격 수영장 · 길이 50m</text>
     </g>`;
-    e = {}; ["pTint", "pRopes", "pTopS", "pCau", "pWater", "pUrine", "pBub", "pLine", "pBand", "pUTag"].forEach(id => e[id] = svg.querySelector("#" + id));
+    e = {}; ["pTint", "pRopes", "pTopS", "pCau", "pWater", "pUrine", "pBub", "pLine", "pBand", "pUTag", "pWaterC", "pFloorC", "pCa1", "pCa2"].forEach(id => e[id] = svg.querySelector("#" + id));
   }
   const bubbles = Array.from({ length: 26 }, () => ({ x: Math.random(), v: .12 + Math.random() * .25, o: Math.random(), r: (1.1 + Math.random() * 2.1).toFixed(1) }));
   function draw(now) {
@@ -1546,6 +1640,11 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
     const back = `L${P(X1 + DX, y0 + DY)} L${P(X0 + DX, y0 + DY)} Z`;
     e.pWater.setAttribute("d", show ? `M${P(X0, FB)} ` + fwd.map(q => `L${P(q[0], q[1])}`).join(" ") + ` L${P(X1, FB)} Z` : "");
     e.pLine.setAttribute("d", show ? front : "");
+    // 수면을 지난 빛이 물속과 바닥에 일렁인다(물이 찰수록 진하게)
+    const caK = show ? clamp((level - 15) / 260) : 0;
+    e.pWaterC.setAttribute("d", e.pWater.getAttribute("d")); e.pWaterC.setAttribute("opacity", (caK * .34).toFixed(3));
+    e.pFloorC.setAttribute("opacity", (caK * .55).toFixed(3));
+    if (!reduce) { const t = now / 1000; e.pCa1.setAttribute("patternTransform", `translate(${(t * 9) % 300} ${(Math.sin(t * .4) * 14).toFixed(2)})`); e.pCa2.setAttribute("patternTransform", `translate(${(-t * 6) % 380} ${(t * 4) % 380}) rotate(12)`); }
     e.pTopS.setAttribute("d", show ? front + " " + back : "");
     e.pTopS.setAttribute("fill", level <= U + 2 ? "#E8B676" : "url(#pTop)");
     e.pTint.setAttribute("d", show ? `M${P(X0, FB)} L${P(X0, y0)} L${P(X0 + DX, y0 + DY)} L${P(X1 + DX, y0 + DY)} L${P(X1 + DX, FB + DY)} L${P(X1, FB)} Z` : "");
@@ -1589,6 +1688,7 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
     if (reduce) { level = target; draw(0); }
   };
 })();
+
 
 /* ─────────── 06 · 위성 지도 ─────────── */
 (() => {
@@ -1864,9 +1964,114 @@ function loop(now) {
   });
   const d = document.documentElement;
   rail.style.transform = `scaleX(${clamp(scrollY / (d.scrollHeight - vh))})`;
+  chapMarks.forEach(m => m.a.classList.toggle("past", scrollY + 2 >= m.top));
   if (busy) requestAnimationFrame(loop); else running = false;
 }
 const req = () => { if (!running) { running = true; lastT = performance.now(); requestAnimationFrame(loop); } };
+
+/* 표지 깊이감: PC에서 마우스를 움직이면 사진은 반대로 조금, 글은 같은 쪽으로 아주 조금, 눈발은 더 많이 움직인다 */
+(() => {
+  if (reduce || !matchMedia("(pointer:fine)").matches) return;
+  const cover = document.getElementById("cover"); if (!cover) return;
+  const img = cover.querySelector(".plate img"), wrap = cover.querySelector(".cover-wrap"), snow = document.getElementById("snow");
+  let tx = 0, ty = 0, x = 0, y = 0, run = false;
+  addEventListener("mousemove", e => { tx = e.clientX / innerWidth * 2 - 1; ty = e.clientY / innerHeight * 2 - 1; if (!run) { run = true; requestAnimationFrame(step); } }, { passive: true });
+  function step() {
+    const r = cover.getBoundingClientRect(), vis = clamp(r.bottom / innerHeight), k = vis * clamp(1 - (-r.top) / (r.height * .6));
+    x += (tx * k - x) * .06; y += (ty * k - y) * .06;
+    if (img) img.style.translate = `${(-x * 14).toFixed(2)}px ${(-y * 9).toFixed(2)}px`;
+    if (wrap) wrap.style.translate = `${(x * 5).toFixed(2)}px ${(y * 3).toFixed(2)}px`;
+    if (snow) snow.style.translate = `${(x * 22).toFixed(2)}px ${(y * 12).toFixed(2)}px`;
+    if (Math.abs(tx * k - x) > .002 || Math.abs(ty * k - y) > .002) requestAnimationFrame(step); else run = false;
+  }
+})();
+
+/* 진행선 장 눈금 */
+const chapMarks = [];
+(() => {
+  const names = { numbers: "01 숫자", then: "02 과거와 지금", fuel: "03 연료", urine: "04 소변", pool: "05 수영장", sat: "06 위성", excl: "07 계산 밖", zoom: "08 히말라야", thame: "09 타메", relocate: "10 제안", coda: "11 마무리" };
+  const box = document.getElementById("chap"); if (!box) return;
+  Object.entries(names).forEach(([id, label]) => {
+    const el = document.getElementById(id); if (!el) return;
+    const a = document.createElement("a"); a.href = "#" + id; a.setAttribute("aria-label", label + " 장으로 이동"); a.innerHTML = `<span>${label}</span>`;
+    a.addEventListener("click", ev => { ev.preventDefault(); window.__nav = true; scrollTo({ top: el.offsetTop + 2, behavior: reduce ? "auto" : "smooth" }); clearTimeout(a.t); a.t = setTimeout(() => { window.__nav = false; }, 1800); });
+    box.appendChild(a); chapMarks.push({ a, el, top: 0 });
+  });
+  const place = () => { const max = document.documentElement.scrollHeight - innerHeight; chapMarks.forEach(m => { m.top = m.el.offsetTop; const x = clamp(m.top / max) * 100; m.a.style.left = x + "%"; m.a.classList.toggle("edge-r", x > 88); }); };
+  place(); addEventListener("resize", place); addEventListener("load", place); setTimeout(place, 1500);
+})();
+
+/* 숫자 오도미터: 자릿수마다 숫자판이 굴러가다 왼쪽부터 차례로 멈춘다. 다 멈추면 일반 글자로 바꿔(글린트·복사용) 둔다 */
+function buildOdo(c) {
+  const fin = fmtC(c.t, c.k), fig = c.n.closest(".fig");
+  c.final = fin; c.odo = true; c.odoLive = true; c.n.setAttribute("aria-label", fin);
+  const strip = Array.from({ length: 30 }, (_, i) => `<b>${i % 10}</b>`).join("");
+  c.n.innerHTML = [...fin].map(ch => /\d/.test(ch) ? `<span class="od"><span class="ods">${strip}</span></span>` : `<span class="odc">${ch}</span>`).join("");
+  c.cols = [...c.n.querySelectorAll(".ods")].map((el, j, all) => ({ el, d: +fin.replace(/\D/g, "")[j], j, m: all.length }));
+  if (fig) { fig.classList.add("odo-fig"); fig.classList.remove("settled"); }
+}
+function tickOdo(c, k) {
+  const fig = c.n.closest(".fig");
+  if (k <= 0 && !c.odoLive) buildOdo(c);
+  if (!c.odoLive) return;
+  if (k >= 1) { c.odoLive = false; c.n.textContent = c.final; if (fig) fig.classList.add("settled"); return; }
+  c.cols.forEach(o => {
+    const st = (o.j / Math.max(1, o.m)) * .28, kk = easeOut(clamp((k - st) / (1 - st)));   // 왼쪽 자리부터 먼저 멈춘다
+    o.el.style.transform = `translateY(${(-(20 + o.d) * kk / 30 * 100).toFixed(3)}%)`;
+  });
+}
+document.addEventListener("animationend", e => { if (e.animationName === "glint" && e.target.classList && e.target.classList.contains("glint")) e.target.classList.remove("glint"); });
+
+/* ─────────── 핵심 장면 붙잡기 ───────────
+   숫자가 세어지거나 연출이 도는 핵심 장면을, 그 연출이 끝나기 전에 아래로 지나치려 하면
+   장면 끝 지점에서 스크롤을 잠깐 멈췄다가 연출이 끝나면 풀어 준다.
+   - 아래로 내릴 때만, 장면마다 페이지당 한 번만. 이미 다 본 장면은 걸리지 않는다.
+   - 붙잡힌 상태에서 위로 올리려 하면 바로 풀린다.
+   - 사용자가 처음 스크롤·터치·키를 누르기 전의 이동(새로고침 위치 복원)은 무시한다. */
+(() => {
+  if (reduce) return;
+  const A = id => acts.find(a => a.el.id === id);
+  const beatDone = (id, i) => () => { const a = A(id); return !!a && a.beats[i].rv >= 1; };
+  const stampDone = (id, i) => () => { const a = A(id); return !!a && !!a.beats[i].b.querySelector(".fig.stamp.hit"); };
+  const holds = [];
+  const add = (id, i, o = {}) => { const a = A(id); if (!a || !a.beats[i]) return; holds.push({ id, i, hp: o.hp ?? a.beats[i].band[1] - .012, done: o.done || beatDone(id, i), max: o.max || 2400, tail: o.tail ?? 350, used: false }); };
+  add("numbers", 0); add("numbers", 1); add("numbers", 2, { max: 2800 });            // 5300m · 50일 · 1600동
+  add("pool", 1); add("pool", 2);                                                    // 849,174MJ · 라면 460만 그릇
+  add("pool", 5, { hp: .715, done: () => FX.poolLevel() >= 2400, max: 3600, tail: 500 });   // 수영장 2492t까지 차오름
+  { const u = A("urine"); if (u) add("urine", u.beats.length - 1, { done: () => FX.xsecSeep() >= 1, max: 4200, tail: 500 }); }   // 열화상·열 줄기
+  { const t = A("thame"); if (t) t.beats.forEach((bt, i) => { if (bt.b.querySelector("[data-stamp]")) add("thame", i, { done: stampDone("thame", i), max: 2800, tail: 600 }); }); }   // 25채 · 135명 · 618만 달러
+  const yOf = h => { const a = A(h.id), r = a.el.getBoundingClientRect(); return r.top + scrollY + (a.el.offsetHeight - innerHeight) * h.hp; };
+  const html = document.documentElement;
+  let armed = false, prevY = scrollY, cur = null, at = 0, t0 = 0, doneAt = 0, poll = 0;
+  ["wheel", "touchstart", "keydown", "pointerdown"].forEach(t => addEventListener(t, () => { armed = true; }, { passive: true, capture: true }));
+  function release() { if (!cur) return; cur.used = true; cur = null; clearInterval(poll); html.classList.remove("hold"); prevY = scrollY; }
+  function lock(h, y) {
+    cur = h; at = y; t0 = performance.now(); doneAt = 0; html.classList.add("hold"); scrollTo(0, y);
+    poll = setInterval(() => {
+      const now = performance.now();
+      if (!doneAt && h.done()) doneAt = now;
+      if ((doneAt && now - doneAt >= h.tail) || now - t0 >= h.max) release();
+    }, 80);
+  }
+  // 붙잡힌 동안: 아래로 가는 입력은 막고(바깥 기사 페이지로 스크롤이 새지 않게), 위로 가는 입력은 풀어 준다
+  addEventListener("wheel", e => { if (!cur) return; if (e.deltaY < 0) { release(); return; } e.preventDefault(); }, { passive: false });
+  let ty = 0;
+  addEventListener("touchstart", e => { ty = e.touches[0].clientY; }, { passive: true });
+  addEventListener("touchmove", e => { if (!cur) return; if (e.touches[0].clientY - ty > 8) { release(); return; } e.preventDefault(); }, { passive: false });
+  addEventListener("keydown", e => { if (!cur) return; if (["ArrowUp", "PageUp", "Home"].includes(e.key)) { release(); return; } if ([" ", "PageDown", "ArrowDown", "End", "Spacebar"].includes(e.key)) e.preventDefault(); });
+  addEventListener("scroll", () => {
+    if (cur) { if (scrollY > at + 1) scrollTo(0, at); return; }
+    if (window.__nav) { prevY = scrollY; return; }                // 진행선 눈금으로 장을 건너뛸 때는 붙잡지 않는다
+    const py = prevY, y = scrollY; prevY = y;
+    if (!armed || y <= py) return;
+    let pick = null, pickY = Infinity;
+    for (const h of holds) { if (h.used) continue; const hy = yOf(h); if (py <= hy + 1 && y > hy && hy < pickY) { pick = h; pickY = hy; } }
+    if (!pick) return;
+    if (pick.done()) { pick.used = true; return; }
+    lock(pick, pickY);
+  }, { passive: true });
+})();
+
 if (reduce) {
   acts.forEach(a => { a.ps = 1; render(a, 1, performance.now()); a.beats.forEach(o => { o.rv = 1; }); render(a, 1, performance.now()); });
   document.querySelectorAll(".beat").forEach(b => { b.style.opacity = 1; b.style.transform = "none"; });
