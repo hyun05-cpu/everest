@@ -2146,6 +2146,10 @@ document.addEventListener("animationend", e => { if (e.animationName === "glint"
    - 사용자가 처음 스크롤·터치·키를 누르기 전의 이동(새로고침 위치 복원)은 무시한다. */
 (() => {
   if (reduce) return;
+  // 기사/CMS iframe에서는 부모 페이지가 실제 스크롤을 소유한다.
+  // 내부 hold가 scrollTo()로 위치를 되감으면 부모 progress와 충돌해 모바일에서
+  // 화면이 앞뒤로 튀므로, 임베드 상태에서는 hold/snap을 사용하지 않는다.
+  if (window.self !== window.top) return;
   const A = id => acts.find(a => a.el.id === id);
   const beatDone = (id, i) => () => { const a = A(id); return !!a && a.beats[i].rv >= 1; };
   const stampDone = (id, i) => () => { const a = A(id); return !!a && !!a.beats[i].b.querySelector(".fig.stamp.hit"); };
