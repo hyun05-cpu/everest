@@ -383,22 +383,27 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 @keyframes grain{0%{transform:translate(0,0)}17%{transform:translate(-3%,2%)}34%{transform:translate(2%,-4%)}51%{transform:translate(-4%,-1%)}68%{transform:translate(3%,3%)}85%{transform:translate(-1%,4%)}100%{transform:translate(0,0)}}
 
 #rail>i{background:var(--rc,#8FBAD4)}
-/* 효과음 버튼 — 에디토리얼 컨트롤 */
-.sound{--c:var(--rc,#9CCBE4);position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 18px);z-index:61;display:flex;align-items:center;gap:9px;height:38px;padding:0 11px;border:1px solid rgba(232,238,242,.42);border-radius:2px;background:rgba(4,7,10,.78);color:#E8EEF2;font-family:var(--sans);line-height:1;cursor:pointer;box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;transition:background .2s,border-color .2s,color .2s,opacity .3s}
-.sound:hover{background:rgba(8,13,18,.92);border-color:rgba(232,238,242,.72)}
-.sound:active{background:rgba(16,23,29,.96)}
-.sound .sound-dot{display:none!important}
-.sound .bars{display:block;position:relative;width:14px;height:14px;flex:none}
-.sound .bars i{display:none}
-.sound .bars::before{content:"";position:absolute;left:0;top:4px;width:4px;height:6px;background:currentColor}
-.sound .bars::after{content:"";position:absolute;left:3px;top:2px;width:8px;height:10px;border:1px solid currentColor;border-left:0;clip-path:polygon(0 0,100% 50%,0 100%);opacity:.72}
-.sound.on .bars{color:var(--c)}
-.sound .sound-label{display:block;position:static;white-space:nowrap;text-align:left;font-size:11px;line-height:1;letter-spacing:.02em;font-weight:600;color:inherit;text-shadow:none}
-.sound.on{border-color:rgba(170,205,224,.58)}
-.sound:not(.on){color:rgba(232,238,242,.68);border-color:rgba(232,238,242,.28)}
-.sound.armed{box-shadow:none}
-.sound-hint{position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 62px);z-index:61;margin:0;padding:0;border:0;background:transparent;color:rgba(214,226,233,.58);font-size:10px;line-height:1.3;letter-spacing:0;pointer-events:none;opacity:0;transform:none;transition:opacity .25s}
-.sound-hint.show{opacity:1}
+/* 효과음 버튼: 매거진 표지의 작은 라벨처럼 — 각진 얇은 테두리, 넓은 자간, 가는 세로선 뒤 ON/OFF 글자 */
+.sound{--c:var(--rc,#8FBAD4);position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 16px);z-index:61;display:flex;align-items:center;gap:10px;min-height:34px;padding:0 12px;border:1px solid rgba(232,238,242,.22);border-radius:1px;background:rgba(4,7,10,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#E8EEF2;font-family:var(--sans);font-size:11.5px;letter-spacing:.16em;font-weight:600;line-height:1;cursor:pointer;transition:border-color .3s,background .3s,opacity .6s}
+.sound:hover{background:rgba(10,16,21,.82);border-color:rgba(232,238,242,.45)}
+.sound.on{border-color:rgba(143,186,212,.5);border-color:color-mix(in srgb,var(--c) 52%,transparent)}
+.sound .bars{display:flex;align-items:flex-end;gap:2px;height:10px;color:var(--c)}
+.sound .bars i{display:block;width:2px;height:2px;background:currentColor;opacity:.4;transition:height .25s,opacity .3s}
+.sound.on .bars i{opacity:1;height:calc(2px + var(--g,0) * 8px)}
+.sound.on .bars i:nth-child(2){height:calc(2px + var(--g2,0) * 8px)}
+.sound.on .bars i:nth-child(3){height:calc(2px + var(--g3,0) * 8px)}
+.sound .sw{display:flex;align-items:center;align-self:stretch;padding-left:10px;border-left:1px solid rgba(232,238,242,.2)}
+.sound .sw::before{content:"OFF";font-size:10px;letter-spacing:.2em;font-weight:700;color:rgba(232,238,242,.45)}
+.sound.on .sw::before{content:"ON";color:var(--c)}
+/* 켜져 있지만 브라우저가 소리를 막고 있을 때: 막대가 숨 쉬고 테두리가 은은하게 깜빡인다 */
+.sound.armed .bars i{animation:armBar 1.4s ease-in-out infinite}
+.sound.armed .bars i:nth-child(2){animation-delay:.2s}
+.sound.armed .bars i:nth-child(3){animation-delay:.4s}
+.sound.armed{animation:armEdge 2.2s ease-in-out infinite}
+@keyframes armBar{0%,100%{height:3px}50%{height:10px}}
+@keyframes armEdge{0%,100%{border-color:rgba(232,238,242,.22)}50%{border-color:var(--c)}}
+.sound-hint{position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 58px);z-index:61;margin:0;padding:6px 10px;border-radius:1px;border:1px solid rgba(232,238,242,.14);letter-spacing:.02em;background:rgba(4,7,10,.74);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#C9D6DD;font-size:12px;line-height:1.4;pointer-events:none;opacity:0;transform:translateY(-4px);transition:opacity .5s,transform .5s}
+.sound-hint.show{opacity:1;transform:none}
 @media (max-width:720px){
   .alt{width:40px;top:24vh;height:50vh}
   .alt b{display:none}
@@ -408,10 +413,8 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
   .figcap,.figsub{max-width:26ch}
   .fig{font-size:clamp(52px,17vw,92px)}
   .readout{top:70px}
-  .sound{right:12px;top:calc(env(safe-area-inset-top,0px) + 10px);height:36px;padding:0 10px;gap:8px}
-  .sound .sound-label{font-size:10.5px;line-height:1;letter-spacing:.01em}
-  .sound .bars{width:13px;height:13px}
-  .sound-hint{right:12px;top:calc(env(safe-area-inset-top,0px) + 54px);font-size:9.5px}
+  .sound{min-height:32px;font-size:11px;gap:9px;padding:0 10px}
+  .sound-hint{top:calc(env(safe-area-inset-top,0px) + 54px);font-size:11px}
   .legend{display:none}
   .cmpbar{right:var(--gut);left:var(--gut);width:auto;top:auto;bottom:calc(clamp(52px,9vh,96px) + 128px);padding:14px 16px 16px;background:rgba(4,7,10,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
   .cmpbar p{margin-bottom:10px}
@@ -471,8 +474,8 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 <div id="grain" aria-hidden="true"></div>
 <canvas id="snow" aria-hidden="true"></canvas>
 <div class="vignette" aria-hidden="true"></div><div class="grain" id="grainC" aria-hidden="true"></div><div class="grain" id="grainW" aria-hidden="true"></div>
-<button class="sound on" id="sound" type="button" role="switch" aria-checked="true" aria-label="효과음 켜기 또는 끄기"><span class="sound-dot" aria-hidden="true"></span><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="sound-label" id="soundLabel">효과음 ON</span></button>
-<p class="sound-hint" id="soundHint" aria-hidden="true">탭하면 사운드가 시작됩니다</p>
+<button class="sound on" id="sound" type="button" role="switch" aria-checked="true" aria-label="효과음: 바람, 버너, 물, 텐트 불빛 소리"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span><span id="soundLabel">효과음</span><span class="sw" aria-hidden="true"></span></button>
+<p class="sound-hint" id="soundHint" aria-hidden="true">화면을 한 번 누르면 소리가 나요</p>
 <main>
 
 <!-- ═══════════ 00 · 표지 ═══════════ -->
@@ -1053,7 +1056,6 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
   const live = () => !!ac && ac.state === "running";
   function apply() {
     btn.setAttribute("aria-checked", String(on)); btn.classList.toggle("on", on);
-    const label = document.getElementById("soundLabel"); if (label) label.innerHTML = on ? "효과음 ON" : "효과음 OFF";
     const armed = on && !live();
     btn.classList.toggle("armed", armed);
     hint.classList.toggle("show", armed && hintOk && scrollY < innerHeight * 1.2);
