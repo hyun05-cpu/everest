@@ -383,25 +383,27 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 
 #rail>i{background:var(--rc,#8FBAD4)}
 /* 효과음 버튼 — 얇은 프로스트 글래스 캡슐. 상태는 작은 점과 파형으로만 표현 */
-.sound{--c:var(--rc,#8FBAD4);position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 18px);z-index:61;display:flex;align-items:center;gap:9px;height:38px;padding:0 13px 0 11px;border:1px solid rgba(232,238,242,.16);border-radius:999px;background:linear-gradient(180deg,rgba(18,25,31,.64),rgba(4,7,10,.48));box-shadow:0 8px 28px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.05);backdrop-filter:blur(14px) saturate(125%);-webkit-backdrop-filter:blur(14px) saturate(125%);color:rgba(232,238,242,.82);font-family:var(--sans);font-size:9.5px;letter-spacing:.2em;font-weight:650;line-height:1;cursor:pointer;transition:transform .28s cubic-bezier(.16,1,.3,1),border-color .3s,background .3s,color .3s,opacity .6s,box-shadow .3s}
-.sound:hover{transform:translateY(-1px);border-color:rgba(232,238,242,.3);background:linear-gradient(180deg,rgba(26,34,41,.76),rgba(7,11,14,.62));box-shadow:0 10px 34px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.07)}
+.sound{--c:var(--rc,#9CCBE4);position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 18px);z-index:61;display:flex;align-items:center;gap:10px;height:46px;padding:0 16px 0 13px;border:1px solid rgba(238,246,250,.52);border-radius:999px;background:linear-gradient(180deg,rgba(19,29,37,.88),rgba(4,8,12,.76));box-shadow:0 12px 36px rgba(0,0,0,.38),0 0 0 1px rgba(142,199,229,.08),inset 0 1px 0 rgba(255,255,255,.11);backdrop-filter:blur(18px) saturate(135%);-webkit-backdrop-filter:blur(18px) saturate(135%);color:#f3f8fb;font-family:var(--sans);font-size:10.5px;letter-spacing:.18em;font-weight:760;line-height:1;cursor:pointer;transition:transform .24s cubic-bezier(.16,1,.3,1),border-color .3s,background .3s,color .3s,opacity .6s,box-shadow .3s}
+.sound::before{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;background:linear-gradient(110deg,rgba(255,255,255,.12),transparent 32%,transparent 68%,rgba(138,203,236,.12));mix-blend-mode:screen;opacity:.9}
+.sound:hover{transform:translateY(-1px);border-color:rgba(238,246,250,.78);background:linear-gradient(180deg,rgba(25,39,49,.94),rgba(7,12,17,.86));box-shadow:0 14px 42px rgba(0,0,0,.44),0 0 24px rgba(142,199,229,.10),inset 0 1px 0 rgba(255,255,255,.14)}
 .sound:active{transform:translateY(0) scale(.975)}
-.sound .sound-dot{width:5px;height:5px;border-radius:50%;background:rgba(232,238,242,.28);box-shadow:none;transition:background .35s,box-shadow .35s}
-.sound.on .sound-dot{background:var(--c);box-shadow:0 0 10px color-mix(in srgb,var(--c) 65%,transparent)}
-.sound .bars{display:flex;align-items:center;justify-content:center;gap:2px;width:18px;height:14px;color:rgba(232,238,242,.48)}
-.sound .bars i{display:block;width:1.5px;border-radius:2px;background:currentColor;height:3px;opacity:.65;transition:height .3s,color .3s,opacity .3s}
-.sound .bars i:nth-child(2){height:7px}.sound .bars i:nth-child(3){height:11px}.sound .bars i:nth-child(4){height:6px}
+.sound .sound-dot{width:7px;height:7px;border-radius:50%;background:rgba(232,238,242,.36);box-shadow:0 0 0 4px rgba(232,238,242,.05);transition:background .35s,box-shadow .35s}
+.sound.on .sound-dot{background:var(--c);box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 12%,transparent),0 0 15px color-mix(in srgb,var(--c) 78%,transparent)}
+.sound .bars{display:flex;align-items:center;justify-content:center;gap:2.5px;width:20px;height:16px;color:rgba(238,246,250,.62)}
+.sound .bars i{display:block;width:2px;border-radius:3px;background:currentColor;height:4px;opacity:.82;transition:height .26s,color .3s,opacity .3s}
+.sound .bars i:nth-child(2){height:8px}.sound .bars i:nth-child(3){height:13px}.sound .bars i:nth-child(4){height:7px}
 .sound.on .bars{color:var(--c)}
-.sound.on .bars i{opacity:.95;transform-origin:center}
-.sound.on .bars i:nth-child(1){height:calc(3px + var(--g,0) * 5px)}
-.sound.on .bars i:nth-child(2){height:calc(5px + var(--g2,0) * 7px)}
-.sound.on .bars i:nth-child(3){height:calc(7px + var(--g3,0) * 6px)}
-.sound.on .bars i:nth-child(4){height:calc(4px + var(--g2,0) * 5px)}
-.sound .sound-label{position:relative;top:.5px;white-space:nowrap}
-.sound.armed .sound-dot{animation:soundPulse 1.8s ease-in-out infinite}
-.sound.armed .bars i{animation:soundBreath 1.5s ease-in-out infinite}.sound.armed .bars i:nth-child(2){animation-delay:.12s}.sound.armed .bars i:nth-child(3){animation-delay:.24s}.sound.armed .bars i:nth-child(4){animation-delay:.36s}
-@keyframes soundPulse{0%,100%{opacity:.45;box-shadow:0 0 0 transparent}50%{opacity:1;box-shadow:0 0 12px var(--c)}}
-@keyframes soundBreath{0%,100%{transform:scaleY(.62)}50%{transform:scaleY(1)}}
+.sound.on .bars i{opacity:1;filter:drop-shadow(0 0 4px color-mix(in srgb,var(--c) 45%,transparent));transform-origin:center}
+.sound.on .bars i:nth-child(1){height:calc(4px + var(--g,0) * 6px)}
+.sound.on .bars i:nth-child(2){height:calc(6px + var(--g2,0) * 8px)}
+.sound.on .bars i:nth-child(3){height:calc(9px + var(--g3,0) * 7px)}
+.sound.on .bars i:nth-child(4){height:calc(5px + var(--g2,0) * 6px)}
+.sound .sound-label{position:relative;top:.4px;white-space:nowrap;text-shadow:0 1px 12px rgba(0,0,0,.35)}
+.sound.armed{border-color:rgba(188,222,239,.72);box-shadow:0 12px 36px rgba(0,0,0,.4),0 0 22px rgba(142,199,229,.16),inset 0 1px 0 rgba(255,255,255,.12)}
+.sound.armed .sound-dot{animation:soundPulse 1.5s ease-in-out infinite}
+.sound.armed .bars i{animation:soundBreath 1.35s ease-in-out infinite}.sound.armed .bars i:nth-child(2){animation-delay:.1s}.sound.armed .bars i:nth-child(3){animation-delay:.2s}.sound.armed .bars i:nth-child(4){animation-delay:.3s}
+@keyframes soundPulse{0%,100%{opacity:.5;box-shadow:0 0 0 4px rgba(156,203,228,.04)}50%{opacity:1;box-shadow:0 0 0 5px rgba(156,203,228,.12),0 0 18px var(--c)}}
+@keyframes soundBreath{0%,100%{transform:scaleY(.58)}50%{transform:scaleY(1.08)}}
 .sound-hint{position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 64px);z-index:61;margin:0;padding:7px 11px;border:1px solid rgba(232,238,242,.10);border-radius:999px;background:rgba(4,7,10,.62);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:rgba(214,226,233,.72);font-size:10.5px;line-height:1.3;letter-spacing:.02em;pointer-events:none;opacity:0;transform:translateY(-3px);transition:opacity .45s,transform .45s}
 .sound-hint.show{opacity:1;transform:none}
 
@@ -415,8 +417,8 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
   .figcap,.figsub{max-width:26ch}
   .fig{font-size:clamp(52px,17vw,92px)}
   .readout{top:70px}
-  .sound{right:16px;top:calc(env(safe-area-inset-top,0px) + 14px);width:40px;height:40px;padding:0;justify-content:center;gap:0}
-  .sound .sound-label,.sound .sound-dot{display:none}
+  .sound{right:14px;top:calc(env(safe-area-inset-top,0px) + 12px);height:44px;padding:0 13px 0 11px;gap:8px;font-size:10px;letter-spacing:.14em}
+  .sound .sound-label,.sound .sound-dot{display:inline-flex}
   .sound .bars{width:18px}
   .sound-hint{right:16px;top:calc(env(safe-area-inset-top,0px) + 60px);font-size:10px}
   .legend{display:none}
@@ -1060,6 +1062,7 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
   const live = () => !!ac && ac.state === "running";
   function apply() {
     btn.setAttribute("aria-checked", String(on)); btn.classList.toggle("on", on);
+    const label = document.getElementById("soundLabel"); if (label) label.textContent = on ? "SOUND ON" : "SOUND OFF";
     const armed = on && !live();
     btn.classList.toggle("armed", armed);
     hint.classList.toggle("show", armed && hintOk && scrollY < innerHeight * 1.2);
