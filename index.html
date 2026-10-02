@@ -203,6 +203,7 @@ html.embedded .credit{display:none}
 html{scrollbar-gutter:stable}
 /* 기사 페이지에 iframe으로 삽입됐을 때: 자체 스크롤바를 숨겨 바깥 페이지와 한 화면처럼 보이게 */
 html.embedded{scrollbar-gutter:auto;scrollbar-width:none}
+html.embedded,html.embedded body{overscroll-behavior:none;touch-action:none}
 html.embedded::-webkit-scrollbar{display:none}
 /* 기사 페이지가 스크롤을 넘겨주는 동안에도 overflow는 건드리지 않는다(안쪽 sticky 장면이 풀리지 않게). 직접 스크롤 입력은 스크립트가 가로채 기사 페이지로 넘긴다 */
 html.hold,html.hold body{overflow:hidden;overscroll-behavior:none}
@@ -1973,7 +1974,7 @@ const CAUSTIC = (() => {
 const rail = document.querySelector("#rail i");
 let ticking = false;
 // 스크롤 진행도를 짧은 관성으로 따라간다(휠 한 칸씩 내려도 뚝뚝 끊기지 않게)
-const TAU = 120;
+const TAU = (window.self !== window.top && matchMedia("(pointer:coarse)").matches) ? 72 : 120;
 let running = false, lastT = 0;
 function loop(now) {
   const dt = Math.min(64, now - lastT); lastT = now;
@@ -2047,29 +2048,21 @@ function oldP(act, p) {
     if (window.__everHoldLocked && dy > 0) return;
     send({ type: "ever:wheel", deltaY: dy, deltaMode: 0 });
   });
-  // 터치: 손가락 움직임을 넘기고, 손을 떼면 관성으로 조금 더 미끄러진다
-  let ty = 0, tt = 0, v = 0, glide = 0;
-  addEventListener("touchstart", e => { if (!driven) return; cancelAnimationFrame(glide); ty = e.touches[0].clientY; tt = performance.now(); v = 0; }, { passive: true });
+  // 모바일 터치: 자체 관성을 만들지 않고 손가락 이동량만 부모 기사에 전달한다.
+  // 브라우저 주소창/iframe 내부 관성과 부모 스크롤이 겹치면 진행도가 튀므로 한 경로만 사용한다.
+  let ty = 0;
+  addEventListener("touchstart", e => {
+    if (!driven || !e.touches.length) return;
+    ty = e.touches[0].clientY;
+  }, { passive: true });
   addEventListener("touchmove", e => {
-    if (!driven) return;
-    const y = e.touches[0].clientY, now = performance.now(), dy = ty - y, dt = Math.max(1, now - tt);
-    ty = y; tt = now; v = v * .4 + (dy / dt) * .6;
+    if (!driven || !e.touches.length) return;
+    const y = e.touches[0].clientY, dy = ty - y;
+    ty = y;
     e.preventDefault();
     if (window.__everHoldLocked && dy > 0) return;
-    if (dy) send({ type: "ever:touchscroll", deltaY: dy });
+    if (Math.abs(dy) > .25) send({ type: "ever:touchscroll", deltaY: dy });
   }, { passive: false });
-  addEventListener("touchend", () => {
-    if (!driven) return;
-    let vel = v * 16, last = performance.now();
-    const step = now => {
-      const dt = Math.min(48, now - last); last = now;
-      vel *= Math.pow(.94, dt / 16);
-      if (Math.abs(vel) < .6 || (window.__everHoldLocked && vel > 0)) return;
-      send({ type: "ever:touchscroll", deltaY: vel * dt / 16 });
-      glide = requestAnimationFrame(step);
-    };
-    glide = requestAnimationFrame(step);
-  }, { passive: true });
 })();
 
 /* 표지 깊이감: PC에서 마우스를 움직이면 사진은 반대로 조금, 글은 같은 쪽으로 아주 조금, 눈발은 더 많이 움직인다 */
