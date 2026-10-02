@@ -470,6 +470,14 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 }
 
 /* reduced motion — 스크롤 연출을 끄고 읽기 문서로 */
+
+/* 모바일 가볍게: 아이폰은 탭 하나가 메모리를 넘기면 강제로 닫고 새로 연다(처음으로 돌아가거나 꺼지는 현상).
+   화면 전체를 덮는 입자 레이어, 실시간 노이즈 필터(얼음 결·돌 질감·열화상 노이즈), 미리 잡아 두는 레이어(will-change)를 끈다 */
+@media (pointer:coarse),(max-width:720px){
+  #grain,.grain{display:none!important}
+  .beat,.plate img,#zCamp img,.fig .ods{will-change:auto!important}
+  #xsvg rect[filter="url(#xTex)"],#xsvg path[filter="url(#xGrit)"],#xsvg rect[filter="url(#thNoise)"],rect[filter="url(#mIceTex)"]{display:none!important}
+}
 /* 동작 줄이기: 스크롤 이야기는 그대로 두고, 큰 움직임(흔들림·확대·패럴랙스·숫자판·필름 깜빡임·반짝임)만 끈다 */
 @media (prefers-reduced-motion:reduce){
   .sound.armed .bars i,.sound.armed .sound-dot{animation:none}
@@ -1003,6 +1011,7 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
       x.fillStyle = g > 0 ? `rgba(${rgb},${Math.min(1, g * 2.6 * amax).toFixed(3)})` : `rgba(0,0,0,${Math.min(1, -g * 2.8 * amax).toFixed(3)})`;
       x.fillRect(i, j, cell, cell); }
     return `url(${c.toDataURL()})`; };
+  if (matchMedia("(pointer:coarse),(max-width:720px)").matches) return;   // 모바일은 입자 레이어를 쓰지 않는다
   const gc = document.getElementById("grainC"), gw = document.getElementById("grainW");
   if (gc) gc.style.backgroundImage = mk(200, 1, "214,232,244", 1);
   if (gw) gw.style.backgroundImage = mk(260, 1, "246,196,140", 1);
@@ -1896,7 +1905,7 @@ const CAUSTIC = (() => {
     const [dx, dy] = [d.u * VW, d.v * VH], R0 = n ? 60 : 48;
     svg.innerHTML = `
     <defs>
-      <filter id="mRelief" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="${n ? .011 : .008}" numOctaves="5" seed="7" result="t"/><feDiffuseLighting in="t" surfaceScale="${n ? 7 : 6}" lighting-color="#8E877B" result="l"><feDistantLight azimuth="300" elevation="38"/></feDiffuseLighting><feColorMatrix in="l" type="matrix" values=".62 0 0 0 0  0 .6 0 0 0  0 0 .58 0 0  0 0 0 1 0"/></filter>
+      <filter id="mRelief" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency="${n ? .011 : .008}" numOctaves="${n ? 2 : 5}" seed="7" result="t"/><feDiffuseLighting in="t" surfaceScale="${n ? 7 : 6}" lighting-color="#8E877B" result="l"><feDistantLight azimuth="300" elevation="38"/></feDiffuseLighting><feColorMatrix in="l" type="matrix" values=".62 0 0 0 0  0 .6 0 0 0  0 0 .58 0 0  0 0 0 1 0"/></filter>
       <filter id="mIceTex" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".03" numOctaves="3" seed="3" result="t"/><feDiffuseLighting in="t" surfaceScale="1.6" lighting-color="#DCEFF8"><feDistantLight azimuth="300" elevation="50"/></feDiffuseLighting></filter>
       <filter id="mRough" x="-10%" y="-10%" width="120%" height="120%"><feTurbulence type="fractalNoise" baseFrequency=".08" numOctaves="2" seed="2" result="t"/><feDisplacementMap in="SourceGraphic" in2="t" scale="6"/></filter>
       <filter id="mEdge" x="-10%" y="-10%" width="120%" height="120%"><feGaussianBlur stdDeviation="${n ? 7 : 5}"/></filter>
