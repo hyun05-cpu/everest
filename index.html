@@ -382,27 +382,27 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 @keyframes grain{0%{transform:translate(0,0)}17%{transform:translate(-3%,2%)}34%{transform:translate(2%,-4%)}51%{transform:translate(-4%,-1%)}68%{transform:translate(3%,3%)}85%{transform:translate(-1%,4%)}100%{transform:translate(0,0)}}
 
 #rail>i{background:var(--rc,#8FBAD4)}
-/* 소리 버튼 — 진행선과 같은 색(--rc)을 따라 서리색 → 호박색 */
-/* 효과음 버튼: 매거진 표지의 작은 라벨처럼 — 각진 얇은 테두리, 넓은 자간, 가는 세로선 뒤 ON/OFF 글자 */
-.sound{--c:var(--rc,#8FBAD4);position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 16px);z-index:61;display:flex;align-items:center;gap:10px;min-height:34px;padding:0 12px;border:1px solid rgba(232,238,242,.22);border-radius:1px;background:rgba(4,7,10,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#E8EEF2;font-family:var(--sans);font-size:11.5px;letter-spacing:.16em;font-weight:600;line-height:1;cursor:pointer;transition:border-color .3s,background .3s,opacity .6s}
-.sound:hover{background:rgba(10,16,21,.82);border-color:rgba(232,238,242,.45)}
-.sound.on{border-color:rgba(143,186,212,.5);border-color:color-mix(in srgb,var(--c) 52%,transparent)}
-.sound .bars{display:flex;align-items:flex-end;gap:2px;height:10px;color:var(--c)}
-.sound .bars i{display:block;width:2px;height:2px;background:currentColor;opacity:.4;transition:height .25s,opacity .3s}
-.sound.on .bars i{opacity:1;height:calc(2px + var(--g,0) * 8px)}
-.sound.on .bars i:nth-child(2){height:calc(2px + var(--g2,0) * 8px)}
-.sound.on .bars i:nth-child(3){height:calc(2px + var(--g3,0) * 8px)}
-.sound .sw{display:flex;align-items:center;align-self:stretch;padding-left:10px;border-left:1px solid rgba(232,238,242,.2)}
-.sound .sw::before{content:"OFF";font-size:10px;letter-spacing:.2em;font-weight:700;color:rgba(232,238,242,.45)}
-.sound.on .sw::before{content:"ON";color:var(--c)}
-/* 켜져 있지만 브라우저가 소리를 막고 있을 때: 막대가 숨 쉬고 테두리가 은은하게 깜빡인다 */
-.sound.armed .bars i{animation:armBar 1.4s ease-in-out infinite}
-.sound.armed .bars i:nth-child(2){animation-delay:.2s}
-.sound.armed .bars i:nth-child(3){animation-delay:.4s}
-.sound.armed{animation:armEdge 2.2s ease-in-out infinite}
-@keyframes armBar{0%,100%{height:3px}50%{height:10px}}
-@keyframes armEdge{0%,100%{border-color:rgba(232,238,242,.22)}50%{border-color:var(--c)}}
-.sound-hint{position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 58px);z-index:61;margin:0;padding:6px 10px;border-radius:1px;border:1px solid rgba(232,238,242,.14);letter-spacing:.02em;background:rgba(4,7,10,.74);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#C9D6DD;font-size:12px;line-height:1.4;pointer-events:none;opacity:0;transform:translateY(-4px);transition:opacity .5s,transform .5s}
+/* 효과음 버튼 — 얇은 프로스트 글래스 캡슐. 상태는 작은 점과 파형으로만 표현 */
+.sound{--c:var(--rc,#8FBAD4);position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 18px);z-index:61;display:flex;align-items:center;gap:9px;height:38px;padding:0 13px 0 11px;border:1px solid rgba(232,238,242,.16);border-radius:999px;background:linear-gradient(180deg,rgba(18,25,31,.64),rgba(4,7,10,.48));box-shadow:0 8px 28px rgba(0,0,0,.22),inset 0 1px 0 rgba(255,255,255,.05);backdrop-filter:blur(14px) saturate(125%);-webkit-backdrop-filter:blur(14px) saturate(125%);color:rgba(232,238,242,.82);font-family:var(--sans);font-size:9.5px;letter-spacing:.2em;font-weight:650;line-height:1;cursor:pointer;transition:transform .28s cubic-bezier(.16,1,.3,1),border-color .3s,background .3s,color .3s,opacity .6s,box-shadow .3s}
+.sound:hover{transform:translateY(-1px);border-color:rgba(232,238,242,.3);background:linear-gradient(180deg,rgba(26,34,41,.76),rgba(7,11,14,.62));box-shadow:0 10px 34px rgba(0,0,0,.28),inset 0 1px 0 rgba(255,255,255,.07)}
+.sound:active{transform:translateY(0) scale(.975)}
+.sound .sound-dot{width:5px;height:5px;border-radius:50%;background:rgba(232,238,242,.28);box-shadow:none;transition:background .35s,box-shadow .35s}
+.sound.on .sound-dot{background:var(--c);box-shadow:0 0 10px color-mix(in srgb,var(--c) 65%,transparent)}
+.sound .bars{display:flex;align-items:center;justify-content:center;gap:2px;width:18px;height:14px;color:rgba(232,238,242,.48)}
+.sound .bars i{display:block;width:1.5px;border-radius:2px;background:currentColor;height:3px;opacity:.65;transition:height .3s,color .3s,opacity .3s}
+.sound .bars i:nth-child(2){height:7px}.sound .bars i:nth-child(3){height:11px}.sound .bars i:nth-child(4){height:6px}
+.sound.on .bars{color:var(--c)}
+.sound.on .bars i{opacity:.95;transform-origin:center}
+.sound.on .bars i:nth-child(1){height:calc(3px + var(--g,0) * 5px)}
+.sound.on .bars i:nth-child(2){height:calc(5px + var(--g2,0) * 7px)}
+.sound.on .bars i:nth-child(3){height:calc(7px + var(--g3,0) * 6px)}
+.sound.on .bars i:nth-child(4){height:calc(4px + var(--g2,0) * 5px)}
+.sound .sound-label{position:relative;top:.5px;white-space:nowrap}
+.sound.armed .sound-dot{animation:soundPulse 1.8s ease-in-out infinite}
+.sound.armed .bars i{animation:soundBreath 1.5s ease-in-out infinite}.sound.armed .bars i:nth-child(2){animation-delay:.12s}.sound.armed .bars i:nth-child(3){animation-delay:.24s}.sound.armed .bars i:nth-child(4){animation-delay:.36s}
+@keyframes soundPulse{0%,100%{opacity:.45;box-shadow:0 0 0 transparent}50%{opacity:1;box-shadow:0 0 12px var(--c)}}
+@keyframes soundBreath{0%,100%{transform:scaleY(.62)}50%{transform:scaleY(1)}}
+.sound-hint{position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 64px);z-index:61;margin:0;padding:7px 11px;border:1px solid rgba(232,238,242,.10);border-radius:999px;background:rgba(4,7,10,.62);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:rgba(214,226,233,.72);font-size:10.5px;line-height:1.3;letter-spacing:.02em;pointer-events:none;opacity:0;transform:translateY(-3px);transition:opacity .45s,transform .45s}
 .sound-hint.show{opacity:1;transform:none}
 
 /* mobile */
@@ -415,8 +415,10 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
   .figcap,.figsub{max-width:26ch}
   .fig{font-size:clamp(52px,17vw,92px)}
   .readout{top:70px}
-  .sound{min-height:32px;font-size:11px;gap:9px;padding:0 10px}
-  .sound-hint{top:calc(env(safe-area-inset-top,0px) + 54px);font-size:11px}
+  .sound{right:16px;top:calc(env(safe-area-inset-top,0px) + 14px);width:40px;height:40px;padding:0;justify-content:center;gap:0}
+  .sound .sound-label,.sound .sound-dot{display:none}
+  .sound .bars{width:18px}
+  .sound-hint{right:16px;top:calc(env(safe-area-inset-top,0px) + 60px);font-size:10px}
   .legend{display:none}
   .cmpbar{right:var(--gut);left:var(--gut);width:auto;top:auto;bottom:calc(clamp(52px,9vh,96px) + 128px);padding:14px 16px 16px;background:rgba(4,7,10,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
   .cmpbar p{margin-bottom:10px}
@@ -459,7 +461,7 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 /* reduced motion — 스크롤 연출을 끄고 읽기 문서로 */
 /* 동작 줄이기: 스크롤 이야기는 그대로 두고, 큰 움직임(흔들림·확대·패럴랙스·숫자판·필름 깜빡임·반짝임)만 끈다 */
 @media (prefers-reduced-motion:reduce){
-  .sound.armed .bars i,.sound.armed{animation:none}
+  .sound.armed .bars i,.sound.armed .sound-dot{animation:none}
   .fig.stamp.hit,.fig.stamp.hit::after,#thame .stage.shake,#xsvg .rec,.ramen .steam path{animation:none}
   .ramen .steam path{opacity:.7}
   .plate img{transform:none!important}
@@ -476,8 +478,8 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 <div id="grain" aria-hidden="true"></div>
 <canvas id="snow" aria-hidden="true"></canvas>
 <div class="vignette" aria-hidden="true"></div><div class="grain" id="grainC" aria-hidden="true"></div><div class="grain" id="grainW" aria-hidden="true"></div>
-<button class="sound on" id="sound" type="button" role="switch" aria-checked="true" aria-label="효과음: 바람, 버너, 물, 텐트 불빛 소리"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span><span id="soundLabel">효과음</span><span class="sw" aria-hidden="true"></span></button>
-<p class="sound-hint" id="soundHint" aria-hidden="true">화면을 한 번 누르면 소리가 나요</p>
+<button class="sound on" id="sound" type="button" role="switch" aria-checked="true" aria-label="효과음 켜기 또는 끄기"><span class="sound-dot" aria-hidden="true"></span><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="sound-label" id="soundLabel">SOUND</span></button>
+<p class="sound-hint" id="soundHint" aria-hidden="true">탭하면 사운드가 시작됩니다</p>
 <main>
 
 <!-- ═══════════ 00 · 표지 ═══════════ -->
