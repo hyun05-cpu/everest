@@ -383,30 +383,26 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 
 #rail>i{background:var(--rc,#8FBAD4)}
 /* 소리 버튼 — 진행선과 같은 색(--rc)을 따라 서리색 → 호박색 */
-.sound{--c:var(--rc,#8FBAD4);position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 16px);z-index:61;display:flex;align-items:center;gap:11px;min-height:42px;padding:0 12px 0 14px;border:1px solid rgba(143,186,212,.55);border:1px solid color-mix(in srgb,var(--c) 55%,transparent);border-radius:999px;background:rgba(4,7,10,.74);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);color:#E8EEF2;font-family:var(--sans);font-size:13.5px;letter-spacing:.02em;font-weight:600;cursor:pointer;box-shadow:0 4px 20px rgba(0,0,0,.45);transition:border-color .3s,background .3s,box-shadow .4s,opacity .6s}
-.sound:hover{background:rgba(10,16,21,.88);border-color:var(--c)}
-.sound.on{box-shadow:0 4px 20px rgba(0,0,0,.45),0 0 0 1px color-mix(in srgb,var(--c) 18%,transparent),0 0 22px color-mix(in srgb,var(--c) 28%,transparent)}
-.sound .bars{display:flex;align-items:flex-end;gap:2.5px;height:14px;color:var(--c)}
-.sound .bars i{display:block;width:2.5px;height:3px;border-radius:1px;background:currentColor;opacity:.45;transition:height .25s,opacity .3s}
-.sound.on .bars i{opacity:1;height:calc(3px + var(--g,0) * 11px)}
-.sound.on .bars i:nth-child(2){height:calc(3px + var(--g2,0) * 11px)}
-.sound.on .bars i:nth-child(3){height:calc(3px + var(--g3,0) * 11px)}
-/* 켜기/끄기 스위치 */
-.sound .sw{position:relative;width:50px;height:22px;border-radius:999px;background:rgba(110,132,146,.35);transition:background .3s}
-.sound .sw::after{content:"";position:absolute;left:3px;top:3px;width:16px;height:16px;border-radius:50%;background:#A9BCC7;transition:transform .3s cubic-bezier(.16,1,.3,1),background .3s}
-/* 스위치 안 ON/OFF 글자: 손잡이 반대편에 */
-.sound .sw::before{content:"OFF";position:absolute;right:7px;top:50%;transform:translateY(-50%);font-size:9.5px;font-weight:800;letter-spacing:.06em;line-height:1;color:rgba(232,238,242,.7)}
-.sound.on .sw{background:color-mix(in srgb,var(--c) 45%,rgba(4,7,10,.6))}
-.sound.on .sw::before{content:"ON";right:auto;left:8px;color:#fff}
-.sound.on .sw::after{transform:translateX(28px);background:#fff;box-shadow:0 0 8px var(--c)}
-/* 켜져 있지만 브라우저가 아직 소리를 막고 있을 때: 막대가 스스로 숨 쉬고 테두리가 맥박친다 */
+/* 효과음 버튼: 매거진 표지의 작은 라벨처럼 — 각진 얇은 테두리, 넓은 자간, 가는 세로선 뒤 ON/OFF 글자 */
+.sound{--c:var(--rc,#8FBAD4);position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 16px);z-index:61;display:flex;align-items:center;gap:10px;min-height:34px;padding:0 12px;border:1px solid rgba(232,238,242,.22);border-radius:1px;background:rgba(4,7,10,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#E8EEF2;font-family:var(--sans);font-size:11.5px;letter-spacing:.16em;font-weight:600;line-height:1;cursor:pointer;transition:border-color .3s,background .3s,opacity .6s}
+.sound:hover{background:rgba(10,16,21,.82);border-color:rgba(232,238,242,.45)}
+.sound.on{border-color:rgba(143,186,212,.5);border-color:color-mix(in srgb,var(--c) 52%,transparent)}
+.sound .bars{display:flex;align-items:flex-end;gap:2px;height:10px;color:var(--c)}
+.sound .bars i{display:block;width:2px;height:2px;background:currentColor;opacity:.4;transition:height .25s,opacity .3s}
+.sound.on .bars i{opacity:1;height:calc(2px + var(--g,0) * 8px)}
+.sound.on .bars i:nth-child(2){height:calc(2px + var(--g2,0) * 8px)}
+.sound.on .bars i:nth-child(3){height:calc(2px + var(--g3,0) * 8px)}
+.sound .sw{display:flex;align-items:center;align-self:stretch;padding-left:10px;border-left:1px solid rgba(232,238,242,.2)}
+.sound .sw::before{content:"OFF";font-size:10px;letter-spacing:.2em;font-weight:700;color:rgba(232,238,242,.45)}
+.sound.on .sw::before{content:"ON";color:var(--c)}
+/* 켜져 있지만 브라우저가 소리를 막고 있을 때: 막대가 숨 쉬고 테두리가 은은하게 깜빡인다 */
 .sound.armed .bars i{animation:armBar 1.4s ease-in-out infinite}
 .sound.armed .bars i:nth-child(2){animation-delay:.2s}
 .sound.armed .bars i:nth-child(3){animation-delay:.4s}
-.sound.armed::before{content:"";position:absolute;inset:-1px;border-radius:inherit;border:1px solid var(--c);animation:armRing 2.2s ease-out infinite;pointer-events:none}
-@keyframes armBar{0%,100%{height:4px}50%{height:12px}}
-@keyframes armRing{0%{opacity:.7;transform:scale(1)}100%{opacity:0;transform:scale(1.25,1.5)}}
-.sound-hint{position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 66px);z-index:61;margin:0;padding:6px 11px;border-radius:8px;background:rgba(4,7,10,.74);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#C9D6DD;font-size:12px;line-height:1.4;pointer-events:none;opacity:0;transform:translateY(-4px);transition:opacity .5s,transform .5s}
+.sound.armed{animation:armEdge 2.2s ease-in-out infinite}
+@keyframes armBar{0%,100%{height:3px}50%{height:10px}}
+@keyframes armEdge{0%,100%{border-color:rgba(232,238,242,.22)}50%{border-color:var(--c)}}
+.sound-hint{position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 58px);z-index:61;margin:0;padding:6px 10px;border-radius:1px;border:1px solid rgba(232,238,242,.14);letter-spacing:.02em;background:rgba(4,7,10,.74);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#C9D6DD;font-size:12px;line-height:1.4;pointer-events:none;opacity:0;transform:translateY(-4px);transition:opacity .5s,transform .5s}
 .sound-hint.show{opacity:1;transform:none}
 
 /* mobile */
@@ -419,8 +415,8 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
   .figcap,.figsub{max-width:26ch}
   .fig{font-size:clamp(52px,17vw,92px)}
   .readout{top:70px}
-  .sound{min-height:40px;font-size:13px;gap:9px;padding:0 10px 0 12px}
-  .sound-hint{top:calc(env(safe-area-inset-top,0px) + 62px);font-size:11.5px}
+  .sound{min-height:32px;font-size:11px;gap:9px;padding:0 10px}
+  .sound-hint{top:calc(env(safe-area-inset-top,0px) + 54px);font-size:11px}
   .legend{display:none}
   .cmpbar{right:var(--gut);left:var(--gut);width:auto;top:auto;bottom:calc(clamp(52px,9vh,96px) + 128px);padding:14px 16px 16px;background:rgba(4,7,10,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
   .cmpbar p{margin-bottom:10px}
@@ -463,7 +459,7 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 /* reduced motion — 스크롤 연출을 끄고 읽기 문서로 */
 /* 동작 줄이기: 스크롤 이야기는 그대로 두고, 큰 움직임(흔들림·확대·패럴랙스·숫자판·필름 깜빡임·반짝임)만 끈다 */
 @media (prefers-reduced-motion:reduce){
-  .sound.armed .bars i,.sound.armed::before{animation:none}
+  .sound.armed .bars i,.sound.armed{animation:none}
   .fig.stamp.hit,.fig.stamp.hit::after,#thame .stage.shake,#xsvg .rec,.ramen .steam path{animation:none}
   .ramen .steam path{opacity:.7}
   .plate img{transform:none!important}
