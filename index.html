@@ -912,7 +912,7 @@ function render(act, p, now) {
     if (c.odo) { tickOdo(c, k); }
     else { const s = fmtC(lerp(c.f, c.t, easeOut(k)), c.k); if (s !== c.last) { c.n.textContent = s; c.last = s; } }
     // 다 세어진 순간 빛이 한 번 훑고 지나간다(다시 처음부터 세면 또 한 번). 끝나면 클래스를 떼어 원래 모습으로
-    if (c.reveal && !reduce) {
+    if (c.reveal && !reduce && !c.odo) {   // 숫자판으로 뜨는 숫자는 굴러가는 것 자체가 연출이라 빛 훑기를 하지 않는다(그림자가 바뀌며 깜빡임)
       if (c.beat.rv >= 1 && c.beat.active && !c.glint) { c.glint = true; c.n.classList.remove("glint"); void c.n.offsetWidth; c.n.classList.add("glint"); }
       else if (c.beat.rv === 0 && c.glint) { c.glint = false; c.n.classList.remove("glint"); }
     }
@@ -2143,7 +2143,11 @@ function tickOdo(c, k) {
   const fig = c.n.closest(".fig");
   if (k <= 0 && !c.odoLive) buildOdo(c);
   if (!c.odoLive) return;
-  if (k >= 1) { c.odoLive = false; c.n.textContent = c.final; if (fig) fig.classList.add("settled"); return; }
+  if (k >= 1) {   // 멈추면 숫자판을 그 자리에 그대로 둔다(글자로 바꾸면 줄 높이 차이로 숫자가 튀어 깜빡여 보인다)
+    c.odoLive = false; const cell = 100 / (c.N + 1);
+    c.cols.forEach(o => { o.el.style.transform = `translateY(${(-(c.N - 1) * cell).toFixed(3)}%)`; o.el.style.opacity = "1"; o.el.style.filter = "none"; });
+    if (fig) fig.classList.add("settled"); return;
+  }
   const N = c.N, cell = 100 / (N + 1);
   c.cols.forEach(o => {
     const st = (o.j / Math.max(1, o.m)) * .4, kk = clamp((k - st) / .6);
