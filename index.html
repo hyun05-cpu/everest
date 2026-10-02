@@ -389,33 +389,37 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 @keyframes grain{0%{transform:translate(0,0)}17%{transform:translate(-3%,2%)}34%{transform:translate(2%,-4%)}51%{transform:translate(-4%,-1%)}68%{transform:translate(3%,3%)}85%{transform:translate(-1%,4%)}100%{transform:translate(0,0)}}
 
 #rail>i{background:var(--rc,#8FBAD4)}
-/* 효과음 버튼: 매거진 표지의 작은 라벨처럼 — 각진 얇은 테두리, 넓은 자간, 가는 세로선 뒤 ON/OFF 글자 */
-.sound{--c:var(--rc,#8FBAD4);position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 16px);z-index:61;display:flex;align-items:center;gap:10px;min-height:34px;padding:0 12px;border:1px solid rgba(232,238,242,.22);border-radius:1px;background:rgba(4,7,10,.55);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#E8EEF2;font-family:var(--sans);font-size:11.5px;letter-spacing:.16em;font-weight:600;line-height:1;cursor:pointer;transition:border-color .3s,background .3s,opacity .6s}
-.sound:hover{background:rgba(10,16,21,.82);border-color:rgba(232,238,242,.45)}
-.sound.on{border-color:rgba(143,186,212,.5);border-color:color-mix(in srgb,var(--c) 52%,transparent)}
-.sound .bars{display:flex;align-items:flex-end;gap:2px;height:10px;color:var(--c)}
-.sound .bars i{display:block;width:2px;height:2px;background:currentColor;opacity:.4;transition:height .25s,opacity .3s}
-.sound.on .bars i{opacity:1;height:calc(2px + var(--g,0) * 8px)}
-.sound.on .bars i:nth-child(2){height:calc(2px + var(--g2,0) * 8px)}
-.sound.on .bars i:nth-child(3){height:calc(2px + var(--g3,0) * 8px)}
-.sound .sw{display:flex;align-items:center;align-self:stretch;padding-left:10px;border-left:1px solid rgba(232,238,242,.2)}
-.sound .sw::before{content:"OFF";font-size:10px;letter-spacing:.2em;font-weight:700;color:rgba(232,238,242,.45)}
-.sound.on .sw::before{content:"ON";color:var(--c)}
-/* 켜져 있지만 브라우저가 소리를 막고 있을 때: 막대가 숨 쉬고 테두리가 은은하게 깜빡인다 */
+/* 효과음 버튼: 각진 라벨의 절제는 유지하되 눈에 띄게 — 장면 색(--c)이 배경·테두리에 스미고, ON은 색이 채워진 칩, 소리 막대 5개 */
+.sound{--c:var(--rc,#8FBAD4);position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 16px);z-index:61;display:flex;align-items:center;gap:11px;height:40px;padding:0 8px 0 13px;border:1px solid rgba(232,238,242,.26);border-radius:2px;background:linear-gradient(180deg,rgba(22,30,38,.82),rgba(6,10,14,.82));backdrop-filter:blur(12px) saturate(1.2);-webkit-backdrop-filter:blur(12px) saturate(1.2);color:#F2F6F8;font-family:var(--sans);font-size:13px;letter-spacing:.08em;font-weight:700;line-height:1;cursor:pointer;box-shadow:0 8px 28px rgba(0,0,0,.5);overflow:hidden;transition:border-color .35s,background .35s,box-shadow .35s,opacity .6s}
+.sound:hover{border-color:rgba(232,238,242,.5)}
+.sound.on{border-color:color-mix(in srgb,var(--c) 72%,transparent);background:linear-gradient(180deg,color-mix(in srgb,var(--c) 24%,rgba(10,14,18,.86)),rgba(6,10,14,.86));box-shadow:0 8px 28px rgba(0,0,0,.5),inset 0 1px 0 color-mix(in srgb,var(--c) 30%,transparent)}
+.sound .bars{display:flex;align-items:center;gap:2px;height:16px;color:var(--c)}
+.sound .bars i{display:block;width:2px;height:3px;border-radius:1px;background:currentColor;opacity:.45;transition:height .25s,opacity .3s}
+.sound.on .bars i{opacity:1;height:calc(3px + var(--g,0) * 12px)}
+.sound.on .bars i:nth-child(2){height:calc(3px + var(--g2,0) * 12px)}
+.sound.on .bars i:nth-child(3){height:calc(3px + var(--g3,0) * 12px)}
+/* 켜져 있으면 막대가 늘 은은하게 살아 움직인다(소리 세기와 함께) */
+.sound.on:not(.armed) .bars i{animation:sv 1s ease-in-out infinite}
+.sound.on:not(.armed) .bars i:nth-child(1){animation-duration:.9s;animation-delay:-.2s}
+.sound.on:not(.armed) .bars i:nth-child(2){animation-duration:1.15s;animation-delay:-.5s}
+.sound.on:not(.armed) .bars i:nth-child(3){animation-duration:.8s;animation-delay:-.1s}
+.sound.on:not(.armed) .bars i:nth-child(4){animation-duration:1.05s;animation-delay:-.7s}
+.sound.on:not(.armed) .bars i:nth-child(5){animation-duration:.95s;animation-delay:-.35s}
+@keyframes sv{0%,100%{height:4px}50%{height:15px}}
+.sound .sw{display:flex;align-items:center;height:22px;padding:0 7px;border:1px solid rgba(232,238,242,.3);border-radius:1px}
+.sound .sw::before{content:"OFF";font-size:10px;letter-spacing:.18em;font-weight:800;color:rgba(232,238,242,.55);margin-right:-.18em}
+.sound.on .sw{background:var(--c);border-color:var(--c)}
+.sound.on .sw::before{content:"ON";color:#04070A}
+/* 켜졌지만 브라우저가 막고 있을 때: 막대가 숨 쉬고, 빛이 천천히 스친다 */
 .sound.armed .bars i{animation:armBar 1.4s ease-in-out infinite}
-.sound.armed .bars i:nth-child(2){animation-delay:.2s}
-.sound.armed .bars i:nth-child(3){animation-delay:.4s}
-.sound.armed{animation:armEdge 2.2s ease-in-out infinite}
-@keyframes armBar{0%,100%{height:3px}50%{height:10px}}
-@keyframes armEdge{0%,100%{border-color:rgba(232,238,242,.22)}50%{border-color:var(--c)}}
-/* 효과음 ON 상태에서는 음량 막대가 항상 눈에 보이게 움직인다. 버튼 외 로직은 변경하지 않음 */
-.sound.on:not(.armed) .bars i{animation:soundLive1 .86s ease-in-out infinite;transform-origin:bottom}
-.sound.on:not(.armed) .bars i:nth-child(2){animation-name:soundLive2;animation-duration:1.08s;animation-delay:-.31s}
-.sound.on:not(.armed) .bars i:nth-child(3){animation-name:soundLive3;animation-duration:.74s;animation-delay:-.17s}
-@keyframes soundLive1{0%,100%{height:3px;opacity:.7}35%{height:9px;opacity:1}68%{height:5px;opacity:.88}}
-@keyframes soundLive2{0%,100%{height:7px;opacity:.92}42%{height:3px;opacity:.68}76%{height:10px;opacity:1}}
-@keyframes soundLive3{0%,100%{height:4px;opacity:.78}28%{height:10px;opacity:1}61%{height:6px;opacity:.9}}
-.sound-hint{position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 58px);z-index:61;margin:0;padding:6px 10px;border-radius:1px;border:1px solid rgba(232,238,242,.14);letter-spacing:.02em;background:rgba(4,7,10,.74);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#C9D6DD;font-size:12px;line-height:1.4;pointer-events:none;opacity:0;transform:translateY(-4px);transition:opacity .5s,transform .5s}
+.sound.armed .bars i:nth-child(2){animation-delay:.15s}
+.sound.armed .bars i:nth-child(3){animation-delay:.3s}
+.sound.armed .bars i:nth-child(4){animation-delay:.45s}
+.sound.armed .bars i:nth-child(5){animation-delay:.6s}
+.sound.armed::after{content:"";position:absolute;top:0;bottom:0;width:40%;left:-45%;background:linear-gradient(100deg,transparent,rgba(255,255,255,.16),transparent);animation:armSweep 2.6s ease-in-out infinite;pointer-events:none}
+@keyframes armBar{0%,100%{height:4px}50%{height:13px}}
+@keyframes armSweep{0%{left:-45%}55%,100%{left:110%}}
+.sound-hint{position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 64px);z-index:61;margin:0;padding:6px 10px;border-radius:1px;border:1px solid rgba(232,238,242,.14);letter-spacing:.02em;background:rgba(4,7,10,.74);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);color:#C9D6DD;font-size:12px;line-height:1.4;pointer-events:none;opacity:0;transform:translateY(-4px);transition:opacity .5s,transform .5s}
 .sound-hint.show{opacity:1;transform:none}
 @media (max-width:720px){
   .alt{width:40px;top:24vh;height:50vh}
@@ -426,7 +430,7 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
   .figcap,.figsub{max-width:26ch}
   .fig{font-size:clamp(52px,17vw,92px)}
   .readout{top:70px}
-  .sound{min-height:32px;font-size:11px;gap:9px;padding:0 10px}
+  .sound{height:36px;font-size:12px;gap:9px;padding:0 6px 0 11px}
   .sound-hint{top:calc(env(safe-area-inset-top,0px) + 54px);font-size:11px}
   .legend{display:none}
   .cmpbar{right:var(--gut);left:var(--gut);width:auto;top:auto;bottom:calc(clamp(52px,9vh,96px) + 128px);padding:14px 16px 16px;background:rgba(4,7,10,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
@@ -480,7 +484,7 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 }
 /* 동작 줄이기: 스크롤 이야기는 그대로 두고, 큰 움직임(흔들림·확대·패럴랙스·숫자판·필름 깜빡임·반짝임)만 끈다 */
 @media (prefers-reduced-motion:reduce){
-  .sound.armed .bars i,.sound.armed .sound-dot{animation:none}
+  .sound.armed .bars i,.sound.on .bars i,.sound.armed::after{animation:none}
   .fig.stamp.hit,.fig.stamp.hit::after,#thame .stage.shake,#xsvg .rec,.ramen .steam path{animation:none}
   .ramen .steam path{opacity:.7}
   .plate img{transform:none!important}
@@ -497,7 +501,7 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 <div id="grain" aria-hidden="true"></div>
 <canvas id="snow" aria-hidden="true"></canvas>
 <div class="vignette" aria-hidden="true"></div><div class="grain" id="grainC" aria-hidden="true"></div><div class="grain" id="grainW" aria-hidden="true"></div>
-<button class="sound on" id="sound" type="button" role="switch" aria-checked="true" aria-label="효과음: 바람, 버너, 물, 텐트 불빛 소리"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span><span id="soundLabel">효과음</span><span class="sw" aria-hidden="true"></span></button>
+<button class="sound on" id="sound" type="button" role="switch" aria-checked="true" aria-label="효과음: 바람, 버너, 물, 텐트 불빛 소리"><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i><i></i></span><span id="soundLabel">효과음</span><span class="sw" aria-hidden="true"></span></button>
 <p class="sound-hint" id="soundHint" aria-hidden="true">화면을 한 번 누르면 소리가 나요</p>
 <main>
 
@@ -830,6 +834,18 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 "use strict";
 // 동작 줄이기를 켠 독자에게도 스크롤 이야기는 그대로 보여 주고(reduce=false), 큰 움직임만 calm으로 끈다
 const calm = matchMedia("(prefers-reduced-motion: reduce)").matches;
+// 모바일 가볍게: 아이폰(3배 해상도)에서 큰 흐림·노이즈 필터는 메모리를 9배로 잡아먹어 탭이 강제로 다시 열린다
+const LITE = matchMedia("(pointer:coarse),(max-width:720px)").matches;
+function liteSVG(str) {
+  if (!LITE) return str;
+  return str
+    .replace(/<rect[^>]*filter="url\(#(?:thNoise|xTex)\)"[^>]*\/>/g, "")          // 노이즈 층은 통째로 뺀다
+    .replace(/<path[^>]*filter="url\(#xGrit\)"[^>]*\/>/g, "")
+    .replace(/stroke-width="9" stroke-linecap="round" filter="url\(#xBlur\)" opacity=".55"/g, 'stroke-width="7" stroke-linecap="round" opacity=".28"')   // 흐린 빛 줄기 → 옅은 굵은 선
+    .replace(/fill="#E0A15E" opacity=".38" filter="url\(#xSoft\)"/g, 'fill="url(#xSoftG)" opacity=".55"')                                  // 큰 흐림 빛 → 방사형 그러데이션
+    .replace("<defs>", '<defs><radialGradient id="xSoftG"><stop offset="0" stop-color="#E0A15E"/><stop offset="1" stop-color="#E0A15E" stop-opacity="0"/></radialGradient>')
+    .replace(/ filter="url\(#(?:xBlur|xSoft|thB\d+)\)"/g, "");                    // 나머지 흐림은 끈다
+}
 const reduce = false;
 const clamp = (v, a = 0, b = 1) => Math.min(b, Math.max(a, v));
 const lerp = (a, b, t) => a + (b - a) * t;
@@ -954,7 +970,7 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
   let Wd = 0, H = 0, last = performance.now();
   const N = innerWidth <= 720 ? 110 : 190;
   const ps = Array.from({ length: N }, () => ({ x: Math.random(), y: Math.random(), r: .4 + Math.random() * 1.7, v: .012 + Math.random() * .035, w: Math.random() * 6, z: .4 + Math.random() * .6, a: .35 + Math.random() * .65, g: Math.random() < .12 }));
-  const size = () => { const d = Math.min(devicePixelRatio || 1, 2); Wd = innerWidth; H = innerHeight; c.width = Wd * d; c.height = H * d; x.setTransform(d, 0, 0, d, 0, 0); };
+  const size = () => { const d = LITE ? 1 : Math.min(devicePixelRatio || 1, 2); Wd = innerWidth; H = innerHeight; c.width = Wd * d; c.height = H * d; x.setTransform(d, 0, 0, d, 0, 0); };
   size(); addEventListener("resize", size);
   const root = document.documentElement.style;
   function loop(now) {
@@ -1177,7 +1193,7 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
   let W = 0, H = 0, dpr = 1, bg = null, glow = null;
   function size() {
     const r = cv.getBoundingClientRect(); if (!r.width) return;
-    dpr = Math.min(2, devicePixelRatio || 1); W = Math.round(r.width * dpr); H = Math.round(r.height * dpr);
+    dpr = Math.min(LITE ? 1.5 : 2, devicePixelRatio || 1); W = Math.round(r.width * dpr); H = Math.round(r.height * dpr);
     cv.width = W; cv.height = H; twc.width = W; twc.height = H;
     // 배경(빙하·돌무더기)은 한 번 그려 둔다
     bg = document.createElement("canvas"); bg.width = W; bg.height = H; const b = bg.getContext("2d");
@@ -1414,7 +1430,7 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
     return `<g transform="translate(${x.toFixed(1)} ${y.toFixed(1)})"><path d="M0 -${(7 * k).toFixed(1)} L${(1.1 * k).toFixed(1)} -${(1.1 * k).toFixed(1)} L${(7 * k).toFixed(1)} 0 L${(1.1 * k).toFixed(1)} ${(1.1 * k).toFixed(1)} L0 ${(7 * k).toFixed(1)} L-${(1.1 * k).toFixed(1)} ${(1.1 * k).toFixed(1)} L-${(7 * k).toFixed(1)} 0 L-${(1.1 * k).toFixed(1)} -${(1.1 * k).toFixed(1)} Z" style="animation-delay:${(-gr7() * 4.2).toFixed(2)}s;animation-duration:${(3.6 + gr7() * 2.2).toFixed(2)}s"/></g>`; }).join("");
   const thermal = `
     <g id="xTh" clip-path="url(#xThClip)">
-      <image href="data:image/svg+xml;charset=utf-8,${encodeURIComponent(thBase)}" x="-20" y="0" width="1040" height="500" preserveAspectRatio="none"/>
+      <image href="data:image/svg+xml;charset=utf-8,${encodeURIComponent(liteSVG(thBase))}" x="-20" y="0" width="1040" height="500" preserveAspectRatio="none"/>
       <g clip-path="url(#xIceClip)">
         <ellipse id="thPocket" cx="520" cy="352" rx="130" ry="46" fill="url(#thPocketC)" opacity="0"/>
         ${thCh}
@@ -1422,7 +1438,7 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
     </g>
     <rect id="xScan" x="-20" y="0" width="1040" height="2.5" fill="#FFF3D6" opacity="0"/><rect id="xScan2" x="-20" y="0" width="1040" height="14" fill="#FFB84D" opacity="0"/>`;
   let trail = `M790 ${trailY(790)}`; for (let x = 780; x >= 20; x -= 20) trail += ` L${x} ${trailY(x).toFixed(1)}`;
-  svg.innerHTML = `
+  svg.innerHTML = liteSVG(`
   <defs>
     <linearGradient id="xSky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#04070A" stop-opacity="0"/><stop offset="1" stop-color="#12202B" stop-opacity=".9"/></linearGradient>
     <linearGradient id="xRidgeA" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#1E2C37"/><stop offset="1" stop-color="#0C141A"/></linearGradient>
@@ -1500,7 +1516,7 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
     <circle r="15" fill="none" stroke="rgba(4,7,10,.7)" stroke-width="3.4"/><circle r="15" fill="none" stroke="#FFFFFF" stroke-width="1.4"/>
     <path d="M-26 0 H-19 M19 0 H26 M0 -26 V-19 M0 19 V26" stroke="#FFFFFF" stroke-width="1.6"/>
     <text id="xRetT" x="24" y="-16" font-size="13" font-weight="700" fill="#FFFFFF" stroke="rgba(4,7,10,.85)" stroke-width="3.5" style="paint-order:stroke;font-variant-numeric:tabular-nums"></text>
-  </g>`;
+  </g>`);
   const pudG = svg.querySelector("#xPud"), glow = svg.querySelector("#xGlow"), dropsG = svg.querySelector("#xDrops"), bar = svg.querySelector("#xBar"), path = svg.querySelector("#xPath"), pathT = svg.querySelector("#xPathT"), pocket = svg.querySelector("#xPocket");
   const drip = svg.querySelector("#xDrip"), dr = [...dropsG.children], wins = [...svg.querySelectorAll(".win")], chs = [...svg.querySelectorAll(".ch")];
   // 모바일: 텐트~저장통만 남기고 잘라 크게 보이게, 라벨은 화면 안쪽으로 옮기고 키운다
