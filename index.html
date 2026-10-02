@@ -2018,8 +2018,9 @@ const req = () => { if (!running) { running = true; lastT = performance.now(); r
     const t = e.data.type;
     if (t === "ever:host") {
       if (!driven) { driven = true; window.__everDriven = true; html.classList.add("driven"); send({ type: "ever:ack" }); }
-      size();
+      size(); if (window.__everSendHolds) window.__everSendHolds();
     } else if (t === "ever:progress" && driven) {
+      if (e.data.armed) window.__everArmed = true;
       const y = Math.round(clamp(+e.data.progress || 0) * maxY());
       if (Math.abs(scrollY - y) >= 1) scrollTo(0, y);
     }
@@ -2157,7 +2158,15 @@ document.addEventListener("animationend", e => { if (e.animationName === "glint"
   const html = document.documentElement;
   let armed = false, prevY = scrollY, cur = null, at = 0, t0 = 0, doneAt = 0, poll = 0;
   ["wheel", "touchstart", "keydown", "pointerdown"].forEach(t => addEventListener(t, () => { armed = true; }, { passive: true, capture: true }));
-  function release() { if (!cur) return; cur.used = true; cur = null; clearInterval(poll); html.classList.remove("hold"); prevY = scrollY; window.__everHoldLocked = false; if (window.__everSend) window.__everSend({ type: "ever:hold", on: false }); }
+  // 기사 페이지에 삽입됐을 때: 남은 붙잡기 지점(진행도)을 미리 알려, 기사 페이지가 지나치기 전에 먼저 멈춰 서게 한다
+  function sendHolds() {
+    if (!window.__everDriven || !window.__everSend) return;
+    const mx = Math.max(1, document.documentElement.scrollHeight - innerHeight);
+    window.__everSend({ type: "ever:holds", list: holds.filter(h => !h.used).map(h => yOf(h) / mx).sort((a, b) => a - b) });
+  }
+  window.__everSendHolds = sendHolds;
+  addEventListener("resize", sendHolds);
+  function release() { if (!cur) return; cur.used = true; cur = null; clearInterval(poll); html.classList.remove("hold"); prevY = scrollY; window.__everHoldLocked = false; if (window.__everSend) window.__everSend({ type: "ever:hold", on: false }); sendHolds(); }
   function lock(h, y) {
     cur = h; at = y; t0 = performance.now(); doneAt = 0; html.classList.add("hold"); scrollTo(0, y);
     window.__everHoldLocked = true;
@@ -2178,11 +2187,11 @@ document.addEventListener("animationend", e => { if (e.animationName === "glint"
     if (cur) { if (scrollY > at + 1) scrollTo(0, at); return; }
     if (window.__nav) { prevY = scrollY; return; }                // 진행선 눈금으로 장을 건너뛸 때는 붙잡지 않는다
     const py = prevY, y = scrollY; prevY = y;
-    if (!armed || y <= py) return;
+    if (!(armed || window.__everArmed) || y <= py) return;
     let pick = null, pickY = Infinity;
     for (const h of holds) { if (h.used) continue; const hy = yOf(h); if (py <= hy + 1 && y > hy && hy < pickY) { pick = h; pickY = hy; } }
     if (!pick) return;
-    if (pick.done()) { pick.used = true; return; }
+    if (pick.done()) { pick.used = true; sendHolds(); return; }
     lock(pick, pickY);
   }, { passive: true });
 })();
