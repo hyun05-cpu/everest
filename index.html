@@ -489,7 +489,7 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 <div id="grain" aria-hidden="true"></div>
 <canvas id="snow" aria-hidden="true"></canvas>
 <div class="vignette" aria-hidden="true"></div><div class="grain" id="grainC" aria-hidden="true"></div><div class="grain" id="grainW" aria-hidden="true"></div>
-<button class="sound on" id="sound" type="button" role="switch" aria-checked="true" aria-label="현장음: 바람, 버너, 물, 텐트 불빛 소리"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span><span id="soundLabel">현장음</span><span class="sw" aria-hidden="true"></span></button>
+<button class="sound on" id="sound" type="button" role="switch" aria-checked="true" aria-label="효과음: 바람, 버너, 물, 텐트 불빛 소리"><span class="bars" aria-hidden="true"><i></i><i></i><i></i></span><span id="soundLabel">효과음</span><span class="sw" aria-hidden="true"></span></button>
 <p class="sound-hint" id="soundHint" aria-hidden="true">화면을 한 번 누르면 소리가 나요</p>
 <main>
 
@@ -512,28 +512,28 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 </section>
 
 <!-- ═══════════ 01 · 숫자 ═══════════ -->
-<section class="act" id="numbers" data-fx="numbers" style="height:640vh">
+<section class="act" id="numbers" data-fx="numbers" style="height:760vh">
   <div class="stage">
     <div class="plate"><img loading="lazy" decoding="async" src="./01-camp.jpg" alt="빙하 위 텐트촌" data-k="1.0,1.12"></div>
     <div class="scrim heavy"></div>
-    <div class="alt" data-ro="0.0,0.18" aria-hidden="true"><b style="bottom:0">0 m</b><b style="bottom:47.2%">2,500</b><b style="bottom:94.3%">5,000</b><i id="altMk"></i></div>
-    <div class="beat centre" data-band="0.02,0.17">
+    <div class="alt" data-ro="0.0,0.28" aria-hidden="true"><b style="bottom:0">0 m</b><b style="bottom:47.2%">2,500</b><b style="bottom:94.3%">5,000</b><i id="altMk"></i></div>
+    <div class="beat centre" data-band="0.02,0.27">
       <p class="fig"><span data-c="0,5300,0.02,0.11,comma">0</span><small>m</small></p>
       <p class="figcap">베이스캠프의 해발 고도</p>
       <p class="figsub">에베레스트 네팔 쪽 등반로. 캠프는 땅이 아니라 쿰부 빙하 위에 있다.</p>
     </div>
-    <div class="beat centre" data-band="0.22,0.36">
-      <p class="fig"><span data-c="0,50,0.22,0.30,int">0</span><small>일</small></p>
+    <div class="beat centre" data-band="0.31,0.43">
+      <p class="fig"><span data-c="0,50,0.31,0.39,int">0</span><small>일</small></p>
       <p class="figcap">2023년 봄, 한 번의 등반 시즌</p>
       <p class="figsub">국제 연구진이 베이스캠프의 에너지 사용을 따져 본 기간이다.</p>
     </div>
-    <div class="beat centre" data-band="0.41,0.64" data-rev="1500">
-      <p class="fig" style="font-size:clamp(52px,9vw,124px)"><span data-c="0,1600,0.42,0.56,comma" id="tentN">0</span><small>동</small></p>
+    <div class="beat centre" data-band="0.47,0.66" data-rev="1500">
+      <p class="fig" style="font-size:clamp(52px,9vw,124px)"><span data-c="0,1600,0.48,0.60,comma" id="tentN">0</span><small>동</small></p>
       <p class="figcap" style="margin-top:16px">빙하 위에 세운 텐트</p>
       <div class="camp" aria-hidden="true"><canvas id="camp"></canvas><canvas id="campTw"></canvas><span class="camp-key"><i></i>텐트 1동</span></div>
       <p class="figsub">등반객과 셰르파, 가이드, 지원 인력 수천 명이 머문다.</p>
     </div>
-    <div class="beat centre" data-band="0.70,0.98" data-rev="2200">
+    <div class="beat centre" data-band="0.71,0.95" data-rev="2200">
       <p class="kicker">지금의 베이스캠프</p>
       <p class="line">과거엔 단순한 야영지에 가까웠다.</p>
       <div class="amen" id="amen"><b>카페</b><b>고속 인터넷</b><b>대형 TV</b><b>온수 샤워</b><b>바닥 난방 텐트</b></div>
@@ -789,6 +789,10 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
     <div class="imgnote">
       <h2>이미지에 대하여</h2>
       <p>화면에 쓰인 사진은 생성형 AI로 제작한 재현 이미지입니다. 실제 베이스캠프나 실존 인물의 사진이 아닙니다. 빙하 단면, 수영장, 위성 지도, 이전 모식도는 연구 결과를 이해하기 쉽게 그린 재현 그래픽입니다.</p>
+    </div>
+    <div class="imgnote">
+      <h2>소리에 대하여</h2>
+      <p>바람 소리 등 콘텐츠에 포함된 모든 소리는 실제 현장에서 녹음한 것이 아니라, AI를 활용해 합성한 재현음입니다.</p>
     </div>
     <div class="imgnote">
       <h2>계산에 대하여</h2>
@@ -1219,7 +1223,7 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
     altMk.style.bottom = (easeOut(B[0].rv) * 100).toFixed(2) + "%";
     const n = Math.round(1600 * easeOut(B[2].rv));
     if (!bg && B[2].b.classList.contains("on")) size();
-    if (n !== lit) { if (n > lit) window.__campNew = (window.__campNew || 0) + (n - lit); lit = n; draw(n); }   // 현장음: 불빛 켜지는 소리
+    if (n !== lit) { if (n > lit) window.__campNew = (window.__campNew || 0) + (n - lit); lit = n; draw(n); }   // 효과음: 불빛 켜지는 소리
     twinkle(!reduce && B[2].active && document.visibilityState === "visible");
     const a = Math.round(clamp(B[3].rv * 1.15) * 5);
     amen.forEach((b, j) => b.classList.toggle("lit", j < a));
@@ -1703,7 +1707,7 @@ const CAUSTIC = (() => {
   function loop(now) {
     const rise = target - level;
     level += rise * .12;
-    window.__poolFlow = rise > 2 ? clamp(rise / 320) : 0; window.__poolFlowT = performance.now();   // 현장음: 물 차는 소리
+    window.__poolFlow = rise > 2 ? clamp(rise / 320) : 0; window.__poolFlowT = performance.now();   // 효과음: 물 차는 소리
     amp += ((Math.abs(target - level) > 4 ? 4.5 : 1.1) - amp) * .08;
     draw(now); if (vis) requestAnimationFrame(loop);
   }
@@ -2159,14 +2163,20 @@ document.addEventListener("animationend", e => { if (e.animationName === "glint"
   let armed = false, prevY = scrollY, cur = null, at = 0, t0 = 0, doneAt = 0, poll = 0;
   ["wheel", "touchstart", "keydown", "pointerdown"].forEach(t => addEventListener(t, () => { armed = true; }, { passive: true, capture: true }));
   // 기사 페이지에 삽입됐을 때: 남은 붙잡기 지점(진행도)을 미리 알려, 기사 페이지가 지나치기 전에 먼저 멈춰 서게 한다
-  function sendHolds() {
+  // 아직 연출이 끝나지 않은 장면만 알린다. 끝난 장면은 목록에서 바로 빠져 기사 페이지가 괜히 멈칫하지 않는다
+  let holdSig = "";
+  function sendHolds(force) {
     if (!window.__everDriven || !window.__everSend) return;
     const mx = Math.max(1, document.documentElement.scrollHeight - innerHeight);
-    window.__everSend({ type: "ever:holds", list: holds.filter(h => !h.used).map(h => yOf(h) / mx).sort((a, b) => a - b) });
+    const list = holds.filter(h => !h.used && !h.done()).map(h => yOf(h) / mx).sort((a, b) => a - b);
+    const sig = list.map(v => v.toFixed(5)).join(",");
+    if (force !== true && sig === holdSig) return;
+    holdSig = sig; window.__everSend({ type: "ever:holds", list });
   }
-  window.__everSendHolds = sendHolds;
-  addEventListener("resize", sendHolds);
-  function release() { if (!cur) return; cur.used = true; cur = null; clearInterval(poll); html.classList.remove("hold"); prevY = scrollY; window.__everHoldLocked = false; if (window.__everSend) window.__everSend({ type: "ever:hold", on: false }); sendHolds(); }
+  window.__everSendHolds = () => sendHolds(true);
+  addEventListener("resize", () => sendHolds(true));
+  setInterval(() => { if (window.__everDriven && !cur) sendHolds(); }, 150);
+  function release() { if (!cur) return; cur.used = true; cur = null; clearInterval(poll); html.classList.remove("hold"); prevY = scrollY; window.__everHoldLocked = false; if (window.__everSend) window.__everSend({ type: "ever:hold", on: false }); sendHolds(true); }
   function lock(h, y) {
     cur = h; at = y; t0 = performance.now(); doneAt = 0; html.classList.add("hold"); scrollTo(0, y);
     window.__everHoldLocked = true;
@@ -2191,7 +2201,7 @@ document.addEventListener("animationend", e => { if (e.animationName === "glint"
     let pick = null, pickY = Infinity;
     for (const h of holds) { if (h.used) continue; const hy = yOf(h); if (py <= hy + 1 && y > hy && hy < pickY) { pick = h; pickY = hy; } }
     if (!pick) return;
-    if (pick.done()) { pick.used = true; sendHolds(); return; }
+    if (pick.done()) { pick.used = true; sendHolds(true); return; }
     lock(pick, pickY);
   }, { passive: true });
 })();
