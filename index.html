@@ -383,30 +383,27 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 @keyframes grain{0%{transform:translate(0,0)}17%{transform:translate(-3%,2%)}34%{transform:translate(2%,-4%)}51%{transform:translate(-4%,-1%)}68%{transform:translate(3%,3%)}85%{transform:translate(-1%,4%)}100%{transform:translate(0,0)}}
 
 #rail>i{background:var(--rc,#8FBAD4)}
-/* 효과음 버튼 — 얇은 프로스트 글래스 캡슐. 상태는 작은 점과 파형으로만 표현 */
-.sound{--c:var(--rc,#9CCBE4);position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 18px);z-index:61;display:flex;align-items:center;gap:10px;height:46px;padding:0 16px 0 13px;border:1px solid rgba(238,246,250,.52);border-radius:999px;background:linear-gradient(180deg,rgba(19,29,37,.88),rgba(4,8,12,.76));box-shadow:0 12px 36px rgba(0,0,0,.38),0 0 0 1px rgba(142,199,229,.08),inset 0 1px 0 rgba(255,255,255,.11);backdrop-filter:blur(18px) saturate(135%);-webkit-backdrop-filter:blur(18px) saturate(135%);color:#f3f8fb;font-family:var(--sans);font-size:10.5px;letter-spacing:.18em;font-weight:760;line-height:1;cursor:pointer;transition:transform .24s cubic-bezier(.16,1,.3,1),border-color .3s,background .3s,color .3s,opacity .6s,box-shadow .3s}
-.sound::before{content:"";position:absolute;inset:-1px;border-radius:inherit;pointer-events:none;background:linear-gradient(110deg,rgba(255,255,255,.12),transparent 32%,transparent 68%,rgba(138,203,236,.12));mix-blend-mode:screen;opacity:.9}
-.sound:hover{transform:translateY(-1px);border-color:rgba(238,246,250,.78);background:linear-gradient(180deg,rgba(25,39,49,.94),rgba(7,12,17,.86));box-shadow:0 14px 42px rgba(0,0,0,.44),0 0 24px rgba(142,199,229,.10),inset 0 1px 0 rgba(255,255,255,.14)}
-.sound:active{transform:translateY(0) scale(.975)}
-.sound .sound-dot{width:7px;height:7px;border-radius:50%;background:rgba(232,238,242,.36);box-shadow:0 0 0 4px rgba(232,238,242,.05);transition:background .35s,box-shadow .35s}
-.sound.on .sound-dot{background:var(--c);box-shadow:0 0 0 4px color-mix(in srgb,var(--c) 12%,transparent),0 0 15px color-mix(in srgb,var(--c) 78%,transparent)}
-.sound .bars{display:flex;align-items:center;justify-content:center;gap:2.5px;width:20px;height:16px;color:rgba(238,246,250,.62)}
-.sound .bars i{display:block;width:2px;border-radius:3px;background:currentColor;height:4px;opacity:.82;transition:height .26s,color .3s,opacity .3s}
-.sound .bars i:nth-child(2){height:8px}.sound .bars i:nth-child(3){height:13px}.sound .bars i:nth-child(4){height:7px}
+/* 효과음 버튼 — 편집 디자인. 캡슐/글로우 없이 직선과 타이포만 사용 */
+.sound{--c:var(--rc,#9CCBE4);position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 18px);z-index:61;display:grid;grid-template-columns:18px auto;grid-template-rows:auto auto;column-gap:10px;align-items:center;min-width:112px;height:48px;padding:7px 12px 7px 11px;border:1px solid rgba(232,238,242,.56);border-radius:0;background:rgba(4,7,10,.82);box-shadow:none;backdrop-filter:none;-webkit-backdrop-filter:none;color:#EEF4F7;font-family:var(--sans);line-height:1;cursor:pointer;transition:border-color .2s,background .2s,color .2s,opacity .4s}
+.sound::before{display:none}
+.sound:hover{transform:none;border-color:rgba(232,238,242,.9);background:rgba(10,16,21,.94);box-shadow:none}
+.sound:active{transform:none;background:rgba(20,29,35,.94)}
+.sound .sound-dot{display:none!important}
+.sound .bars{grid-column:1;grid-row:1 / span 2;display:flex;align-items:flex-end;justify-content:flex-start;gap:2px;width:18px;height:22px;color:rgba(232,238,242,.48);border-left:1px solid rgba(232,238,242,.28);padding-left:5px}
+.sound .bars i{display:block;width:1px;border-radius:0;background:currentColor;height:5px;opacity:1;transition:height .18s,color .18s}
+.sound .bars i:nth-child(2){height:10px}.sound .bars i:nth-child(3){height:16px}.sound .bars i:nth-child(4){height:8px}
 .sound.on .bars{color:var(--c)}
-.sound.on .bars i{opacity:1;filter:drop-shadow(0 0 4px color-mix(in srgb,var(--c) 45%,transparent));transform-origin:center}
-.sound.on .bars i:nth-child(1){height:calc(4px + var(--g,0) * 6px)}
-.sound.on .bars i:nth-child(2){height:calc(6px + var(--g2,0) * 8px)}
-.sound.on .bars i:nth-child(3){height:calc(9px + var(--g3,0) * 7px)}
-.sound.on .bars i:nth-child(4){height:calc(5px + var(--g2,0) * 6px)}
-.sound .sound-label{position:relative;top:.4px;white-space:nowrap;text-shadow:0 1px 12px rgba(0,0,0,.35)}
-.sound.armed{border-color:rgba(188,222,239,.72);box-shadow:0 12px 36px rgba(0,0,0,.4),0 0 22px rgba(142,199,229,.16),inset 0 1px 0 rgba(255,255,255,.12)}
-.sound.armed .sound-dot{animation:soundPulse 1.5s ease-in-out infinite}
-.sound.armed .bars i{animation:soundBreath 1.35s ease-in-out infinite}.sound.armed .bars i:nth-child(2){animation-delay:.1s}.sound.armed .bars i:nth-child(3){animation-delay:.2s}.sound.armed .bars i:nth-child(4){animation-delay:.3s}
-@keyframes soundPulse{0%,100%{opacity:.5;box-shadow:0 0 0 4px rgba(156,203,228,.04)}50%{opacity:1;box-shadow:0 0 0 5px rgba(156,203,228,.12),0 0 18px var(--c)}}
-@keyframes soundBreath{0%,100%{transform:scaleY(.58)}50%{transform:scaleY(1.08)}}
-.sound-hint{position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 64px);z-index:61;margin:0;padding:7px 11px;border:1px solid rgba(232,238,242,.10);border-radius:999px;background:rgba(4,7,10,.62);backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);color:rgba(214,226,233,.72);font-size:10.5px;line-height:1.3;letter-spacing:.02em;pointer-events:none;opacity:0;transform:translateY(-3px);transition:opacity .45s,transform .45s}
-.sound-hint.show{opacity:1;transform:none}
+.sound.on .bars i{filter:none;transform-origin:bottom}
+.sound.on .bars i:nth-child(1){height:calc(5px + var(--g,0) * 4px)}
+.sound.on .bars i:nth-child(2){height:calc(8px + var(--g2,0) * 5px)}
+.sound.on .bars i:nth-child(3){height:calc(12px + var(--g3,0) * 5px)}
+.sound.on .bars i:nth-child(4){height:calc(7px + var(--g2,0) * 4px)}
+.sound .sound-label{grid-column:2;grid-row:1 / span 2;position:static;white-space:pre-line;text-align:left;font-size:10px;line-height:1.25;letter-spacing:.16em;font-weight:700;text-shadow:none}
+.sound.on{border-color:rgba(170,205,224,.76)}
+.sound.armed{border-color:rgba(232,238,242,.56);box-shadow:none}
+.sound.armed .bars i,.sound.armed .sound-dot{animation:none}
+.sound-hint{position:fixed;right:var(--gut);top:calc(env(safe-area-inset-top,0px) + 72px);z-index:61;margin:0;padding:5px 0;border:0;border-radius:0;background:transparent;backdrop-filter:none;-webkit-backdrop-filter:none;color:rgba(214,226,233,.68);font-size:10px;line-height:1.3;letter-spacing:.02em;pointer-events:none;opacity:0;transform:none;transition:opacity .35s}
+.sound-hint.show{opacity:1}
 
 /* mobile */
 @media (max-width:720px){
@@ -418,10 +415,10 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
   .figcap,.figsub{max-width:26ch}
   .fig{font-size:clamp(52px,17vw,92px)}
   .readout{top:70px}
-  .sound{right:14px;top:calc(env(safe-area-inset-top,0px) + 12px);height:44px;padding:0 13px 0 11px;gap:8px;font-size:10px;letter-spacing:.14em}
-  .sound .sound-label,.sound .sound-dot{display:inline-flex}
-  .sound .bars{width:18px}
-  .sound-hint{right:16px;top:calc(env(safe-area-inset-top,0px) + 60px);font-size:10px}
+  .sound{right:12px;top:calc(env(safe-area-inset-top,0px) + 10px);min-width:130px;height:50px;padding:7px 13px 7px 11px;column-gap:11px}
+  .sound .sound-label{display:block;font-size:10px;line-height:1.28;letter-spacing:.17em}
+  .sound .bars{width:19px;height:23px}
+  .sound-hint{right:12px;top:calc(env(safe-area-inset-top,0px) + 66px);font-size:10px}
   .legend{display:none}
   .cmpbar{right:var(--gut);left:var(--gut);width:auto;top:auto;bottom:calc(clamp(52px,9vh,96px) + 128px);padding:14px 16px 16px;background:rgba(4,7,10,.62);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
   .cmpbar p{margin-bottom:10px}
@@ -481,7 +478,7 @@ footer{position:relative;z-index:5;background:var(--ink);padding:clamp(46px,8vh,
 <div id="grain" aria-hidden="true"></div>
 <canvas id="snow" aria-hidden="true"></canvas>
 <div class="vignette" aria-hidden="true"></div><div class="grain" id="grainC" aria-hidden="true"></div><div class="grain" id="grainW" aria-hidden="true"></div>
-<button class="sound on" id="sound" type="button" role="switch" aria-checked="true" aria-label="효과음 켜기 또는 끄기"><span class="sound-dot" aria-hidden="true"></span><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="sound-label" id="soundLabel">SOUND</span></button>
+<button class="sound on" id="sound" type="button" role="switch" aria-checked="true" aria-label="효과음 켜기 또는 끄기"><span class="sound-dot" aria-hidden="true"></span><span class="bars" aria-hidden="true"><i></i><i></i><i></i><i></i></span><span class="sound-label" id="soundLabel">SOUND<br>ON</span></button>
 <p class="sound-hint" id="soundHint" aria-hidden="true">탭하면 사운드가 시작됩니다</p>
 <main>
 
@@ -1063,7 +1060,7 @@ const gust = t => clamp(.35 + .45 * Math.sin(t * .31) * Math.sin(t * .117 + 1.3)
   const live = () => !!ac && ac.state === "running";
   function apply() {
     btn.setAttribute("aria-checked", String(on)); btn.classList.toggle("on", on);
-    const label = document.getElementById("soundLabel"); if (label) label.textContent = on ? "SOUND ON" : "SOUND OFF";
+    const label = document.getElementById("soundLabel"); if (label) label.innerHTML = on ? "SOUND<br>ON" : "SOUND<br>OFF";
     const armed = on && !live();
     btn.classList.toggle("armed", armed);
     hint.classList.toggle("show", armed && hintOk && scrollY < innerHeight * 1.2);
@@ -2050,19 +2047,19 @@ function oldP(act, p) {
   });
   // 모바일 터치: 자체 관성을 만들지 않고 손가락 이동량만 부모 기사에 전달한다.
   // 브라우저 주소창/iframe 내부 관성과 부모 스크롤이 겹치면 진행도가 튀므로 한 경로만 사용한다.
-  let ty = 0;
-  addEventListener("touchstart", e => {
-    if (!driven || !e.touches.length) return;
-    ty = e.touches[0].clientY;
-  }, { passive: true });
-  addEventListener("touchmove", e => {
-    if (!driven || !e.touches.length) return;
-    const y = e.touches[0].clientY, dy = ty - y;
-    ty = y;
-    e.preventDefault();
-    if (window.__everHoldLocked && dy > 0) return;
-    if (Math.abs(dy) > .25) send({ type: "ever:touchscroll", deltaY: dy });
-  }, { passive: false });
+  // 모바일 스크롤은 바깥 CMS의 투명 터치 실드가 네이티브로 담당한다.
+  // iframe 안에서는 별도 touchmove -> scrollBy 전달을 하지 않는다. 이중 스크롤 방지.
+  if (!matchMedia("(pointer:coarse)").matches) {
+    let ty = 0;
+    addEventListener("touchstart", e => { if (!driven || !e.touches.length) return; ty = e.touches[0].clientY; }, { passive: true });
+    addEventListener("touchmove", e => {
+      if (!driven || !e.touches.length) return;
+      const y = e.touches[0].clientY, dy = ty - y; ty = y;
+      e.preventDefault();
+      if (window.__everHoldLocked && dy > 0) return;
+      if (Math.abs(dy) > .25) send({ type: "ever:touchscroll", deltaY: dy });
+    }, { passive: false });
+  }
 })();
 
 /* 표지 깊이감: PC에서 마우스를 움직이면 사진은 반대로 조금, 글은 같은 쪽으로 아주 조금, 눈발은 더 많이 움직인다 */
